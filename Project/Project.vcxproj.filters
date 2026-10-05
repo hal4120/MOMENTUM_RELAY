@@ -141,6 +141,7 @@
     <ClInclude Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\FocusLinesPostEffect\FocusLinesPostEffect.h" />
     <ClInclude Include="Src\Common\Quaternion.h" />
+    <ClInclude Include="Src\Object\Common\DebugObject\IceBoxDebugObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />

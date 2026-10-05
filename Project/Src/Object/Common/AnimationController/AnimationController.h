@@ -44,7 +44,9 @@ public:
 
 	bool IsEnd(void)const;
 	int GetAnimePlayType(void)const { return playType; }
-	bool IsAnimEnd(void)const { return playAnim.step >= playAnim.totalTime; }
+	bool IsAnimEnd(void)const { 
+		return playAnim.step >= playAnim.totalTime; 
+	}
 
 	float GetAnimeRatio(void)const { return (playAnim.step / playAnim.totalTime); }
 	float GetAnimeTotalTime(void)const { return playAnim.totalTime / playAnim.speed; }
