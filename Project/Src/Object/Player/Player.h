@@ -25,8 +25,6 @@ private:
 		Move,
 		Jump,
 
-		KickDownAttack,
-
 		Max
 	};
 
@@ -42,15 +40,6 @@ private:
 		Walk,
 		Run,
 
-		Damage,
-		Down,
-		Death,
-		
-		KickDown,
-
-		ForwardThrow,
-		Toss,
-
 		JumpStart,
 		JumpLoop,
 		Stamp,
@@ -61,23 +50,14 @@ private:
 	// アニメーション再生速度テーブル
 	float ANIME_SPEED_TABLE[(int)ANIME_TYPE::Max] =
 	{
-		1.0f,	// Idle
+		0.5f,	// Idle
 
-		1.0f,	// Walk
-		1.5f,	// Run
+		0.75f,	// Walk
+		1.25f,	// Run
 
-		1.0f,	// Damage
-		1.0f,	// Down
-		1.0f,	// Death
-
-		1.0f,	// KickDown
-
-		1.0f,	// ForwardThrow
-		1.0f,	// Toss
-
-		3.0f,	// JumpStart
-		1.0f,	// JumpLoop
-		3.0f,	// Stamp
+		2.0f,	// JumpStart
+		0.5f,	// JumpLoop
+		2.5f,	// Stamp
 	};
 
 	// アニメーションループ再生フラグテーブル
@@ -87,15 +67,6 @@ private:
 
 		true,	// Walk
 		true,	// Run
-
-		false,	// Damage
-		false,	// Down
-		false,	// Death
-
-		false,	// KickDown
-
-		false,	// ForwardThrow
-		false,	// Toss
 
 		false,	// JumpStart
 		true,	// JumpLoop
@@ -109,7 +80,14 @@ private:
 
 		// 待機状態に遷移
 		ChangeState(STATE::Idle);
+
+		ACCEL_RATE = 3.0f;
+		DECEL_RATE = 3.0f;
+
+		ACCEL_MAX = 40.0f;
 	}
 
 	void SubUpdate(void)override;
+
+	void SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other)override;
 };

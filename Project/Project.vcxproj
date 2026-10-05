@@ -238,6 +238,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\Common\Collider\MeshCollider.h" />
     <ClInclude Include="Src\Object\Common\DebugObject\CapsuleDebugObject.h" />
     <ClInclude Include="Src\Object\Common\DebugObject\DebugObjectBase.h" />
+    <ClInclude Include="Src\Object\Common\DebugObject\IceBoxDebugObject.h" />
     <ClInclude Include="Src\Object\Common\DebugObject\SphereDebugObject.h" />
     <ClInclude Include="Src\Object\Common\AnimationController\AnimationController.h" />
     <ClInclude Include="Src\Manager\Collision\CollisionManager.h" />

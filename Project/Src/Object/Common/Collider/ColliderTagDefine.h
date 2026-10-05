@@ -24,6 +24,7 @@ enum class COLLIDER_TAG
 	Enemy,
 
 	Stage,
+	IceStage,
 
 	DebugObject,
 };

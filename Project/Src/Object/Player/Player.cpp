@@ -42,7 +42,7 @@ void Player::Load(void)
 #pragma region ƒ‚ƒfƒ‹Ý’è
 
 	// ƒ‚ƒfƒ‹‚Ì“Ç‚Ýž‚Ý
-	trans.LoadModel("GrapeModel");
+	trans.LoadModel("Player/Player");
 
 	// ƒ‚ƒfƒ‹‚ÌƒXƒP[ƒ‹Ý’è
 	trans.scale = 1;
@@ -129,16 +129,16 @@ void Player::Load(void)
 	);
 
 	// UŒ‚i“¥‚Ý‚Â‚¯jó‘Ô
-	AddState(
-		STATE::KickDownAttack,
-		new PlayerKickDownAttackState(
-			0.9f, 1.0f,
-			*kickDownAttackCollOperator,
-			[&]() { AnimePlay(ANIME_TYPE::KickDown); },
-			[&]() { return GetAnimeRatio(); },
-			[&]() { ChangeState(STATE::Idle); }
-		)
-	);
+	//AddState(
+	//	STATE::KickDownAttack,
+	//	new PlayerKickDownAttackState(
+	//		0.9f, 1.0f,
+	//		*kickDownAttackCollOperator,
+	//		[&]() { AnimePlay(ANIME_TYPE::KickDown); },
+	//		[&]() { return GetAnimeRatio(); },
+	//		[&]() { ChangeState(STATE::Idle); }
+	//	)
+	//);
 
 	// u‘Ò‹@ó‘Ôv->uˆÚ“®ó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
 	RegisterStateTransition(STATE::Idle, STATE::Move);
@@ -150,10 +150,10 @@ void Player::Load(void)
 	// uˆÚ“®ó‘Ôv->uƒWƒƒƒ“ƒvó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
 	RegisterStateTransition(STATE::Move, STATE::Jump);
 
-	// u‘Ò‹@ó‘Ôv->uUŒ‚i“¥‚Ý‚Â‚¯jó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
-	RegisterStateTransition(STATE::Idle, STATE::KickDownAttack);
-	// uˆÚ“®ó‘Ôv->uUŒ‚i“¥‚Ý‚Â‚¯jó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
-	RegisterStateTransition(STATE::Move, STATE::KickDownAttack);
+	//// u‘Ò‹@ó‘Ôv->uUŒ‚i“¥‚Ý‚Â‚¯jó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
+	//RegisterStateTransition(STATE::Idle, STATE::KickDownAttack);
+	//// uˆÚ“®ó‘Ôv->uUŒ‚i“¥‚Ý‚Â‚¯jó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
+	//RegisterStateTransition(STATE::Move, STATE::KickDownAttack);
 
 #pragma endregion
 }
@@ -162,21 +162,45 @@ void Player::OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const C
 {
 }
 
+void Player::SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other)
+{
+	ActorBase::SubOnGrounded(ownTag, other);
+
+	switch (other.GetTag())
+	{
+
+	case COLLIDER_TAG::IceStage: {
+
+		DECEL_RATE = 0.05f;
+
+		break;
+	}
+
+	default: {
+
+		DECEL_RATE = 3.0f;
+
+		break;
+	}
+
+	}
+}
+
 void Player::SubUpdate(void)
 {
-	static char type = 0;
-	static bool prev = false, now = false;
+	//static char type = 0;
+	//static bool prev = false, now = false;
 
-	prev = now;
-	now = CheckHitKey(KEY_INPUT_SPACE) == 1;
+	//prev = now;
+	//now = CheckHitKey(KEY_INPUT_SPACE) == 1;
 
-	if (!prev && now) {
+	//if (!prev && now) {
 
-		if (++type > 1) { type = 0; }
+	//	if (++type > 1) { type = 0; }
 
-		switch (type){
-		case 0: { CreateShader(new DefaultShader()); break; }
-		case 1: { CreateShader(new RimLightShader()); break; }
-		}
-	}
+	//	switch (type){
+	//	case 0: { CreateShader(new DefaultShader()); break; }
+	//	case 1: { CreateShader(new RimLightShader()); break; }
+	//	}
+	//}
 }
