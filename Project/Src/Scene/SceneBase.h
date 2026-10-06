@@ -62,7 +62,7 @@ public:
 	void AddPostEffect(PostEffectBase* postEffect);
 
 	// 指定した種類のポストエフェクトを削除
-	template<class T>
+	template<class T = PostEffectBase>
 	void RemovePostEffect() {
 		for (auto it = postEffects.begin(); it != postEffects.end(); ++it) {
 			T* effect = dynamic_cast<T*>(*it);

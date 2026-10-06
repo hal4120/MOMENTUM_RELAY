@@ -51,7 +51,6 @@ void GameScene::SubPostLoad(void)
 
 void GameScene::SubPostInit(void)
 {
-	//AddPostEffect(new FocusLinesPostEffect(1.5f, 18.0f, 100.0f));
 }
 
 void GameScene::SubPostUpdate(void)
@@ -61,9 +60,16 @@ void GameScene::SubPostUpdate(void)
 		SceneManager::GetIns().ChangeSceneFade(SCENE_ID::Title);
 	}
 
+	static bool prevDebugKey = false, nowDebugKey = false, isPostEffect = false;
+	prevDebugKey = nowDebugKey;
+	nowDebugKey = CheckHitKey(KEY_INPUT_RSHIFT) == 1;
+
 	// Œˆ’è
-	if (CheckHitKey(KEY_INPUT_RSHIFT) == 1) {
-		SceneManager::GetIns().ChangeSceneFade(SCENE_ID::GameClear);
+	if (!prevDebugKey && nowDebugKey) {
+		//SceneManager::GetIns().ChangeSceneFade(SCENE_ID::GameClear);
+		if (isPostEffect) { RemovePostEffect(); }
+		else { AddPostEffect(new FocusLinesPostEffect(1.5f, 18.0f, 100.0f)); }
+		isPostEffect = !isPostEffect;
 	}
 }
 

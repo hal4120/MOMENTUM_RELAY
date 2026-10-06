@@ -46,7 +46,6 @@
     <ClCompile Include="Src\Object\Common\Shader\TestShader.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerIdleState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerJumpState.cpp" />
-    <ClCompile Include="Src\Object\Player\State\PlayerKickDownAttackState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerMoveState.cpp" />
     <ClCompile Include="Src\Object\Player\Wepon\PlayerKickDownAttackCollOperator.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
@@ -58,6 +57,7 @@
     <ClCompile Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\FocusLinesPostEffect\FocusLinesPostEffect.cpp" />
     <ClCompile Include="Src\Common\Quaternion.cpp" />
+    <ClCompile Include="Src\Object\Player\State\PlayerKickDownAttackState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -128,7 +128,6 @@
     <ClInclude Include="Src\Object\Common\Shader\TestShader.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerIdleState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerJumpState.h" />
-    <ClInclude Include="Src\Object\Player\State\PlayerKickDownAttackState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerMoveState.h" />
     <ClInclude Include="Src\Object\Player\Wepon\PlayerKickDownAttackCollOperator.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />
@@ -142,6 +141,7 @@
     <ClInclude Include="Src\Scene\Common\PostEffect\FocusLinesPostEffect\FocusLinesPostEffect.h" />
     <ClInclude Include="Src\Common\Quaternion.h" />
     <ClInclude Include="Src\Object\Common\DebugObject\IceBoxDebugObject.h" />
+    <ClInclude Include="Src\Object\Player\State\PlayerKickDownAttackState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />
