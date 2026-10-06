@@ -2,18 +2,21 @@
 
 #include "../../Utility/Utility.h"
 
+#include "../../Scene/SceneManager.h"
+#include "../../Scene/SceneBase.h"
+
 #include "../Common/Collider/CapsuleCollider.h"
+
+#include "../../Scene/Common/PostEffect/FocusLinesPostEffect/FocusLinesPostEffect.h"
+#include "../../Scene/Common/PostEffect/CRTPostEffect/CRTPostEffect.h"
 
 #include "../Common/Shader/DefaultShader.h"
 #include "../Common/Shader/RimLightShader.h"
 #include "../Common/Shader/WaterShader.h"
 
-#include "Wepon/PlayerKickDownAttackCollOperator.h"
-
 #include "State/PlayerIdleState.h"
 #include "State/PlayerMoveState.h"
 #include "State/PlayerJumpState.h"
-#include "State/PlayerKickDownAttackState.h"
 
 Player::Player() : CharacterBase()
 {
@@ -86,11 +89,6 @@ void Player::Load(void)
 
 #pragma region ‰ºˆÊƒAƒNƒ^[‚Ì¶¬
 
-	// UŒ‚“–‚½‚è”»’èŠÇ—ƒNƒ‰ƒX
-	PlayerKickDownAttackCollOperator* kickDownAttackCollOperator =
-		new PlayerKickDownAttackCollOperator(100.0f, Vector3(0, -100, 100), trans);
-
-	AddChildActor(kickDownAttackCollOperator);
 #pragma endregion
 
 
@@ -128,18 +126,6 @@ void Player::Load(void)
 		)
 	);
 
-	// UŒ‚i“¥‚Ý‚Â‚¯jó‘Ô
-	//AddState(
-	//	STATE::KickDownAttack,
-	//	new PlayerKickDownAttackState(
-	//		0.9f, 1.0f,
-	//		*kickDownAttackCollOperator,
-	//		[&]() { AnimePlay(ANIME_TYPE::KickDown); },
-	//		[&]() { return GetAnimeRatio(); },
-	//		[&]() { ChangeState(STATE::Idle); }
-	//	)
-	//);
-
 	// u‘Ò‹@ó‘Ôv->uˆÚ“®ó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
 	RegisterStateTransition(STATE::Idle, STATE::Move);
 	// uˆÚ“®ó‘Ôv->u‘Ò‹@ó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
@@ -149,11 +135,6 @@ void Player::Load(void)
 	RegisterStateTransition(STATE::Idle, STATE::Jump);
 	// uˆÚ“®ó‘Ôv->uƒWƒƒƒ“ƒvó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
 	RegisterStateTransition(STATE::Move, STATE::Jump);
-
-	//// u‘Ò‹@ó‘Ôv->uUŒ‚i“¥‚Ý‚Â‚¯jó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
-	//RegisterStateTransition(STATE::Idle, STATE::KickDownAttack);
-	//// uˆÚ“®ó‘Ôv->uUŒ‚i“¥‚Ý‚Â‚¯jó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
-	//RegisterStateTransition(STATE::Move, STATE::KickDownAttack);
 
 #pragma endregion
 }
@@ -166,6 +147,8 @@ void Player::SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other)
 {
 	ActorBase::SubOnGrounded(ownTag, other);
 
+	static bool postEffectFlg = false;
+
 	switch (other.GetTag())
 	{
 
@@ -173,12 +156,24 @@ void Player::SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other)
 
 		DECEL_RATE = 0.05f;
 
+		if (!postEffectFlg) {
+			SceneManager::GetIns().GetScene()->AddPostEffect(new FocusLinesPostEffect(1.5f, 18.0f, 100.0f));
+			SceneManager::GetIns().GetScene()->AddPostEffect(new CRTPostEffect(1.0f, 0.05f));
+			postEffectFlg = true;
+		}
+
 		break;
 	}
 
 	default: {
 
 		DECEL_RATE = 3.0f;
+
+		if (postEffectFlg) {
+			SceneManager::GetIns().GetScene()->RemovePostEffect();
+			SceneManager::GetIns().GetScene()->RemovePostEffect();
+			postEffectFlg = false;
+		}
 
 		break;
 	}

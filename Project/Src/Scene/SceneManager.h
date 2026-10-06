@@ -93,6 +93,21 @@ public:
 
 #pragma endregion
 
+	// シーンを取得
+	SceneBase* GetScene(int index = -1)	{
+		// スタックが空の場合はnullptrを返す
+		if (scenes.empty()) { return nullptr; }
+
+		// indexが指定なし(-1)の場合は末尾のシーンを返す
+		if (index == -1) { index = static_cast<int>(scenes.size()) - 1; }
+
+		// indexが範囲外の場合はnullptrを返す
+		if (index < 0 || static_cast<std::size_t>(index) >= scenes.size()) { return nullptr; }
+
+		// 指定されたindexのシーンを返す
+		return scenes[index].get();
+	}
+
 #pragma region シーンをまたいでの保持が必要な情報の操作
 
 #pragma endregion
@@ -240,4 +255,3 @@ private:
 };
 
 using SCENE_ID = SceneManager::SCENE_ID;
-
