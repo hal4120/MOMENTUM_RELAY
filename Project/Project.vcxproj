@@ -275,6 +275,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\Player\State\PlayerKickDownAttackState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerMoveState.h" />
     <ClInclude Include="Src\Object\Player\Wepon\PlayerKickDownAttackCollOperator.h" />
+    <ClInclude Include="Src\Object\SkyDome.h" />
     <ClInclude Include="Src\Object\Water.h" />
     <ClInclude Include="Src\pch.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.h" />
