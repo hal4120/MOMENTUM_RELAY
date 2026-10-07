@@ -188,6 +188,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Object\Common\Shader\ShaderBase.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\TestShader.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\WaterShader.cpp" />
+    <ClCompile Include="Src\Object\Common\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Src\Object\Common\Transform\Transform.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerIdleState.cpp" />
@@ -267,6 +268,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\Common\Shader\ShaderBase.h" />
     <ClInclude Include="Src\Object\Common\Shader\TestShader.h" />
     <ClInclude Include="Src\Object\Common\Shader\WaterShader.h" />
+    <ClInclude Include="Src\Object\Common\SkyBox\SkyBox.h" />
     <ClInclude Include="Src\Object\Common\Transform\Transform.h" />
     <ClInclude Include="Src\Object\Common\DebugObject\MeshDebugObject.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />
@@ -504,6 +506,18 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     </FxCompile>
     <FxCompile Include="Src\Shader\Shadow\ShadowVS_NMap8Frame.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\SkyBox\SkyBoxPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\SkyBox\SkyBoxVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Src\Shader\Water\WaterPS.hlsl">

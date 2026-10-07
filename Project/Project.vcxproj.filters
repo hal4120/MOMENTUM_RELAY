@@ -61,6 +61,7 @@
     <ClCompile Include="Src\Scene\Common\PostEffect\UnderWaterPostEffect\UnderWaterPostEffect.cpp" />
     <ClCompile Include="Src\Object\CameraCollOperator\CameraPointCollOperator.cpp" />
     <ClCompile Include="Src\Object\CameraCollOperator\CameraLineCollOperator.cpp" />
+    <ClCompile Include="Src\Object\Common\SkyBox\SkyBox.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -149,6 +150,7 @@
     <ClInclude Include="Src\Object\CameraCollOperator\CameraPointCollOperator.h" />
     <ClInclude Include="Src\Object\CameraCollOperator\CameraLineCollOperator.h" />
     <ClInclude Include="Src\Object\SkyDome.h" />
+    <ClInclude Include="Src\Object\Common\SkyBox\SkyBox.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />
@@ -218,5 +220,7 @@
     <FxCompile Include="Src\Shader\Default\DefaultVS_NMap4Frame.hlsl" />
     <FxCompile Include="Src\Shader\Default\DefaultVS_NMap8Frame.hlsl" />
     <FxCompile Include="Src\Shader\PostEffect\UnderWaterPS.hlsl" />
+    <FxCompile Include="Src\Shader\SkyBox\SkyBoxVS.hlsl" />
+    <FxCompile Include="Src\Shader\SkyBox\SkyBoxPS.hlsl" />
   </ItemGroup>
 </Project>
