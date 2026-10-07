@@ -21,6 +21,10 @@ enum class VERTEX_SHADER_TYPE
 
 	// 水面
     Water,
+
+
+    // スカイボックス
+    SkyBox,
 };
 
 // ピクセルシェーダーの種類
@@ -50,6 +54,9 @@ enum class PIXEL_SHADER_TYPE
 	UnderWater,
 
 #pragma endregion
+
+    // スカイボックス
+    SkyBox,
 };
 
 // 頂点タイプ
