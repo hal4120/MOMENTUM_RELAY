@@ -5,6 +5,8 @@
 #include "../../../Manager/Input/InputManager.h"
 #include "../../../Manager/Camera/CurrentCamera.h"
 
+#include "../Collider/ColliderBase.h"
+
 class DebugObjectBase : public ActorBase
 {
 public:
@@ -50,6 +52,10 @@ public:
 	}
 	~DebugObjectBase()override = default;
 
+	void OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result)override {
+		if (other.GetTag() == COLLIDER_TAG::CameraLine) { SetDrawType(ACTOR_DRAW_TYPE::Alpha); }
+	}
+
 private:
 	// ‘€ì‰Â”\‚©‚Ç‚¤‚©
 	bool isOperator;
@@ -64,6 +70,8 @@ private:
 	}
 
 	void SubUpdate(void)override {
+		SetDrawType(ACTOR_DRAW_TYPE::Default);
+
 		if (!isOperator) { return; }
 
 		// ˆÚ“®•ûŒü

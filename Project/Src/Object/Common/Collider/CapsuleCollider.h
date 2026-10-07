@@ -79,6 +79,17 @@ public:
 	}
 #pragma endregion
 
+#pragma region 各セット関数
+
+	// 線分の始点を再設定する
+	void SetStartPos(const Vector3& startPos) { this->startPos = startPos; }
+
+	// 線分の終点を再設定する
+	void SetEndPos(const Vector3& endPos) { this->endPos = endPos; }
+
+#pragma endregion
+
+
 	void DrawDebug(unsigned int color = 0xffffff)override {
 		DrawCapsule3D(GetStartPos().ToVECTOR(), GetEndPos().ToVECTOR(), radius, 12, color, color, true);
 	}

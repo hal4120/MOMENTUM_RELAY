@@ -6,8 +6,6 @@
 
 class CameraEventBase;
 
-class CameraCollOperator;
-
 class CameraBase
 {
 public:
@@ -68,9 +66,6 @@ public:
 	// カメラ移動における補間数値
 	static float GetSmoothCameraMoveRate(void) { return smoothCameraMoveRate; }
 
-	// カメラ衝突判定用クラスを取得
-	CameraCollOperator* GetCameraCollOperator(void) { return cameraCollOperator; }
-
 #pragma endregion
 
 #pragma region セット関数
@@ -102,9 +97,6 @@ public:
 	bool IsEvent(void) const { return cameraEvent != nullptr; }
 
 #pragma endregion
-
-	// カメラ衝突判定用クラスを生成
-	void CreateCameraCollOperator(float radius = 10.0f);
 
 protected:
 
@@ -160,7 +152,4 @@ private:
 
 	// イベントカメラ
 	CameraEventBase* cameraEvent;
-
-	// カメラ衝突判定用クラス
-	CameraCollOperator* cameraCollOperator;
 };

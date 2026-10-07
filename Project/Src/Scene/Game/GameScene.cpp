@@ -10,7 +10,6 @@
 #include "../../Manager/Font/FontManager.h"
 
 #include "../../Manager/Camera/FollowRemote/FollowRemoteCamera.h"
-#include "../../Manager/Camera/CameraCollOperator.h"
 
 #include "../SceneManager.h"
 
@@ -26,6 +25,9 @@
 #include "../../Object/Common/DebugObject/SphereDebugObject.h"
 #include "../../Object/Common/DebugObject/CapsuleDebugObject.h"
 #include "../../Object/Common/DebugObject/MeshDebugObject.h"
+
+#include "../../Object/CameraCollOperator/CameraPointCollOperator.h"
+#include "../../Object/CameraCollOperator/CameraLineCollOperator.h"
 
 #include "../../Object/Player/Player.h"
 
@@ -87,7 +89,8 @@ void GameScene::CreateCamera(void)
 {
 	camera = new FollowRemoteCamera(&ActorSerch<Player>(actors)->GetTrans().pos);
 
-	camera->CreateCameraCollOperator();
+	// カメラの当たり判定オペレーターを追加
+	AddActor(new CameraPointCollOperator(*camera));
 
-	AddActor(camera->GetCameraCollOperator());
+	AddActor(new CameraLineCollOperator(camera->GetPos(), ActorSerch<Player>(actors)->GetTrans().pos));
 }

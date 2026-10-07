@@ -9,8 +9,6 @@
 
 #include "CameraEvent/CameraEventBase.h"
 
-#include "CameraCollOperator.h"
-
 // カメラ回転におけるマウス感度
 float CameraBase::mouseRotSensi = CameraBase::DEFAULT_MOUSE_ROT_SENSI;
 // カメラ回転におけるコントローラー感度
@@ -21,9 +19,7 @@ float CameraBase::smoothCameraMoveRate = CameraBase::DEFAULT_SMOOTH_CAMERA_MOVE_
 CameraBase::CameraBase(const Vector3& pos, const Vector3& angle, float fov) :
 	pos(pos), angle(angle), fov(fov),
 
-	cameraEvent(nullptr),
-
-	cameraCollOperator(nullptr)
+	cameraEvent(nullptr)
 {
 }
 
@@ -42,9 +38,6 @@ void CameraBase::Update(void)
 		// なければ通常の更新
 		NormalUpdate();
 	}
-
-	// カメラコライダーが生成されていたら更新
-	if (cameraCollOperator) { cameraCollOperator->Update(); }
 }
 
 void CameraBase::Apply(void) 
@@ -84,8 +77,6 @@ void CameraBase::Release(void)
 
 	// 現在イベントがあれば強制終了する
 	EndEvent();
-
-	cameraCollOperator = nullptr;
 }
 
 
@@ -112,15 +103,6 @@ void CameraBase::EndEvent(void)
 	cameraEvent->End(*this);
 	delete cameraEvent;
 	cameraEvent = nullptr;
-}
-
-void CameraBase::CreateCameraCollOperator(float radius)
-{
-	// すでに生成済みなら削除
-	if (cameraCollOperator) { delete cameraCollOperator; }
-
-	// 生成
-	cameraCollOperator = new CameraCollOperator(*this, radius);
 }
 
 bool CameraBase::RotationInput(Vector3& out)

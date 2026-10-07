@@ -28,7 +28,7 @@ public:
 
 	// “–‚½‚è”»’è‚Ì’Ê’m
 	void OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result)override {
-		if (other.GetTag() == COLLIDER_TAG::Camera) { nowIsUnderWater = true; SetIsDraw(false); }
+		if (other.GetTag() == COLLIDER_TAG::CameraPoint) { nowIsUnderWater = true; SetIsDraw(false); }
 	}
 
 	char UnderWaterPostEffectSwitch(void) {
