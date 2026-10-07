@@ -29,6 +29,8 @@
 #include "../../Object/CameraCollOperator/CameraPointCollOperator.h"
 #include "../../Object/CameraCollOperator/CameraLineCollOperator.h"
 
+#include "../../Object/SkyDome.h"
+
 #include "../../Object/Player/Player.h"
 
 #include "../../Object/Water.h"
@@ -40,6 +42,8 @@ GameScene::GameScene() : SceneBase()
 void GameScene::SubPostLoad(void)
 {
 	Snd::GetIns().ChangeScene("Game");
+
+	AddActor(new SkyDome);
 
 	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false));
 	AddActor(new IceBoxDebugObject(Vector3(1000, 100, 1000), Vector3::XZonly(-1500.0f, 1500.0f), false));

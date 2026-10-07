@@ -148,6 +148,7 @@
     <ClInclude Include="Src\Scene\Common\PostEffect\UnderWaterPostEffect\UnderWaterPostEffect.h" />
     <ClInclude Include="Src\Object\CameraCollOperator\CameraPointCollOperator.h" />
     <ClInclude Include="Src\Object\CameraCollOperator\CameraLineCollOperator.h" />
+    <ClInclude Include="Src\Object\SkyDome.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />
