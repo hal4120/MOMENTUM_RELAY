@@ -22,7 +22,8 @@ public:
 private:
 
 	void SubUpdate(void)override {
-		trans.AddAngleYDeg(0.5f);
+		trans.AddAngleYDeg(0.01f);
+		trans.Attach();
 	}
 
 };
