@@ -30,7 +30,7 @@ ActorBase::ActorBase() :
 	isGroundMaster(false),
 
 	isDraw(true),
-	drawType(ACTOR_DRAW_TYPE::Normal),
+	drawType(ACTOR_DRAW_TYPE::Default),
 
 	shader(nullptr),
 
@@ -55,7 +55,7 @@ ActorBase::ActorBase(const std::string& parameterPath) :
 	isGroundMaster(false),
 
 	isDraw(true),
-	drawType(ACTOR_DRAW_TYPE::Normal),
+	drawType(ACTOR_DRAW_TYPE::Default),
 
 	shader(nullptr),
 

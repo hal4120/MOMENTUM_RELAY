@@ -10,6 +10,7 @@
 #include "../../Manager/Font/FontManager.h"
 
 #include "../../Manager/Camera/FollowRemote/FollowRemoteCamera.h"
+#include "../../Manager/Camera/CameraCollOperator.h"
 
 #include "../SceneManager.h"
 
@@ -17,6 +18,8 @@
 
 #include "../Common/PostEffect/CRTPostEffect/CRTPostEffect.h"
 #include "../Common/PostEffect/FocusLinesPostEffect/FocusLinesPostEffect.h"
+
+#include "../Common/PostEffect/UnderWaterPostEffect/UnderWaterPostEffect.h"
 
 #include "../../Object/Common/DebugObject/BoxDebugObject.h"
 #include "../../Object/Common/DebugObject/IceBoxDebugObject.h"
@@ -63,13 +66,15 @@ void GameScene::SubPostUpdate(void)
 	static bool prevDebugKey = false, nowDebugKey = false, isPostEffect = false;
 	prevDebugKey = nowDebugKey;
 	nowDebugKey = CheckHitKey(KEY_INPUT_RSHIFT) == 1;
-
 	// Œˆ’è
 	if (!prevDebugKey && nowDebugKey) {
-		//SceneManager::GetIns().ChangeSceneFade(SCENE_ID::GameClear);
-		if (isPostEffect) { RemovePostEffect(); }
-		else { AddPostEffect(new FocusLinesPostEffect(1.5f, 18.0f, 100.0f)); }
-		isPostEffect = !isPostEffect;
+		SceneManager::GetIns().ChangeSceneFade(SCENE_ID::GameClear);
+	}
+
+	switch (ActorSerch<Water>(actors)->UnderWaterPostEffectSwitch()) {
+	case -1: { break; }
+	case 0: { RemovePostEffect<UnderWaterPostEffect>(); break; }
+	case 1: { AddPostEffect(new UnderWaterPostEffect()); break; }
 	}
 }
 
@@ -81,4 +86,8 @@ void GameScene::SubUiDraw(void)
 void GameScene::CreateCamera(void)
 {
 	camera = new FollowRemoteCamera(&ActorSerch<Player>(actors)->GetTrans().pos);
+
+	camera->CreateCameraCollOperator();
+
+	AddActor(camera->GetCameraCollOperator());
 }

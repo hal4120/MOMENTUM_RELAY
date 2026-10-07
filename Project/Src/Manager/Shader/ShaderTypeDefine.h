@@ -46,6 +46,9 @@ enum class PIXEL_SHADER_TYPE
     // 集中線ポストエフェクト
     FocusLines,
 
+	// 水中ポストエフェクト
+	UnderWater,
+
 #pragma endregion
 };
 

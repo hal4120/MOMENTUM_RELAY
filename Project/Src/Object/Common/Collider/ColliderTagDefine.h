@@ -25,6 +25,9 @@ enum class COLLIDER_TAG
 
 	Stage,
 	IceStage,
+	Water,
+
+	Camera,
 
 	DebugObject,
 };

@@ -6,6 +6,8 @@
 
 
 CRTPostEffect::CRTPostEffect(float intensity, float distortion) :
+	PostEffectBase(),
+
 	constBufferData{},
 	constBufferHandle(-1)
 {
@@ -20,7 +22,6 @@ CRTPostEffect::CRTPostEffect(float intensity, float distortion) :
 void CRTPostEffect::Init(void)
 {
 	// ピクセルシェーダーを取得
-	// ※ここは現在のShaderResourceManagerの取得方法に合わせる
 	ShaderResourceManager::GetIns().CreatePixelShader(PIXEL_SHADER_TYPE::CRT);
 	pixelShaderHandle = ShaderResourceManager::GetIns().GetPixelShader(PIXEL_SHADER_TYPE::CRT);
 
@@ -76,7 +77,4 @@ void CRTPostEffect::Release(void)
 		DeleteShaderConstantBuffer(constBufferHandle);
 		constBufferHandle = -1;
 	}
-
-	// pixelShaderHandleはShaderResourceManager所有なので
-	// ここではDeleteShaderしない
 }
