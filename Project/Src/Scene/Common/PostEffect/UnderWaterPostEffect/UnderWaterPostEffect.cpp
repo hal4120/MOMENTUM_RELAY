@@ -1,43 +1,46 @@
-#include "CRTPostEffect.h"
+#include "UnderWaterPostEffect.h"
 
 #include "../../../../pch.h"
 
 #include "../../../../Manager/Shader/ShaderResourceManager.h"
 
-
-CRTPostEffect::CRTPostEffect(float intensity, float distortion) :
+UnderWaterPostEffect::UnderWaterPostEffect() :
 	PostEffectBase(),
 
 	constBufferData{},
 	constBufferHandle(-1)
 {
 	constBufferData.time = 0.0f;
-	constBufferData.intensity = intensity;
-	constBufferData.distortion = distortion;
-	constBufferData.scanLineStrength = 0.15f;
+	constBufferData.intensity = 1.0f;
+	constBufferData.distortionStrength = 0.003f;
+	constBufferData.distortionSpeed = 2.0f;
 }
 
-
-// 初期化
-void CRTPostEffect::Init(void)
+void UnderWaterPostEffect::Init(void)
 {
 	// ピクセルシェーダーを取得
-	ShaderResourceManager::GetIns().CreatePixelShader(PIXEL_SHADER_TYPE::CRT);
-	pixelShaderHandle = ShaderResourceManager::GetIns().GetPixelShader(PIXEL_SHADER_TYPE::CRT);
+	ShaderResourceManager::GetIns().CreatePixelShader(PIXEL_SHADER_TYPE::UnderWater);
+	pixelShaderHandle = ShaderResourceManager::GetIns().GetPixelShader(PIXEL_SHADER_TYPE::UnderWater);
 
 	// 定数バッファを作成
 	constBufferHandle = CreateShaderConstantBuffer(sizeof(ConstBuffer));
 }
 
-// 更新
-void CRTPostEffect::Update(void)
+void UnderWaterPostEffect::Update(void)
 {
 	// 時間を進める
 	constBufferData.time += 1.0f / 60.0f;
 }
 
-// 固有パラメータを適用
-void CRTPostEffect::ApplyParameter(void)
+void UnderWaterPostEffect::Release(void)
+{
+	if (constBufferHandle >= 0) {
+		DeleteShaderConstantBuffer(constBufferHandle);
+		constBufferHandle = -1;
+	}
+}
+
+void UnderWaterPostEffect::ApplyParameter(void)
 {
 	if (constBufferHandle < 0) { return; }
 
@@ -61,20 +64,8 @@ void CRTPostEffect::ApplyParameter(void)
 	SetShaderConstantBuffer(constBufferHandle, DX_SHADERTYPE_PIXEL, 0);
 }
 
-
-// 固有パラメータをリセット
-void CRTPostEffect::ResetParameter(void)
+void UnderWaterPostEffect::ResetParameter(void)
 {
 	// PixelShaderのb0を解除
 	SetShaderConstantBuffer(-1, DX_SHADERTYPE_PIXEL, 0);
-}
-
-
-// 解放
-void CRTPostEffect::Release(void)
-{
-	if (constBufferHandle >= 0) {
-		DeleteShaderConstantBuffer(constBufferHandle);
-		constBufferHandle = -1;
-	}
 }

@@ -51,7 +51,7 @@ void Player::Load(void)
 	trans.scale = 1;
 
 	// モデルの中心点のズレの補正
-	trans.centerDiff = Vector3(0.0f, -102.81f, 0.0f) * trans.scale;
+	trans.centerDiff = Vector3(0.0f, -81.8f, 0.0f) * trans.scale;
 
 	// モデルの角度のズレの補正
 	trans.SetLocalRotation(Quaternion::FromRotationY(Deg2Rad(180.0f)));
@@ -78,9 +78,9 @@ void Player::Load(void)
 	AddCollider(
 		new CapsuleCollider(
 			COLLIDER_TAG::Player,
-			Vector3::Yonly(60.0f) * trans.scale,
-			Vector3::Yonly(-60.0f) * trans.scale,
-			60.0f * trans.scale.MaxElementF()
+			Vector3::Yonly(56.0f) * trans.scale,
+			Vector3::Yonly(-56.0f) * trans.scale,
+			25.0f * trans.scale.MaxElementF()
 		)
 	);
 
@@ -170,8 +170,8 @@ void Player::SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other)
 		DECEL_RATE = 3.0f;
 
 		if (postEffectFlg) {
-			SceneManager::GetIns().GetScene()->RemovePostEffect();
-			SceneManager::GetIns().GetScene()->RemovePostEffect();
+			SceneManager::GetIns().GetScene()->RemovePostEffect<FocusLinesPostEffect>();
+			SceneManager::GetIns().GetScene()->RemovePostEffect<CRTPostEffect>();
 			postEffectFlg = false;
 		}
 

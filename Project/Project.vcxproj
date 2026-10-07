@@ -170,6 +170,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Manager\Font\FontManager.cpp" />
     <ClCompile Include="Src\Manager\Shader\ShaderResourceManager.cpp" />
     <ClCompile Include="Src\Manager\TimeScale\TimeScale.cpp" />
+    <ClCompile Include="Src\Manager\Camera\CameraCollOperator.cpp" />
     <ClCompile Include="Src\Object\Common\AnimationController\AnimationController.cpp" />
     <ClCompile Include="Src\Manager\Collision\CollisionManager.cpp" />
     <ClCompile Include="Src\Manager\FPS\FPS.cpp" />
@@ -197,6 +198,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Scene\Common\PostEffect\FocusLinesPostEffect\FocusLinesPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\GrayScalePostEffect\GrayScalePostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\PostEffectBase.cpp" />
+    <ClCompile Include="Src\Scene\Common\PostEffect\UnderWaterPostEffect\UnderWaterPostEffect.cpp" />
     <ClCompile Include="Src\Scene\GameClear\GameClearScene.cpp" />
     <ClCompile Include="Src\Scene\Common\Fade\Default\DefaultFadeScene.cpp" />
     <ClCompile Include="Src\Scene\Common\Fade\FadeSceneBase.cpp" />
@@ -233,6 +235,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Manager\Shader\ShaderResourceManager.h" />
     <ClInclude Include="Src\Manager\Shader\ShaderTypeDefine.h" />
     <ClInclude Include="Src\Manager\TimeScale\TimeScale.h" />
+    <ClInclude Include="Src\Manager\Camera\CameraCollOperator.h" />
     <ClInclude Include="Src\Object\Common\ActorBase\ActorDrawTypeDefine.h" />
     <ClInclude Include="Src\Object\Common\CharacterBase\CharacterStateBase.h" />
     <ClInclude Include="Src\Object\Common\Collider\MeshCollider.h" />
@@ -276,6 +279,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Scene\Common\PostEffect\FocusLinesPostEffect\FocusLinesPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\GrayScalePostEffect\GrayScalePostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\PostEffectBase.h" />
+    <ClInclude Include="Src\Scene\Common\PostEffect\UnderWaterPostEffect\UnderWaterPostEffect.h" />
     <ClInclude Include="Src\Scene\GameClear\GameClearScene.h" />
     <ClInclude Include="Src\Scene\Common\Fade\Default\DefaultFadeScene.h" />
     <ClInclude Include="Src\Scene\Common\Fade\FadeDefine.h" />
@@ -427,6 +431,12 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     </FxCompile>
     <FxCompile Include="Src\Shader\PostEffect\SepiaPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PostEffect\UnderWaterPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Src\Shader\PostEffect\VignettePS.hlsl">

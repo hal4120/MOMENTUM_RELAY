@@ -125,7 +125,7 @@ void SceneBase::Draw(void)
 
 	// í èÌï`âÊ
 	SubPreDraw();
-	ActorsDraw(actors, ACTOR_DRAW_TYPE::Normal);
+	ActorsDraw(actors, ACTOR_DRAW_TYPE::Default);
 	SubPostDraw();
 
 	// îºìßñæï`âÊ
