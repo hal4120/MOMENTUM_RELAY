@@ -170,7 +170,8 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Manager\Font\FontManager.cpp" />
     <ClCompile Include="Src\Manager\Shader\ShaderResourceManager.cpp" />
     <ClCompile Include="Src\Manager\TimeScale\TimeScale.cpp" />
-    <ClCompile Include="Src\Manager\Camera\CameraCollOperator.cpp" />
+    <ClCompile Include="Src\Object\CameraCollOperator\CameraLineCollOperator.cpp" />
+    <ClCompile Include="Src\Object\CameraCollOperator\CameraPointCollOperator.cpp" />
     <ClCompile Include="Src\Object\Common\AnimationController\AnimationController.cpp" />
     <ClCompile Include="Src\Manager\Collision\CollisionManager.cpp" />
     <ClCompile Include="Src\Manager\FPS\FPS.cpp" />
@@ -235,7 +236,8 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Manager\Shader\ShaderResourceManager.h" />
     <ClInclude Include="Src\Manager\Shader\ShaderTypeDefine.h" />
     <ClInclude Include="Src\Manager\TimeScale\TimeScale.h" />
-    <ClInclude Include="Src\Manager\Camera\CameraCollOperator.h" />
+    <ClInclude Include="Src\Object\CameraCollOperator\CameraLineCollOperator.h" />
+    <ClInclude Include="Src\Object\CameraCollOperator\CameraPointCollOperator.h" />
     <ClInclude Include="Src\Object\Common\ActorBase\ActorDrawTypeDefine.h" />
     <ClInclude Include="Src\Object\Common\CharacterBase\CharacterStateBase.h" />
     <ClInclude Include="Src\Object\Common\Collider\MeshCollider.h" />

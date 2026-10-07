@@ -59,7 +59,8 @@
     <ClCompile Include="Src\Common\Quaternion.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerKickDownAttackState.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\UnderWaterPostEffect\UnderWaterPostEffect.cpp" />
-    <ClCompile Include="Src\Manager\Camera\CameraCollOperator.cpp" />
+    <ClCompile Include="Src\Object\CameraCollOperator\CameraPointCollOperator.cpp" />
+    <ClCompile Include="Src\Object\CameraCollOperator\CameraLineCollOperator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -145,7 +146,8 @@
     <ClInclude Include="Src\Object\Common\DebugObject\IceBoxDebugObject.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerKickDownAttackState.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\UnderWaterPostEffect\UnderWaterPostEffect.h" />
-    <ClInclude Include="Src\Manager\Camera\CameraCollOperator.h" />
+    <ClInclude Include="Src\Object\CameraCollOperator\CameraPointCollOperator.h" />
+    <ClInclude Include="Src\Object\CameraCollOperator\CameraLineCollOperator.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />
