@@ -147,55 +147,21 @@ void Player::SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other)
 {
 	ActorBase::SubOnGrounded(ownTag, other);
 
-	static bool postEffectFlg = false;
-
-	switch (other.GetTag())
-	{
+	switch (other.GetTag()) {
 
 	case COLLIDER_TAG::IceStage: {
-
+		nowIsOnIce = true;
 		DECEL_RATE = 0.05f;
-
-		if (!postEffectFlg) {
-			SceneManager::GetIns().GetScene()->AddPostEffect(new FocusLinesPostEffect(1.5f, 18.0f, 100.0f));
-			SceneManager::GetIns().GetScene()->AddPostEffect(new CRTPostEffect(1.0f, 0.05f));
-			postEffectFlg = true;
-		}
-
-		break;
+		break; 
 	}
 
-	default: {
-
-		DECEL_RATE = 3.0f;
-
-		if (postEffectFlg) {
-			SceneManager::GetIns().GetScene()->RemovePostEffect<FocusLinesPostEffect>();
-			SceneManager::GetIns().GetScene()->RemovePostEffect<CRTPostEffect>();
-			postEffectFlg = false;
-		}
-
-		break;
-	}
+	default: { DECEL_RATE = 3.0f; break; }
 
 	}
 }
 
 void Player::SubUpdate(void)
 {
-	//static char type = 0;
-	//static bool prev = false, now = false;
-
-	//prev = now;
-	//now = CheckHitKey(KEY_INPUT_SPACE) == 1;
-
-	//if (!prev && now) {
-
-	//	if (++type > 1) { type = 0; }
-
-	//	switch (type){
-	//	case 0: { CreateShader(new DefaultShader()); break; }
-	//	case 1: { CreateShader(new RimLightShader()); break; }
-	//	}
-	//}
+	prevIsOnIce = nowIsOnIce;
+	nowIsOnIce = false;
 }

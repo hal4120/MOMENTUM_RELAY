@@ -13,6 +13,8 @@
 
 #include "../SceneManager.h"
 
+#include "../../Object/Common/SkyBox/SkyBox.h"
+
 #include "../ActorUseDefine.h"
 
 #include "../Common/PostEffect/CRTPostEffect/CRTPostEffect.h"
@@ -29,8 +31,6 @@
 #include "../../Object/CameraCollOperator/CameraPointCollOperator.h"
 #include "../../Object/CameraCollOperator/CameraLineCollOperator.h"
 
-#include "../../Object/SkyDome.h"
-
 #include "../../Object/Player/Player.h"
 
 #include "../../Object/Water.h"
@@ -43,7 +43,7 @@ void GameScene::SubPostLoad(void)
 {
 	Snd::GetIns().ChangeScene("Game");
 
-	AddActor(new SkyDome);
+	skyBox = new SkyBox();
 
 	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false));
 	AddActor(new IceBoxDebugObject(Vector3(1000, 100, 1000), Vector3::XZonly(-1500.0f, 1500.0f), false));
@@ -60,6 +60,7 @@ void GameScene::SubPostLoad(void)
 
 void GameScene::SubPostInit(void)
 {
+	skyBox->Init();
 }
 
 void GameScene::SubPostUpdate(void)
@@ -77,6 +78,21 @@ void GameScene::SubPostUpdate(void)
 		SceneManager::GetIns().ChangeSceneFade(SCENE_ID::GameClear);
 	}
 
+
+	switch (ActorSerch<Player>(actors)->OnIcePostEffectSwitch()) {
+	case -1: { break; }
+	case 0: { 
+		RemovePostEffect<FocusLinesPostEffect>();
+		RemovePostEffect<CRTPostEffect>();
+		break; 
+	}
+	case 1: {
+		AddPostEffect(new FocusLinesPostEffect(1.5f, 18.0f, 100.0f));
+		AddPostEffect(new CRTPostEffect(1.0f, 0.05f));
+		break; 
+	}
+	}
+
 	switch (ActorSerch<Water>(actors)->UnderWaterPostEffectSwitch()) {
 	case -1: { break; }
 	case 0: { RemovePostEffect<UnderWaterPostEffect>(); break; }
@@ -84,9 +100,23 @@ void GameScene::SubPostUpdate(void)
 	}
 }
 
+void GameScene::SubPreDraw(void)
+{
+	skyBox->Draw();
+}
+
 void GameScene::SubUiDraw(void)
 {
 	DrawStringToHandle(0, 0, "ゲーム", 0xffffff, Font::GetIns().GetFont(FontKinds::Marumiya40));
+}
+
+void GameScene::SubPostRelease(void)
+{
+	if (skyBox != nullptr) {
+		skyBox->Release();
+		delete skyBox;
+		skyBox = nullptr;
+	}
 }
 
 void GameScene::CreateCamera(void)
@@ -94,7 +124,6 @@ void GameScene::CreateCamera(void)
 	camera = new FollowRemoteCamera(&ActorSerch<Player>(actors)->GetTrans().pos);
 
 	// カメラの当たり判定オペレーターを追加
-	AddActor(new CameraPointCollOperator(*camera));
-
+	AddActor(new CameraPointCollOperator(camera->GetPos()));
 	AddActor(new CameraLineCollOperator(camera->GetPos(), ActorSerch<Player>(actors)->GetTrans().pos));
 }

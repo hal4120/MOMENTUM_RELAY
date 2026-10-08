@@ -2,6 +2,8 @@
 
 #include"../SceneBase.h"
 
+class SkyBox;
+
 class GameScene : public SceneBase
 {
 public:
@@ -21,10 +23,18 @@ private:
 	// XV
 	void SubPostUpdate(void)override;
 
+	// •`‰æ
+	void SubPreDraw(void)override;
+
 	// UI•`‰æ
 	void SubUiDraw(void)override;
+
+	// ‰ğ•ú
+	void SubPostRelease(void)override;
 
 #pragma endregion
 
 	void CreateCamera(void)override;
+
+	SkyBox* skyBox;
 };

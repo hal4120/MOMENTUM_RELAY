@@ -1,40 +1,31 @@
 #pragma once
 
+#include <array>
+
+#include "../../../pch.h"
+
 class SkyBox
 {
 public:
 
-	SkyBox(float size = 1000.0f);
+    explicit SkyBox(float size = 1000.0f);
+    ~SkyBox() = default;
 
-	~SkyBox() = default;
-
-	// 初期化
-	void Init(void);
-
-	// 描画
-	void Draw(void);
-
-	// 解放
-	void Release(void);
-
-	// テクスチャを設定
-	void SetTexture(int texture);
+    void Init(void);
+    void Draw(void);
+    void Release(void);
 
 private:
 
-	// 1辺の長さ
-	float size;
+    static constexpr int VERTEX_NUM = 24;
+    static constexpr int INDEX_NUM = 36;
+    static constexpr int POLYGON_NUM = 12;
 
-	// 頂点バッファ
-	int vertexBuffer;
-	// インデックスバッファ
-	int indexBuffer;
+    float size;
 
-	// 頂点シェーダー
-	int vertexShader;
-	// ピクセルシェーダー
-	int pixelShader;
-	
-	// テクスチャ
-	int texture;
+    std::array<VERTEX3DSHADER, VERTEX_NUM> vertices;
+    std::array<unsigned short, INDEX_NUM> indices;
+
+    int vertexShader;
+    int pixelShader;
 };

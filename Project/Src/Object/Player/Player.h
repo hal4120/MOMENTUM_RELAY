@@ -14,6 +14,11 @@ public:
 	// ìñÇΩÇËîªíËÇÃí ím
 	void OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result)override;
 
+	char OnIcePostEffectSwitch(void) {
+		if (prevIsOnIce == nowIsOnIce) { return -1; }
+		return (char)nowIsOnIce;
+	}
+
 private:
 
 	// èÛë‘íËã`
@@ -90,4 +95,7 @@ private:
 	void SubUpdate(void)override;
 
 	void SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other)override;
+
+	bool nowIsOnIce = false;
+	bool prevIsOnIce = false;
 };
