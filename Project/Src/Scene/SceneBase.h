@@ -15,6 +15,8 @@ struct Vector2I;
 
 class PostEffectBase;
 
+class SkyBox;
+
 class SceneBase
 {
 public:
@@ -140,6 +142,9 @@ protected:
 	// 当たり判定管理クラスを使用するかどうか
 	virtual bool UseCollisionManager(void)const { return true; }
 
+	// スカイボックスを使用するかどうか
+	virtual bool UseSkyBox(void)const { return false; }
+
 private:
 
 	// 二重Load / 二重Releaseを防止する「状態」
@@ -154,6 +159,9 @@ private:
 	// ポストエフェクト用のスクリーンハンドル
 	int mainScreen;
 	int tempScreen[2];
+
+	// スカイボックス
+	SkyBox* skyBox;
 
 	// アクター描画関数
 	void ActorsDraw(const std::vector<ActorBase*>& actors, ACTOR_DRAW_TYPE drawType);

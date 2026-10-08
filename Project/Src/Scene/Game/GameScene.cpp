@@ -13,8 +13,6 @@
 
 #include "../SceneManager.h"
 
-#include "../../Object/Common/SkyBox/SkyBox.h"
-
 #include "../ActorUseDefine.h"
 
 #include "../Common/PostEffect/CRTPostEffect/CRTPostEffect.h"
@@ -43,8 +41,6 @@ void GameScene::SubPostLoad(void)
 {
 	Snd::GetIns().ChangeScene("Game");
 
-	skyBox = new SkyBox();
-
 	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false));
 	AddActor(new IceBoxDebugObject(Vector3(1000, 100, 1000), Vector3::XZonly(-1500.0f, 1500.0f), false));
 
@@ -60,7 +56,6 @@ void GameScene::SubPostLoad(void)
 
 void GameScene::SubPostInit(void)
 {
-	skyBox->Init();
 }
 
 void GameScene::SubPostUpdate(void)
@@ -77,7 +72,6 @@ void GameScene::SubPostUpdate(void)
 	if (!prevDebugKey && nowDebugKey) {
 		SceneManager::GetIns().ChangeSceneFade(SCENE_ID::GameClear);
 	}
-
 
 	switch (ActorSerch<Player>(actors)->OnIcePostEffectSwitch()) {
 	case -1: { break; }
@@ -100,23 +94,9 @@ void GameScene::SubPostUpdate(void)
 	}
 }
 
-void GameScene::SubPreDraw(void)
-{
-	skyBox->Draw();
-}
-
 void GameScene::SubUiDraw(void)
 {
 	DrawStringToHandle(0, 0, "ƒQ[ƒ€", 0xffffff, Font::GetIns().GetFont(FontKinds::Marumiya40));
-}
-
-void GameScene::SubPostRelease(void)
-{
-	if (skyBox != nullptr) {
-		skyBox->Release();
-		delete skyBox;
-		skyBox = nullptr;
-	}
 }
 
 void GameScene::CreateCamera(void)

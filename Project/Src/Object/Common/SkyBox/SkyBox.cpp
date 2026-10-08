@@ -2,13 +2,25 @@
 
 #include "../../../Manager/Shader/ShaderResourceManager.h"
 
+#include "../../../Manager/TimeScale/TimeScale.h"
+
 SkyBox::SkyBox(float size) :
     size(size),
+
     vertices{},
     indices{},
+
     vertexShader(-1),
-    pixelShader(-1)
+    pixelShader(-1),
+
+    cloudConstantBuffer(-1),
+    cloudParam{}
 {
+    cloudParam.time = 0.0f;
+    cloudParam.cloudScale = 1.5f;
+    cloudParam.cloudSpeed = 0.3f;
+    cloudParam.cloudCoverage = 0.52f;
+    cloudParam.cloudOpacity = 0.75f;
 }
 
 void SkyBox::Init(void)
@@ -86,33 +98,54 @@ void SkyBox::Init(void)
     shaderManager.CreateVertexShader(VERTEX_SHADER_TYPE::SkyBox);
     shaderManager.CreatePixelShader(PIXEL_SHADER_TYPE::SkyBox);
 
-    vertexShader = shaderManager.GetVertexShader(
-        VERTEX_SHADER_TYPE::SkyBox
-    );
+    vertexShader = shaderManager.GetVertexShader(VERTEX_SHADER_TYPE::SkyBox);
 
-    pixelShader = shaderManager.GetPixelShader(
-        PIXEL_SHADER_TYPE::SkyBox
-    );
+    pixelShader = shaderManager.GetPixelShader(PIXEL_SHADER_TYPE::SkyBox);
+
+    cloudConstantBuffer = CreateShaderConstantBuffer(sizeof(CloudParam));
+}
+
+void SkyBox::Update(void)
+{
+    // 60FPS想定で1フレーム分の時間を進める
+    cloudParam.time += (1.0f / 60.0f) * TimeScale::Get();
 }
 
 void SkyBox::Draw(void)
 {
-    if (vertexShader == -1 || pixelShader == -1)
+    if (vertexShader == -1 ||
+        pixelShader == -1 ||
+        cloudConstantBuffer == -1)
     {
         return;
     }
 
-    // 描画設定
     SetUseLighting(false);
 
     SetUseZBuffer3D(true);
     SetWriteZBuffer3D(false);
     SetZBufferCmpType(DX_CMP_LESSEQUAL);
-
-    // SkyBoxは内側から描画する
     SetUseBackCulling(false);
 
-    // シェーダー設定
+    // 定数バッファ更新
+    CloudParam* param = static_cast<CloudParam*>(
+        GetBufferShaderConstantBuffer(cloudConstantBuffer)
+        );
+
+    if (param != nullptr)
+    {
+        *param = cloudParam;
+
+        UpdateShaderConstantBuffer(cloudConstantBuffer);
+    }
+
+    // PSのb4へ設定
+    SetShaderConstantBuffer(
+        cloudConstantBuffer,
+        DX_SHADERTYPE_PIXEL,
+        4
+    );
+
     SetUseVertexShader(vertexShader);
     SetUsePixelShader(pixelShader);
 
@@ -124,22 +157,31 @@ void SkyBox::Draw(void)
         POLYGON_NUM
     );
 
-    // シェーダー解除
     SetUseVertexShader(-1);
     SetUsePixelShader(-1);
 
-    // 描画設定を戻す
-    SetUseBackCulling(true);
+    // 定数バッファ解除
+    SetShaderConstantBuffer(
+        -1,
+        DX_SHADERTYPE_PIXEL,
+        4
+    );
 
+    SetUseBackCulling(true);
     SetZBufferCmpType(DX_CMP_LESS);
     SetWriteZBuffer3D(true);
-
     SetUseLighting(true);
 }
 
 void SkyBox::Release(void)
 {
-    // シェーダーの実体はShaderResourceManagerが管理する
+    if (cloudConstantBuffer != -1)
+    {
+        DeleteShaderConstantBuffer(cloudConstantBuffer);
+        cloudConstantBuffer = -1;
+    }
+
+    // シェーダーの実体はShaderResourceManagerが管理
     vertexShader = -1;
     pixelShader = -1;
 }

@@ -1,47 +1,97 @@
+// 雲のパラメータ
+cbuffer CloudParam : register(b4)
+{
+    float time;
+    float cloudScale;
+    float cloudSpeed;
+    float cloudCoverage;
+
+    float cloudOpacity;
+    float3 padding;
+};
+
 struct SkyBoxInput
 {
     float4 svPos : SV_POSITION;
     float3 direction : TEXCOORD0;
 };
 
+// 疑似乱数
+float Hash(float2 p)
+{
+    return frac(
+        sin(dot(p, float2(127.1f, 311.7f))) *
+        43758.5453f
+    );
+}
+
+// 2D Value Noise
+float Noise(float2 p)
+{
+    float2 i = floor(p);
+    float2 f = frac(p);
+
+    // 滑らかな補間
+    f = f * f * (3.0f - 2.0f * f);
+
+    float a = Hash(i);
+    float b = Hash(i + float2(1.0f, 0.0f));
+    float c = Hash(i + float2(0.0f, 1.0f));
+    float d = Hash(i + float2(1.0f, 1.0f));
+
+    return lerp(
+        lerp(a, b, f.x),
+        lerp(c, d, f.x),
+        f.y
+    );
+}
+
+// 3層のノイズを合成
+float FBM(float2 p)
+{
+    float value = 0.0f;
+    float amplitude = 0.5f;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        value += Noise(p) * amplitude;
+
+        p *= 2.0f;
+        amplitude *= 0.5f;
+    }
+
+    return value / 0.875f;
+}
+
 float4 main(SkyBoxInput input) : SV_TARGET
 {
     float3 dir = normalize(input.direction);
 
-    // 上下方向
     float height = dir.y;
 
-    // 天頂の色
+    // ==============================
+    // 空のグラデーション
+    // ==============================
+
     float3 zenithColor = float3(
-        0.08f,
-        0.35f,
-        0.85f
+        0.08f, 0.35f, 0.85f
     );
 
-    // 地平線の色
     float3 horizonColor = float3(
-        0.65f,
-        0.85f,
-        1.0f
+        0.65f, 0.85f, 1.0f
     );
 
-    // 地平線より下の色
     float3 bottomColor = float3(
-        0.85f,
-        0.90f,
-        0.95f
+        0.85f, 0.90f, 0.95f
     );
 
-    float3 color;
+    float3 skyColor;
 
     if (height >= 0.0f)
     {
-        float t = saturate(height);
+        float t = pow(saturate(height), 0.65f);
 
-        // グラデーションを調整
-        t = pow(t, 0.65f);
-
-        color = lerp(
+        skyColor = lerp(
             horizonColor,
             zenithColor,
             t
@@ -49,14 +99,78 @@ float4 main(SkyBoxInput input) : SV_TARGET
     }
     else
     {
-        float t = saturate(-height);
-
-        color = lerp(
+        skyColor = lerp(
             horizonColor,
             bottomColor,
-            t
+            saturate(-height)
         );
     }
 
-    return float4(color, 1.0f);
+    // ==============================
+    // 雲の生成
+    // ==============================
+
+    // 地平線付近でUVが極端に大きくならないようにする
+    float safeHeight = max(height, 0.08f);
+
+    // 上空の仮想平面へ投影
+    float2 cloudUV = dir.xz / safeHeight;
+
+    cloudUV *= cloudScale;
+
+    // 時間経過による雲の移動
+    cloudUV += float2(
+        time * cloudSpeed,
+        time * cloudSpeed * 0.35f
+    );
+
+    // ノイズ生成
+    float noiseValue = FBM(cloudUV);
+
+    // 雲の輪郭
+    float cloud = smoothstep(
+        cloudCoverage - 0.12f,
+        cloudCoverage + 0.12f,
+        noiseValue
+    );
+
+    // 地平線付近では雲を消す
+    float horizonFade = smoothstep(
+        0.03f,
+        0.25f,
+        height
+    );
+
+    cloud *= horizonFade;
+
+    // 雲の透明度
+    cloud *= cloudOpacity;
+
+    // ==============================
+    // 雲の色
+    // ==============================
+
+    float3 cloudShadow = float3(
+        0.72f, 0.80f, 0.88f
+    );
+
+    float3 cloudLight = float3(
+        1.0f, 1.0f, 1.0f
+    );
+
+    // ノイズに応じて雲に濃淡をつける
+    float3 cloudColor = lerp(
+        cloudShadow,
+        cloudLight,
+        saturate(noiseValue * 1.5f)
+    );
+
+    // 空と雲を合成
+    float3 finalColor = lerp(
+        skyColor,
+        cloudColor,
+        saturate(cloud)
+    );
+
+    return float4(finalColor, 1.0f);
 }
