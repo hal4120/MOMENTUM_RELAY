@@ -161,11 +161,7 @@ void SkyBox::Draw(void)
     SetUsePixelShader(-1);
 
     // 定数バッファ解除
-    SetShaderConstantBuffer(
-        -1,
-        DX_SHADERTYPE_PIXEL,
-        4
-    );
+    SetShaderConstantBuffer(-1, DX_SHADERTYPE_PIXEL, 4);
 
     SetUseBackCulling(true);
     SetZBufferCmpType(DX_CMP_LESS);
