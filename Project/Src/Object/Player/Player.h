@@ -30,6 +30,8 @@ private:
 		Move,
 		Jump,
 
+		Attack,
+
 		Max
 	};
 
@@ -47,7 +49,9 @@ private:
 
 		JumpStart,
 		JumpLoop,
-		Stamp,
+		JumpEnd,
+
+		Totta,
 
 		Max
 	};
@@ -62,7 +66,9 @@ private:
 
 		2.0f,	// JumpStart
 		0.5f,	// JumpLoop
-		2.5f,	// Stamp
+		2.5f,	// JumpEnd,
+
+		1.0f,	// Totta
 	};
 
 	// アニメーションループ再生フラグテーブル
@@ -75,8 +81,31 @@ private:
 
 		false,	// JumpStart
 		true,	// JumpLoop
-		false,	// Stamp
+		false,	// JumpEnd
+
+		false,	// Totta
 	};
+
+	// アニメーションファイルパス
+	const std::string ANIME_FILE_PATH = "Data/Model/Player/Animation/";
+
+	// アニメーションの名前テーブル
+	const std::string ANIME_NAME_TABLE[(int)ANIME_TYPE::Max] =
+	{
+		"Idle",			// Idle
+
+		"Walk",			// Walk
+		"Run",			// Run
+
+		"JumpStart",	// JumpStart
+		"JumpLoop",		// JumpLoop
+		"JumpEnd",		// JumpEnd
+
+		"Totta",		// Totta
+	};
+
+	// アニメーションファイル拡張子
+	const std::string ANIME_FILE_EXTENSION = ".mv1";
 
 #pragma endregion
 

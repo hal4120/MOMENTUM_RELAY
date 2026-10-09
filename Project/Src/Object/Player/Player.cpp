@@ -14,9 +14,12 @@
 #include "../Common/Shader/RimLightShader.h"
 #include "../Common/Shader/WaterShader.h"
 
+#include "Wepon/PlayerKickDownAttackCollOperator.h"
+
 #include "State/PlayerIdleState.h"
 #include "State/PlayerMoveState.h"
 #include "State/PlayerJumpState.h"
+#include "State/PlayerKickDownAttackState.h"
 
 Player::Player() : CharacterBase()
 {
@@ -24,7 +27,6 @@ Player::Player() : CharacterBase()
 
 void Player::Load(void)
 {
-
 #pragma region オブジェクト設定
 
 	// 動的オブジェクトとしての処理を有効にする
@@ -41,7 +43,6 @@ void Player::Load(void)
 
 #pragma endregion
 
-
 #pragma region モデル設定
 
 	// モデルの読み込み
@@ -51,7 +52,7 @@ void Player::Load(void)
 	trans.scale = 1;
 
 	// モデルの中心点のズレの補正
-	trans.centerDiff = Vector3(0.0f, -81.8f, 0.0f) * trans.scale;
+	trans.centerDiff = Vector3(0.0f, -82.5f, 0.0f) * trans.scale;
 
 	// モデルの角度のズレの補正
 	trans.SetLocalRotation(Quaternion::FromRotationY(Deg2Rad(180.0f)));
@@ -61,36 +62,42 @@ void Player::Load(void)
 
 #pragma endregion
 
-
 #pragma region アニメーション読み込み
 
 	// アニメーションコントローラーの生成
 	CreateAnimationController();
 
 	// アニメーションの読み込み
-	AddInFbxAnimation((int)ANIME_TYPE::Max, ANIME_SPEED_TABLE, ANIME_LOOP_TABLE);
+	for (int i = 0; i < (int)ANIME_TYPE::Max; i++) {
+		AddAnimation(
+			i,
+			ANIME_SPEED_TABLE[i],
+			ANIME_LOOP_TABLE[i],
+			(ANIME_FILE_PATH + ANIME_NAME_TABLE[i] + ANIME_FILE_EXTENSION).c_str()
+		);
+	}
 
 #pragma endregion
-
 
 #pragma region コライダーの生成
 
 	AddCollider(
 		new CapsuleCollider(
 			COLLIDER_TAG::Player,
-			Vector3::Yonly(56.0f) * trans.scale,
-			Vector3::Yonly(-56.0f) * trans.scale,
+			Vector3::Yonly(57.5f) * trans.scale,
+			Vector3::Yonly(-57.5f) * trans.scale,
 			25.0f * trans.scale.MaxElementF()
 		)
 	);
 
 #pragma endregion
 
-
 #pragma region 下位アクターの生成
 
-#pragma endregion
+	PlayerKickDownAttackCollOperator* kickDownAttackCollOperator = new PlayerKickDownAttackCollOperator(10.0f, Vector3::Zonly(50.0f), trans);
+	AddChildActor(kickDownAttackCollOperator);
 
+#pragma endregion
 
 #pragma region 状態設定
 
@@ -120,8 +127,20 @@ void Player::Load(void)
 			std::bind(&Player::MoveAccel, this, std::placeholders::_1),
 			[&]() { AnimePlay(ANIME_TYPE::JumpStart); },
 			[&]() { AnimePlay(ANIME_TYPE::JumpLoop); },
-			[&]() { AnimePlay(ANIME_TYPE::Stamp); },
+			[&]() { AnimePlay(ANIME_TYPE::JumpEnd); },
 			std::bind(&Player::IsAnimeEnd, this),
+			[&]() { ChangeState(STATE::Idle); }
+		)
+	);
+
+	// 攻撃状態
+	AddState(
+		STATE::Attack,
+		new PlayerKickDownAttackState(
+			0.5f, 0.7f,
+			*kickDownAttackCollOperator,
+			[&]() { AnimePlay(ANIME_TYPE::Totta); },
+			std::bind(&Player::GetAnimeRatio, this),
 			[&]() { ChangeState(STATE::Idle); }
 		)
 	);
@@ -135,6 +154,11 @@ void Player::Load(void)
 	RegisterStateTransition(STATE::Idle, STATE::Jump);
 	// 「移動状態」->「ジャンプ状態」の自動遷移登録
 	RegisterStateTransition(STATE::Move, STATE::Jump);
+
+	// 「待機状態」->「攻撃状態」の自動遷移登録
+	RegisterStateTransition(STATE::Idle, STATE::Attack);
+	// 「移動状態」->「攻撃状態」の自動遷移登録
+	RegisterStateTransition(STATE::Move, STATE::Attack);
 
 #pragma endregion
 }
