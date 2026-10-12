@@ -51,7 +51,7 @@ void FollowYawCamera::NormalUpdate(void)
 		rotInput.x = rotInput.z = 0.0f;
 
 		// ‰ñ“]
-		controlAngle += (rotInput * ROT_POWER) * TimeScale::Get();
+		controlAngle += (rotInput * ROT_POWER) * GetTimeScale();
 
 		// ‰ñ“]‚Ì”’l§Œä
 		if (controlAngle.y <= Deg2Rad(0.0f)) { controlAngle.y += Deg2Rad(360.0f); }

@@ -154,6 +154,8 @@ struct Transform
 	/// <param name="path">エフェクトのパス（Data/Effect/～.efk）</param>
 	void LoadEffect(std::string path);
 
+	/// モデル描画に使用するワールド変換行列を取得する
+	MATRIX GetWorldMatrix(void) const;
 
 	// Transform情報をモデルに適用
 	void Attach(void);

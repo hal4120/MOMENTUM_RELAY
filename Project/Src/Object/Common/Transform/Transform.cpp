@@ -135,15 +135,16 @@ void Transform::LoadEffect(std::string path)
 	model = LoadEffekseerEffect(("Data/Effect/" + path + ".efk").c_str());
 }
 
-void Transform::Attach(void)
+MATRIX Transform::GetWorldMatrix(void) const
 {
-	if (model == -1) { return; }
-
-	// 最終的な回転
+	// 最終回転
 	const MATRIX rotationMat = FinalRotationMat();
 
-	// centerDiffも最終的なモデル姿勢に合わせて回転させる。
-	const Vector3 drawPos = pos + Vector3(VTransform(centerDiff.ToVECTOR(), rotationMat));
+	// 描画座標
+	const Vector3 drawPos =
+		pos + Vector3(
+			VTransform(centerDiff.ToVECTOR(), rotationMat)
+		);
 
 	// スケール
 	MATRIX modelMat = MGetScale(scale.ToVECTOR());
@@ -152,10 +153,19 @@ void Transform::Attach(void)
 	modelMat = MMult(modelMat, rotationMat);
 
 	// 座標
-	modelMat = MMult(modelMat, MGetTranslate(drawPos.ToVECTOR()));
+	modelMat = MMult(
+		modelMat,
+		MGetTranslate(drawPos.ToVECTOR())
+	);
 
-	// モデルへ適用
-	MV1SetMatrix(model, modelMat);
+	return modelMat;
+}
+
+void Transform::Attach(void)
+{
+	if (model == -1) { return; }
+
+	MV1SetMatrix(model, GetWorldMatrix());
 }
 
 void Transform::Draw(void)

@@ -64,8 +64,12 @@ bool MeshCollider::BVHNode::IsLeaf(void)const
 	return left < 0 && right < 0;
 }
 
-MeshCollider::MeshCollider(COLLIDER_TAG type, const Vector3& pos, const Quaternion& rotation) :
+MeshCollider::MeshCollider(COLLIDER_TAG type, int frameIndex, const Vector3& pos, const Quaternion& rotation) :
 	ColliderBase(type, pos, rotation),
+
+	modelHandle(-1),
+	frameIndex(frameIndex),
+
 	triangles(),
 	triangleIndices(),
 	bvhNodes(),
@@ -75,36 +79,61 @@ MeshCollider::MeshCollider(COLLIDER_TAG type, const Vector3& pos, const Quaterni
 }
 
 MeshCollider::MeshCollider(COLLIDER_TAG type, int modelHandle, int frameIndex, const Vector3& pos, const Quaternion& rotation) :
-	MeshCollider(type, pos, rotation)
+	MeshCollider(type, frameIndex, pos, rotation)
 {
-	SetupFromModel(modelHandle, frameIndex);
+	this->modelHandle = modelHandle;
+}
+
+void MeshCollider::Init(void)
+{
+	SetupFromModel((modelHandle == -1) ? GetTransform().model : modelHandle, frameIndex);
 }
 
 bool MeshCollider::SetupFromModel(int modelHandle, int frameIndex)
 {
 	Clear();
 
-	if (modelHandle < 0) { return false; }
+	if (modelHandle < 0) {
+		return false;
+	}
 
-	/*
-		参照メッシュはローカル座標で取得する。
-		三角形を毎フレームワールド変換せず、
-		判定時にBVHから得た候補だけをワールド座標へ変換する。
-	*/
-	const MV1_REF_POLYGONLIST referenceMesh = MV1GetReferenceMesh(modelHandle, frameIndex, true, true);
+	// モデルに設定されているワールド変換を取得
+	const MATRIX modelMat = MV1GetMatrix(modelHandle);
+	const MATRIX inverseModelMat = MInverse(modelMat);
 
-	if (referenceMesh.PolygonNum <= 0 || referenceMesh.Polygons == nullptr) { return false; }
+	const MV1_REF_POLYGONLIST referenceMesh =
+		MV1GetReferenceMesh(modelHandle, frameIndex, true, true);
 
-	triangles.reserve(static_cast<size_t>(referenceMesh.PolygonNum));
+	if (referenceMesh.PolygonNum <= 0 ||
+		referenceMesh.Polygons == nullptr ||
+		referenceMesh.Vertexs == nullptr)
+	{
+		return false;
+	}
 
-	for (int i = 0; i < referenceMesh.PolygonNum; i++) {
+	triangles.reserve(referenceMesh.PolygonNum);
+
+	for (int i = 0; i < referenceMesh.PolygonNum; ++i)
+	{
 		const MV1_REF_POLYGON& polygon = referenceMesh.Polygons[i];
 
-		triangles.emplace_back(
-			Vector3(referenceMesh.Vertexs[polygon.VIndex[0]].Position),
-			Vector3(referenceMesh.Vertexs[polygon.VIndex[1]].Position),
-			Vector3(referenceMesh.Vertexs[polygon.VIndex[2]].Position)
-		);
+		// ワールド座標からモデルローカル座標に戻す
+		const Vector3 p0 = Vector3(VTransform(
+			referenceMesh.Vertexs[polygon.VIndex[0]].Position,
+			inverseModelMat
+		));
+
+		const Vector3 p1 = Vector3(VTransform(
+			referenceMesh.Vertexs[polygon.VIndex[1]].Position,
+			inverseModelMat
+		));
+
+		const Vector3 p2 = Vector3(VTransform(
+			referenceMesh.Vertexs[polygon.VIndex[2]].Position,
+			inverseModelMat
+		));
+
+		triangles.emplace_back(p0, p1, p2);
 	}
 
 	BuildBVH();
@@ -295,59 +324,39 @@ unsigned int MeshCollider::GetTriangleNum(void)const
 
 Vector3 MeshCollider::ToWorldPoint(
 	const Vector3& localPoint
-)const
+) const
 {
-	const Transform& transform = GetTransform();
+	const MATRIX worldMat = GetTransform().GetWorldMatrix();
 
-	Vector3 scaled = localPoint * transform.scale;
-	Vector3 rotated = scaled.TransMat(GetRotationMat());
-
-	return GetPos() + rotated;
+	return Vector3(
+		VTransform(localPoint.ToVECTOR(), worldMat)
+	);
 }
 
 Vector3 MeshCollider::ToLocalPoint(
 	const Vector3& worldPoint
-)const
+) const
 {
-	const Transform& transform = GetTransform();
+	const MATRIX inverseMat =
+		MInverse(GetTransform().GetWorldMatrix());
 
-	const MATRIX inverseAngle =
-		MInverse(GetRotationMat());
-
-	Vector3 local =
-		(worldPoint - GetPos()).TransMat(
-			inverseAngle
-		);
-
-	constexpr float epsilon = 0.000001f;
-
-	local.x =
-		(std::abs(transform.scale.x) > epsilon) ?
-		local.x / transform.scale.x :
-		0.0f;
-
-	local.y =
-		(std::abs(transform.scale.y) > epsilon) ?
-		local.y / transform.scale.y :
-		0.0f;
-
-	local.z =
-		(std::abs(transform.scale.z) > epsilon) ?
-		local.z / transform.scale.z :
-		0.0f;
-
-	return local;
+	return Vector3(
+		VTransform(worldPoint.ToVECTOR(), inverseMat)
+	);
 }
 
 Vector3 MeshCollider::ToWorldDirection(
 	const Vector3& localDirection
-)const
+) const
 {
-	Vector3 direction =
-		localDirection.TransMat(GetRotationMat());
+	Vector3 direction = Vector3(
+		VTransformSR(
+			localDirection.ToVECTOR(),
+			GetTransform().FinalRotationMat()
+		)
+	);
 
-	if (direction.LengthSq() > 0.000001f)
-	{
+	if (direction.LengthSq() > 0.000001f) {
 		direction.Normalize();
 	}
 
@@ -356,15 +365,19 @@ Vector3 MeshCollider::ToWorldDirection(
 
 Vector3 MeshCollider::ToLocalDirection(
 	const Vector3& worldDirection
-)const
+) const
 {
-	Vector3 direction =
-		worldDirection.TransMat(
-			MInverse(GetRotationMat())
-		);
+	const MATRIX inverseRotation =
+		MInverse(GetTransform().FinalRotationMat());
 
-	if (direction.LengthSq() > 0.000001f)
-	{
+	Vector3 direction = Vector3(
+		VTransformSR(
+			worldDirection.ToVECTOR(),
+			inverseRotation
+		)
+	);
+
+	if (direction.LengthSq() > 0.000001f) {
 		direction.Normalize();
 	}
 

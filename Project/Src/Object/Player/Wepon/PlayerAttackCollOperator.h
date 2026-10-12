@@ -4,16 +4,16 @@
 
 class SphereCollider;
 
-class PlayerKickDownAttackCollOperator : public ActorBase
+class PlayerAttackCollOperator : public ActorBase
 {
 public:
-	PlayerKickDownAttackCollOperator(
+	PlayerAttackCollOperator(
 		float COLL_RADIUS,
 		const Vector3& COLL_LOCAL_POS,
 
 		const Transform& playerTrans
 	);
-	~PlayerKickDownAttackCollOperator()override = default;
+	~PlayerAttackCollOperator()override = default;
 
 	void Load(void)override;
 

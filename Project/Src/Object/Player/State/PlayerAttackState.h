@@ -6,9 +6,9 @@
 
 struct Transform;
 
-class PlayerKickDownAttackCollOperator;
+class PlayerAttackCollOperator;
 
-class PlayerKickDownAttackState : public CharacterStateBase
+class PlayerAttackState : public CharacterStateBase
 {
 public:
 
@@ -21,11 +21,11 @@ public:
 	/// <param name="playAnimeAttack"></param>
 	/// <param name="getAnimeRatio"></param>
 	/// <param name="changeStateIdle"></param>
-	PlayerKickDownAttackState(
+	PlayerAttackState(
 		float COLL_START_TIME,
 		float COLL_END_TIME,
 
-		PlayerKickDownAttackCollOperator& collOperator,
+		PlayerAttackCollOperator& collOperator,
 
 		std::function<void(void)> playAnimeAttack,
 		std::function<float(void)> getAnimeRatio,
@@ -33,7 +33,7 @@ public:
 		std::function<void(void)> changeStateIdle
 	);
 
-	~PlayerKickDownAttackState()override = default;
+	~PlayerAttackState()override = default;
 
 	// 自分の状態に遷移する条件関数
 	void OwnStateConditionUpdate(void);
@@ -72,7 +72,7 @@ private:
 #pragma region 受け取る参照変数・関数
 
 	// 攻撃の当たり判定管理クラスの参照
-	PlayerKickDownAttackCollOperator& collOperator;
+	PlayerAttackCollOperator& collOperator;
 
 	// 攻撃アニメーションの再生関数のポインタ
 	const std::function<void(void)> playAnimeAttack;

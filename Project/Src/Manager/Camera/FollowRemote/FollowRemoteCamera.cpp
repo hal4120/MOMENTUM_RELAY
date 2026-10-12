@@ -47,7 +47,7 @@ void FollowRemoteCamera::NormalUpdate(void)
 	Vector3 rotInput = Vector3();
 	if (RotationInput(rotInput)) {
 
-		controlAngle += (rotInput * ROT_POWER) * TimeScale::Get();
+		controlAngle += (rotInput * ROT_POWER) * GetTimeScale();
 
 		// âÒì]ÇÃêîílêßå‰
 		if (controlAngle.y <= Deg2Rad(0.0f)) { controlAngle.y += Deg2Rad(360.0f); }

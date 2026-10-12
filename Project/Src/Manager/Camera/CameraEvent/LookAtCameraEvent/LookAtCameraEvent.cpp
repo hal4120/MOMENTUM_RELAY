@@ -33,7 +33,7 @@ LookAtCameraEvent::LookAtCameraEvent(const Vector3& lookAtPos, const Vector3 loo
 
 void LookAtCameraEvent::Update(CameraBase& camera)
 {
-	currentFrame += TimeScale::Get();
+	currentFrame += camera.GetTimeScale();
 
 	// カメラから注視点へ向かうベクトル
 	Vector3 vec = (lookAtPos + lookAtOffset) - camera.GetPos();

@@ -37,7 +37,7 @@ public:
 	~MeshDebugObject() = default;
 
 	void Load(void)override {
-		AddCollider(new MeshCollider(COLLIDER_TAG::DebugObject, trans.model));
+		AddCollider(new MeshCollider(COLLIDER_TAG::DebugObject));
 	}
 
 private:

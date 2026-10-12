@@ -78,6 +78,9 @@ void ActorBase::Init(void)
 
 	// モデル制御情報の適用
 	trans.Attach();
+
+	// コライダーの初期化
+	for (ColliderBase* collider : colliders) { collider->Init(); }
 	
 	// パラメータの解放
 	if (parameter != nullptr) {
