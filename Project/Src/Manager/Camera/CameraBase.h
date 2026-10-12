@@ -58,6 +58,9 @@ public:
 	// 視野角
 	float GetFov(void)const { return fov; }
 
+	// 現在の時間倍率
+	float GetTimeScale(void)const;
+
 	// カメラ回転におけるマウス感度
 	static float GetMouseSensi(void) { return mouseRotSensi; }
 	// カメラ回転におけるコントローラー感度
@@ -75,6 +78,9 @@ public:
 	void SetAngle(const Vector3& angle) { this->angle = angle; }
 	// 視野角
 	void SetFov(float fov) { this->fov = fov; }
+
+	// 時間倍率を適用するか
+	void SetUseTimeScale(bool flg) { useTimeScale = flg; }
 
 	// カメラ回転におけるマウス感度
 	static void SetMouseSensi(float sensi) { mouseRotSensi = sensi; }
@@ -149,6 +155,9 @@ private:
 
 	// カメラ移動における補間数値
 	static float smoothCameraMoveRate;
+
+	// 時間倍率を適用するかどうか
+	bool useTimeScale;
 
 	// イベントカメラ
 	CameraEventBase* cameraEvent;

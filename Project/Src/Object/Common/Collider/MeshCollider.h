@@ -50,7 +50,7 @@ public:
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
-	MeshCollider(COLLIDER_TAG type, const Vector3& pos = Vector3(), const Quaternion& rotation = Quaternion());
+	MeshCollider(COLLIDER_TAG type, int frameIndex = -1, const Vector3& pos = Vector3(), const Quaternion& rotation = Quaternion());
 
 	/// <summary>
 	/// モデルハンドルから三角形情報を構築するコンストラクタ
@@ -58,6 +58,9 @@ public:
 	MeshCollider(COLLIDER_TAG type, int modelHandle, int frameIndex = -1, const Vector3& pos = Vector3(), const Quaternion& rotation = Quaternion());
 
 	~MeshCollider()override = default;
+
+	// 初期化
+	void Init(void)override;
 
 	/// <summary>
 	/// DxLibモデルの参照メッシュから三角形情報とBVHを構築
@@ -114,6 +117,12 @@ private:
 
 	// 1葉ノードに格納する最大三角形数
 	static constexpr unsigned int LEAF_TRIANGLE_COUNT = 8;
+
+	// 参照Transform以外でのモデルハンドルを使う場合
+	int modelHandle;
+
+	// フレームインデックス
+	int frameIndex;
 
 	// 三角形一覧
 	std::vector<Triangle> triangles;

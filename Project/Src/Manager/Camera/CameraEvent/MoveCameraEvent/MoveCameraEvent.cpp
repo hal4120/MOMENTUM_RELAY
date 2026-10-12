@@ -41,7 +41,7 @@ void MoveCameraEvent::Start(CameraBase& camera)
 
 void MoveCameraEvent::Update(CameraBase& camera)
 {
-    currentFrame += TimeScale::Get();
+    currentFrame += camera.GetTimeScale();
 
     float rate = currentFrame / maxFrame;
 

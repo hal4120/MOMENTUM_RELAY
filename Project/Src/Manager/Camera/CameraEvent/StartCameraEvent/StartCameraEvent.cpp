@@ -2,8 +2,6 @@
 
 #include <algorithm>
 
-#include "../../../TimeScale/TimeScale.h"
-
 #include "../../CameraBase.h"
 
 StartCameraEvent::StartCameraEvent(const Vector3& startPos, const Vector3& startAngle, float startFov, float frame) :
@@ -47,7 +45,7 @@ void StartCameraEvent::Start(CameraBase& camera)
 
 void StartCameraEvent::Update(CameraBase& camera)
 {
-    currentFrame += TimeScale::Get();
+    currentFrame += camera.GetTimeScale();
 
     float rate = currentFrame / maxFrame;
 

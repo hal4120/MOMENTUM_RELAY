@@ -1,16 +1,16 @@
-#include "PlayerKickDownAttackState.h"
+#include "PlayerAttackState.h"
 
 #include "../../Common/Transform/Transform.h"
 
 #include "../../../Manager/Input/InputManager.h"
 
-#include "../Wepon/PlayerKickDownAttackCollOperator.h"
+#include "../Wepon/PlayerAttackCollOperator.h"
 
-PlayerKickDownAttackState::PlayerKickDownAttackState(
+PlayerAttackState::PlayerAttackState(
 	float COLL_START_TIME,
 	float COLL_END_TIME,
 
-	PlayerKickDownAttackCollOperator& collOperator,
+	PlayerAttackCollOperator& collOperator,
 
 	std::function<void(void)> playAnimeAttack,
 	std::function<float(void)> getAnimeRatio,
@@ -31,14 +31,14 @@ PlayerKickDownAttackState::PlayerKickDownAttackState(
 {
 }
 
-void PlayerKickDownAttackState::OwnStateConditionUpdate(void)
+void PlayerAttackState::OwnStateConditionUpdate(void)
 {
 	if (Input::GetIns().GetInfo(KEY_TYPE::PlayerKickDownAttack).down) {
 		OwnChangeState();
 	}
 }
 
-void PlayerKickDownAttackState::Enter(void)
+void PlayerAttackState::Enter(void)
 {
 	// ステップを「前隙」へ
 	step = STEP::Startup;
@@ -50,7 +50,7 @@ void PlayerKickDownAttackState::Enter(void)
 	playAnimeAttack();
 }
 
-void PlayerKickDownAttackState::Update(void)
+void PlayerAttackState::Update(void)
 {
 	// アニメーションの再生割合を取得
 	const float animeRatio = getAnimeRatio();
@@ -58,7 +58,7 @@ void PlayerKickDownAttackState::Update(void)
 	// ステップ別更新
 	switch (step) {
 
-	case PlayerKickDownAttackState::STEP::Startup: {
+	case PlayerAttackState::STEP::Startup: {
 		// 前隙
 
 		// 攻撃判定発生開始
@@ -74,7 +74,7 @@ void PlayerKickDownAttackState::Update(void)
 		break;
 	}
 
-	case PlayerKickDownAttackState::STEP::Active: {
+	case PlayerAttackState::STEP::Active: {
 		// 攻撃判定発生中
 
 		// 当たり判定を追従
@@ -92,7 +92,7 @@ void PlayerKickDownAttackState::Update(void)
 		break;
 	}
 
-	case PlayerKickDownAttackState::STEP::Recovery: {
+	case PlayerAttackState::STEP::Recovery: {
 		// 後隙
 
 		// アニメーション再生終了で強制的に待機状態へ
@@ -108,7 +108,7 @@ void PlayerKickDownAttackState::Update(void)
 	}
 }
 
-void PlayerKickDownAttackState::Exit(void)
+void PlayerAttackState::Exit(void)
 {
 	// 当たり判定を消去
 	collOperator.Off();

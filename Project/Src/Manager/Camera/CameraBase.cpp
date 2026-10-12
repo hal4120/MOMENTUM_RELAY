@@ -19,6 +19,8 @@ float CameraBase::smoothCameraMoveRate = CameraBase::DEFAULT_SMOOTH_CAMERA_MOVE_
 CameraBase::CameraBase(const Vector3& pos, const Vector3& angle, float fov) :
 	pos(pos), angle(angle), fov(fov),
 
+	useTimeScale(true),
+
 	cameraEvent(nullptr)
 {
 }
@@ -79,6 +81,10 @@ void CameraBase::Release(void)
 	EndEvent();
 }
 
+float CameraBase::GetTimeScale(void)const
+{
+	return (useTimeScale) ? TimeScale::Get() : 1.0f;
+}
 
 #pragma region ÉCÉxÉìÉgä÷êî
 

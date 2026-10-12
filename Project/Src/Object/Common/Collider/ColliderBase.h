@@ -63,6 +63,8 @@ public:
 
 	virtual ~ColliderBase() = default;
 
+	// 初期化
+	virtual void Init(void) {}
 
 	// デバッグ描画
 	virtual void DrawDebug(unsigned int color = 0xffffff) = 0;

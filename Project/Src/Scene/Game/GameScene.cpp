@@ -29,6 +29,8 @@
 #include "../../Object/CameraCollOperator/CameraPointCollOperator.h"
 #include "../../Object/CameraCollOperator/CameraLineCollOperator.h"
 
+#include "../../Object/TestStage.h"
+
 #include "../../Object/Player/Player.h"
 
 #include "../../Object/Water.h"
@@ -41,17 +43,18 @@ void GameScene::SubPostLoad(void)
 {
 	Snd::GetIns().ChangeScene("Game");
 
-	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false));
+	//AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false));
 	AddActor(new IceBoxDebugObject(Vector3(1000, 100, 1000), Vector3::XZonly(-1500.0f, 1500.0f), false));
 
 	//AddActor(new CapsuleDebugObject(Vector3(50, 0, 0), Vector3(-50, 0, 0), 50.0f, Vector3(), true, true, true, 50, true));
+	AddActor(new TestStage);
 	AddActor(new Player);
 	AddActor(new Water);
 
-	for (int i = 0; i < 50; i++) {
-		AddActor(new SphereDebugObject(50.0f, Vector3::Xonly(10.0f * 25 - (10.0f * i))));
-		AddActor(new SphereDebugObject(50.0f, Vector3::Zonly(10.0f * 25 - (10.0f * i))));
-	}
+	//for (int i = 0; i < 50; i++) {
+	//	AddActor(new SphereDebugObject(50.0f, Vector3::Xonly(10.0f * 25 - (10.0f * i))));
+	//	AddActor(new SphereDebugObject(50.0f, Vector3::Zonly(10.0f * 25 - (10.0f * i))));
+	//}
 }
 
 void GameScene::SubPostInit(void)

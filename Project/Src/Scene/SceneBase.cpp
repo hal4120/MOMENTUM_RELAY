@@ -61,8 +61,6 @@ void SceneBase::Load(void)
 	// シーンごとに独立したカメラを生成する
 	CreateCamera();
 
-	// 全Actorが追加された後、巨大な静的オブジェクト等のチャンクを一度構築する
-	if (collision != nullptr) { collision->InitBuildChunks(); }
 
 	// スカイボックスを生成
 	if (UseSkyBox()) { skyBox = new SkyBox(); }
@@ -85,6 +83,9 @@ void SceneBase::Init(void)
 
 	// シーンが所有するActorをすべて初期化する
 	for (ActorBase* actor : actors) { actor->Init(); }
+
+	// 全Actorが追加された後、巨大な静的オブジェクト等のチャンクを一度構築する
+	if (collision != nullptr) { collision->InitBuildChunks(); }
 
 	// 派生先の初期化（後）
 	SubPostInit();
@@ -155,7 +156,7 @@ void SceneBase::Draw(void)
 	ActorsColliderDebugDraw(actors);
 
 	// デバッグ用チャンク描画
-	if (collision != nullptr && camera != nullptr) { collision->DrawChunkGrid(camera->GetPos()); }
+	//if (collision != nullptr && camera != nullptr) { collision->DrawChunkGrid(camera->GetPos()); }
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 

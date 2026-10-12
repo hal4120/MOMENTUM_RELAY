@@ -14,12 +14,12 @@
 #include "../Common/Shader/RimLightShader.h"
 #include "../Common/Shader/WaterShader.h"
 
-#include "Wepon/PlayerKickDownAttackCollOperator.h"
+#include "Wepon/PlayerAttackCollOperator.h"
 
 #include "State/PlayerIdleState.h"
 #include "State/PlayerMoveState.h"
 #include "State/PlayerJumpState.h"
-#include "State/PlayerKickDownAttackState.h"
+#include "State/PlayerAttackState.h"
 
 Player::Player() : CharacterBase()
 {
@@ -94,7 +94,7 @@ void Player::Load(void)
 
 #pragma region 下位アクターの生成
 
-	PlayerKickDownAttackCollOperator* kickDownAttackCollOperator = new PlayerKickDownAttackCollOperator(10.0f, Vector3::Zonly(50.0f), trans);
+	PlayerAttackCollOperator* kickDownAttackCollOperator = new PlayerAttackCollOperator(10.0f, Vector3::Zonly(50.0f), trans);
 	AddChildActor(kickDownAttackCollOperator);
 
 #pragma endregion
@@ -136,7 +136,7 @@ void Player::Load(void)
 	// 攻撃状態
 	AddState(
 		STATE::Attack,
-		new PlayerKickDownAttackState(
+		new PlayerAttackState(
 			0.5f, 0.7f,
 			*kickDownAttackCollOperator,
 			[&]() { AnimePlay(ANIME_TYPE::Totta); },
@@ -165,6 +165,13 @@ void Player::Load(void)
 
 void Player::OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result)
 {
+
+	if (other.GetTag() == COLLIDER_TAG::Stage) {
+
+		int aaaa = 0;
+
+		aaaa++;
+	}
 }
 
 void Player::SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other)

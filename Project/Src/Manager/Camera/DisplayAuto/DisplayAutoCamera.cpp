@@ -26,7 +26,7 @@ DisplayAutoCamera::DisplayAutoCamera(const Vector3& fixedLookAtPos, const Vector
 void DisplayAutoCamera::NormalUpdate(void)
 {
 	// ‰ñ“]ˆ—iÝ’è‚³‚ê‚½’l‰¡Œü‚«‚É‰ñ‚µ‘±‚¯‚éj
-	controlAngle += (Vector3::Yonly(1.0f).Normalized() * ROT_POWER) * TimeScale::Get();
+	controlAngle += (Vector3::Yonly(1.0f).Normalized() * ROT_POWER) * GetTimeScale();
 
 	if (controlAngle.y >= Deg2Rad(360.0f)) { controlAngle.y -= Deg2Rad(360.0f); }
 	if (controlAngle.y <= Deg2Rad(0.0f)) { controlAngle.y += Deg2Rad(360.0f); }
