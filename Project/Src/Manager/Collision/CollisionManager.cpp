@@ -10,6 +10,8 @@
 #include "../../Common/Vector2.h"
 #include "../../Common/Vector2I.h"
 
+#include "../../Object/Common/ActorBase/ActorBase.h"
+
 #include"../../Object/Common/Collider/LineCollider.h"
 #include"../../Object/Common/Collider/SphereCollider.h"
 #include"../../Object/Common/Collider/CapsuleCollider.h"
@@ -2522,6 +2524,69 @@ void CollisionManager::ApplyPush(ColliderBase* a, ColliderBase* b, const Vector3
 void CollisionManager::ApplyPushOneSide(ColliderBase* dynamicColl, ColliderBase* staticColl, const Vector3& overlapVec)const
 {
 	MoveCollider(dynamicColl, overlapVec, *staticColl);
+}
+
+#pragma endregion
+
+#pragma region レイキャスト
+
+bool CollisionManager::Raycast(const Vector3& origin, const Vector3& direction, float maxDistance, RaycastHit& result)
+{
+	result = RaycastHit{};
+
+	if (maxDistance <= 0.0f || direction.LengthSq() < 0.000001f) { return false; }
+
+	const Vector3 dir = direction.Normalized();
+
+	float nearestDistance = maxDistance;
+	bool isHit = false;
+
+	for (const ColliderGroupData& group : groupColliders) {
+
+		for (ColliderBase* collider : group.colliders) {
+
+			if (!collider || !collider->GetJudgeFlg()) { continue; }
+
+			// 今回は球体のみ対応
+			if (collider->GetShape() != COLLIDER_SHAPE::Sphere) { continue; }
+
+			SphereCollider* sphere = static_cast<SphereCollider*>(collider);
+
+			const Vector3 center = sphere->GetPos();
+			const float radius = sphere->GetRadius();
+
+			// レイ開始点から球中心へのベクトル
+			const Vector3 oc = origin - center;
+
+			const float b = oc.Dot(dir);
+			const float c = oc.Dot(oc) - radius * radius;
+
+			const float discriminant = b * b - c;
+
+			if (discriminant < 0.0f) { continue; }
+
+			const float sqrtD = std::sqrt(discriminant);
+
+			// 手前側の交点
+			float distance = -b - sqrtD;
+
+			// 球内部から開始している場合は出口側
+			if (distance < 0.0f) { distance = -b + sqrtD; }
+
+			if (distance < 0.0f || distance > nearestDistance) { continue; }
+
+			nearestDistance = distance;
+
+			result.collider = collider;
+			result.distance = distance;
+			result.point = origin + dir * distance;
+			result.normal = (result.point - center).Normalized();
+
+			isHit = true;
+		}
+	}
+
+	return isHit;
 }
 
 #pragma endregion

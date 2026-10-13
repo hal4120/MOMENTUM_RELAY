@@ -23,7 +23,7 @@ struct Vector2I;
 class ActorBase
 {
 public:
-	
+
 	// デフォルトコンストラクタ
 	ActorBase();
 	// パラメーターを外部から読み込む場合に使うコンストラクタ
@@ -49,6 +49,9 @@ public:
 	// モデル制御情報構造体のゲット関数
 	const Transform& GetTrans(void)const { return trans; }
 
+	// 座標セット
+	void SetPos(const Vector3& pos) { trans.pos = pos; }
+
 	// 当たり判定の通知
 	virtual void OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result) {}
 
@@ -73,6 +76,15 @@ public:
 
 	// 子クラスを取得する
 	const std::vector<ActorBase*>& GetChildActors(void)const { return childActors; }
+
+	// 動的オブジェクトかどうか（true = 動的、false = 静的）
+	bool GetDynamicFlg(void)const { return dynamicFlg; }
+
+	// 衝突時押し出しを行うかどうか（true = 押し出す、false = 押し出さず通り抜ける）
+	bool GetPushFlg(void)const { return pushFlg; }
+
+	// 押し出しを行う際の重さ（0 ～ 100 で設定）
+	unsigned char GetPushWeight(void)const { return pushWeight; }
 
 private:
 
@@ -239,8 +251,6 @@ protected:
 	// 当たり判定の設定（true = 「判定する」、false = 「判定しない」）
 	void SetJudgeFlg(bool flg);
 
-	// 移動するオブジェクトかの設定を取得
-	bool GetDynamicFlg(void)const { return dynamicFlg; }
 	// 重力の設定の状態を取得
 	bool GetGravityFlg(void)const { return gravityFlg; }
 

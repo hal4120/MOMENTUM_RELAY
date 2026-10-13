@@ -57,6 +57,9 @@ public:
 	// Update / Draw可能な状態か
 	bool IsInitialized(void)const { return state == STATE::Initialized; }
 
+	// 当たり判定管理クラスを取得する。使用しない場合はnullptrを返す
+	CollisionManager* GetCollisionManager(void)const { return collision; }
+
 	// カメラを取得する。カメラを使用しない場合はnullptrを返す。
 	CameraBase* GetCamera(void)const { return camera; }
 

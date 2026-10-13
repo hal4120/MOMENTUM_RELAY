@@ -62,6 +62,7 @@
     <ClCompile Include="Src\Object\CameraCollOperator\CameraPointCollOperator.cpp" />
     <ClCompile Include="Src\Object\CameraCollOperator\CameraLineCollOperator.cpp" />
     <ClCompile Include="Src\Object\Common\SkyBox\SkyBox.cpp" />
+    <ClCompile Include="Src\Manager\Collision\CurrentCollisionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -151,6 +152,7 @@
     <ClInclude Include="Src\Object\CameraCollOperator\CameraLineCollOperator.h" />
     <ClInclude Include="Src\Object\Common\SkyBox\SkyBox.h" />
     <ClInclude Include="Src\Object\TestStage.h" />
+    <ClInclude Include="Src\Manager\Collision\CurrentCollisionManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />
