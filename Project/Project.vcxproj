@@ -167,6 +167,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Manager\Camera\Free\FreeCamera.cpp" />
     <ClCompile Include="Src\Manager\Camera\DisplayRemote\DisplayRemoteCamera.cpp" />
     <ClCompile Include="Src\Manager\Camera\MultifuncCamera\MultifuncCamera.cpp" />
+    <ClCompile Include="Src\Manager\Collision\CurrentCollisionManager.cpp" />
     <ClCompile Include="Src\Manager\Font\FontManager.cpp" />
     <ClCompile Include="Src\Manager\Shader\ShaderResourceManager.cpp" />
     <ClCompile Include="Src\Manager\TimeScale\TimeScale.cpp" />
@@ -233,6 +234,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Manager\Camera\DisplayRemote\DisplayRemoteCamera.h" />
     <ClInclude Include="Src\Manager\Camera\MultifuncCamera\MultifuncCamera.h" />
     <ClInclude Include="Src\Manager\Collision\ChunkStDefine.h" />
+    <ClInclude Include="Src\Manager\Collision\CurrentCollisionManager.h" />
     <ClInclude Include="Src\Manager\Font\FontManager.h" />
     <ClInclude Include="Src\Manager\Shader\ShaderResourceManager.h" />
     <ClInclude Include="Src\Manager\Shader\ShaderTypeDefine.h" />

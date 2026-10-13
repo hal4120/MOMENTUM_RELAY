@@ -2,6 +2,7 @@
 
 #include <cassert>
 
+#include "../ActorBase/ActorBase.h"
 
 CollisionResult::CollisionResult(void) :
 	point(),
@@ -12,11 +13,7 @@ CollisionResult::CollisionResult(void) :
 
 
 ColliderBase::ColliderBase(COLLIDER_TAG type, const Vector3& pos, const Quaternion& rotation) :
-	trans(nullptr),
-
-	dynamicFlg(nullptr),
-	pushFlg(nullptr),
-	pushWeight(nullptr),
+	owner(nullptr),
 
 	pos(pos),
 	rotation(rotation.Normalized()),
@@ -32,29 +29,10 @@ ColliderBase::ColliderBase(COLLIDER_TAG type, const Vector3& pos, const Quaterni
 }
 
 
-void ColliderBase::SetTransformPtr(Transform* ptr)
+void ColliderBase::SetActorPtr(ActorBase* ptr)
 {
-	trans = ptr;
+	owner = ptr;
 }
-
-
-void ColliderBase::SetDynamicFlgPtr(const bool* ptr)
-{
-	dynamicFlg = ptr;
-}
-
-
-void ColliderBase::SetPushFlgPtr(const bool* ptr)
-{
-	pushFlg = ptr;
-}
-
-
-void ColliderBase::SetPushWeightPtr(const unsigned char* ptr)
-{
-	pushWeight = ptr;
-}
-
 
 void ColliderBase::SetOnCollisionFunc(std::function<void(COLLIDER_TAG, const ColliderBase&, const CollisionResult&)> OnCollisionFunc)
 {
@@ -70,7 +48,7 @@ void ColliderBase::SetOnGroundedFunc(std::function<void(COLLIDER_TAG, const Coll
 
 Vector3 ColliderBase::GetPos(void) const
 {
-	assert(trans != nullptr);
+	assert(owner != nullptr);
 
 	/*
 		相対座標posはTransform本体の回転のみを受ける。
@@ -79,21 +57,21 @@ Vector3 ColliderBase::GetPos(void) const
 		Colliderの形状を回転させるためのものなので
 		相対座標には適用しない。
 	*/
-	return		trans->pos + trans->VTrans(pos);
+	return owner->GetTrans().pos + owner->GetTrans().VTrans(pos);
 }
 
 
 Vector3 ColliderBase::GetPrevPos(void) const
 {
-	assert(trans != nullptr);
+	assert(owner != nullptr);
 
-	return		trans->prevPos + trans->VTrans(pos);
+	return owner->GetTrans().prevPos + owner->GetTrans().VTrans(pos);
 }
 
 
 Quaternion ColliderBase::GetRotation(void) const
 {
-	assert(trans != nullptr);
+	assert(owner != nullptr);
 
 	/*
 		Transform本体の回転
@@ -112,9 +90,9 @@ Quaternion ColliderBase::GetRotation(void) const
 
 MATRIX ColliderBase::GetRotationMat(void) const
 {
-	assert(trans != nullptr);
+	assert(owner != nullptr);
 
-	return MMult(trans->RotationMat(), rotation.ToMatrix());
+	return MMult(owner->GetTrans().RotationMat(), rotation.ToMatrix());
 }
 
 
@@ -128,15 +106,17 @@ Vector3 ColliderBase::VTrans(const Vector3& v) const
 
 const Transform& ColliderBase::GetTransform(void) const
 {
-	assert(trans != nullptr);
+	assert(owner != nullptr);
 
-	return *trans;
+	return owner->GetTrans();
 }
 
 
 bool ColliderBase::GetDynamicFlg(void) const
 {
-	return (dynamicFlg != nullptr) ? *dynamicFlg : true;
+	assert(owner != nullptr);
+
+	return owner->GetDynamicFlg();
 }
 
 
@@ -148,13 +128,17 @@ bool ColliderBase::GetJudgeFlg(void) const
 
 bool ColliderBase::GetPushFlg(void) const
 {
-	return (pushFlg != nullptr) ? *pushFlg : true;
+	assert(owner != nullptr);
+
+	return owner->GetPushFlg();
 }
 
 
 unsigned char ColliderBase::GetPushWeight(void) const
 {
-	return (pushWeight != nullptr) ? *pushWeight : 0;
+	assert(owner != nullptr);
+
+	return owner->GetPushWeight();
 }
 
 
@@ -188,17 +172,17 @@ void ColliderBase::CallOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other
 
 void ColliderBase::SetTransformPos(const Vector3& pos)
 {
-	assert(trans != nullptr);
+	assert(owner != nullptr);
 
-	trans->pos = pos;
+	owner->SetPos(pos);
 }
 
 
 void ColliderBase::SetTransformPosAdd(const Vector3& vec)
 {
-	assert(trans != nullptr);
+	assert(owner != nullptr);
 
-	trans->pos += vec;
+	owner->SetPos(owner->GetTrans().pos + vec);
 }
 
 

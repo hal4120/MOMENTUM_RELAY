@@ -1,5 +1,7 @@
 #include "MeshCollider.h"
 
+#include "../ActorBase/ActorBase.h"
+
 #include <algorithm>
 #include <cfloat>
 #include <numeric>

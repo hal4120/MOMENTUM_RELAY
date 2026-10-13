@@ -7,6 +7,7 @@
 
 #include "../Manager/Loading/Loading.h"
 
+#include "../Manager/Collision/CurrentCollisionManager.h"
 #include "../Manager/Camera/CurrentCamera.h"
 
 #include "Title/TitleScene.h"
@@ -378,6 +379,9 @@ void SceneManager::ApplyRequest(SceneRequest request)
 	default: { break; }
 	}
 
+	// 1番上に重なっているシーンの当たり判定管理クラスをCurrentCollisionManagerに設定する
+	SetCurrentCollisionManager();
+
 	// 1番上に重なっているシーンのカメラをCurrentCameraに設定する
 	SetCurrentCamera();
 }
@@ -400,6 +404,9 @@ void SceneManager::StartLoad(std::unique_ptr<SceneBase> scene, LOAD_COMMIT commi
 		loadingScene->Init();
 
 		CommitLoadedScene();
+
+		// 1番上に重なっているシーンの当たり判定管理クラスをCurrentCollisionManagerに設定する
+		SetCurrentCollisionManager();
 
 		// 1番上に重なっているシーンのカメラをCurrentCameraに設定する
 		SetCurrentCamera();
@@ -428,6 +435,9 @@ void SceneManager::UpdateLoading(void)
 
 	// ロード対象を初期化する
 	scenes.back()->Init();
+
+	// 1番上に重なっているシーンの当たり判定管理クラスをCurrentCollisionManagerに設定する
+	SetCurrentCollisionManager();
 
 	// 1番上に重なっているシーンのカメラをCurrentCameraに設定する
 	SetCurrentCamera();
@@ -547,6 +557,31 @@ std::unique_ptr<FadeSceneBase> SceneManager::CreateFadeScene(FADE_TYPE fadeType,
 	case FADE_TYPE::Default: { return std::make_unique<DefaultFadeScene>(FADE_TIME, FADE_OUT_COLOR, FADE_IN_COLOR); }
 
 	default: { return std::make_unique<DefaultFadeScene>(FADE_TIME, FADE_OUT_COLOR, FADE_IN_COLOR); }
+	}
+}
+
+void SceneManager::SetCurrentCollisionManager(void) const
+{
+	// 初期化
+	CurrentCollisionManager::Set(nullptr);
+
+	// 安全処理
+	if (scenes.empty()) { return; }
+
+	// 末尾から先頭へ確認し、カメラを使用しているシーンを探す
+	for (int index = (int)(scenes.size() - 1); index >= 0; index--) {
+
+		// カメラのインスタンスのポインターを取得
+		CollisionManager* cameraIns = scenes.at(index)->GetCollisionManager();
+
+		// 取得したインスタンスが有効かどうか
+		if (cameraIns == nullptr) { continue; }
+
+		// 有効ならそれをカレントカメラに設定
+		CurrentCollisionManager::Set(cameraIns);
+
+		// 終了
+		break;
 	}
 }
 

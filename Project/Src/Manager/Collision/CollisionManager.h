@@ -13,6 +13,17 @@ class BoxCollider;
 class MeshCollider;
 class XZCircleCollider;
 
+// レイキャストの結果を格納する構造体
+struct RaycastHit
+{
+	ColliderBase* collider = nullptr;
+
+	Vector3 point;
+	Vector3 normal;
+
+	float distance = 0.0f;
+};
+
 class CollisionManager
 {
 private:
@@ -105,6 +116,16 @@ public:
 
 	// 判定実行
 	void Check(void);
+
+	/// <summary>
+	/// レイキャスト
+	/// </summary>
+	/// <param name="origin">レイの開始座標</param>
+	/// <param name="direction">レイの方向（内部で正規化）</param>
+	/// <param name="maxDistance">検索する最大距離</param>
+	/// <param name="result">最も近くで命中したコライダーと命中情報</param>
+	/// <returns></returns>
+	bool Raycast(const Vector3& origin, const Vector3& direction, float maxDistance, RaycastHit& result);
 
 	// チャンク描画
 	void DrawChunkGrid(const Vector3& cameraPos) const;
