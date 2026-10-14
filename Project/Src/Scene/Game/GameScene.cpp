@@ -17,6 +17,7 @@
 
 #include "../Common/PostEffect/CRTPostEffect/CRTPostEffect.h"
 #include "../Common/PostEffect/FocusLinesPostEffect/FocusLinesPostEffect.h"
+#include "../Common/PostEffect/MenacingPostEffect/MenacingPostEffect.h"
 
 #include "../Common/PostEffect/UnderWaterPostEffect/UnderWaterPostEffect.h"
 
@@ -43,11 +44,11 @@ void GameScene::SubPostLoad(void)
 {
 	Snd::GetIns().ChangeScene("Game");
 
-	//AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false));
+	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false));
 	AddActor(new IceBoxDebugObject(Vector3(1000, 100, 1000), Vector3::XZonly(-1500.0f, 1500.0f), false));
 
 	//AddActor(new CapsuleDebugObject(Vector3(50, 0, 0), Vector3(-50, 0, 0), 50.0f, Vector3(), true, true, true, 50, true));
-	AddActor(new TestStage);
+	//AddActor(new TestStage);
 	AddActor(new Player);
 	AddActor(new Water);
 
@@ -81,11 +82,13 @@ void GameScene::SubPostUpdate(void)
 	case 0: { 
 		RemovePostEffect<FocusLinesPostEffect>();
 		RemovePostEffect<CRTPostEffect>();
+		RemovePostEffect<MenacingPostEffect>();
 		break; 
 	}
 	case 1: {
 		AddPostEffect(new FocusLinesPostEffect(1.5f, 18.0f, 100.0f));
 		AddPostEffect(new CRTPostEffect(1.0f, 0.05f));
+		AddPostEffect(new MenacingPostEffect(2.0f, 0.5f, 1.0f));
 		break; 
 	}
 	}
