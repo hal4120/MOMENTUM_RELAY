@@ -182,6 +182,11 @@ private:
 			"UnderWaterPS"
 		},
 
+		// ゴゴゴゴ…エフェクト
+		{
+			PIXEL_SHADER_TYPE::Menacing,
+			"MenacingPS"
+		},
 	#pragma endregion
 
 		// スカイボックス

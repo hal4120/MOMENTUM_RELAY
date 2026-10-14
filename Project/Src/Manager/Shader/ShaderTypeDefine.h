@@ -53,6 +53,9 @@ enum class PIXEL_SHADER_TYPE
 	// 水中ポストエフェクト
 	UnderWater,
 
+    // ゴゴゴゴ…エフェクト
+    Menacing,
+
 #pragma endregion
 
     // スカイボックス
