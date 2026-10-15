@@ -7,9 +7,9 @@
 StartCameraEvent::StartCameraEvent(const Vector3& startPos, const Vector3& startAngle, float startFov, float frame) :
     CameraEventBase(),
 
-    startPos(startPos), startAngle(startAngle), startFov(startFov),
+    startPos(startPos), startRotation(Quaternion::FromEulerXZY(startAngle)), startFov(startFov),
 
-    endPos(), endAngle(), endFov(0.0f),
+    endPos(), endRotation(), endFov(0.0f),
 
     maxFrame((std::max)(frame, 1.0f)),
     currentFrame(0)
@@ -19,9 +19,9 @@ StartCameraEvent::StartCameraEvent(const Vector3& startPos, const Vector3& start
 StartCameraEvent::StartCameraEvent(const CameraBase& camera, const Vector3& startLocalPos, const Vector3& startLocalAngle, float startLocalFov, float frame) :
     CameraEventBase(),
 
-    startPos(camera.GetPos() + startLocalPos), startAngle(camera.GetAngle() + startLocalAngle), startFov(camera.GetFov() + startLocalFov),
+    startPos(camera.GetPos() + startLocalPos), startRotation(Quaternion::FromEulerXZY(startLocalAngle) * camera.GetRotation()), startFov(camera.GetFov() + startLocalFov),
 
-    endPos(), endAngle(), endFov(0.0f),
+    endPos(), endRotation(), endFov(0.0f),
 
     maxFrame((std::max)(frame, 1.0f)),
     currentFrame(0)
@@ -32,12 +32,12 @@ void StartCameraEvent::Start(CameraBase& camera)
 {
     // 通常Cameraが本来いる位置を保存
     endPos = camera.GetPos();
-    endAngle = camera.GetAngle();
+    endRotation = camera.GetRotation();
     endFov = camera.GetFov();
 
     // 一旦イベント開始位置へ移動
     camera.SetPos(startPos);
-    camera.SetAngle(startAngle);
+    camera.SetRotation(startRotation);
     camera.SetFov(startFov);
 
     currentFrame = 0;
@@ -58,20 +58,20 @@ void StartCameraEvent::Update(CameraBase& camera)
     Vector3 pos = startPos + (endPos - startPos) * t;
 
     // 角度補間
-    Vector3 angle = startAngle + (endAngle - startAngle) * t;
+    Quaternion rotation = Quaternion::Slerp(startRotation, endRotation, t);
 
     // FOV補間
     float fov = startFov + (endFov - startFov) * t;
 
     camera.SetPos(pos);
-    camera.SetAngle(angle);
+    camera.SetRotation(rotation);
     camera.SetFov(fov);
 }
 
 void StartCameraEvent::End(CameraBase& camera)
 {
     camera.SetPos(endPos);
-    camera.SetAngle(endAngle);
+    camera.SetRotation(endRotation);
     camera.SetFov(endFov);
 }
 

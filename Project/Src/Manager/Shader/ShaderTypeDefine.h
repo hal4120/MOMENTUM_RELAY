@@ -56,6 +56,12 @@ enum class PIXEL_SHADER_TYPE
     // ゴゴゴゴ…エフェクト
     Menacing,
 
+    // 炎ポストエフェクト
+    PurpleFlame,
+
+    // ダメージフラッシュポストエフェクト
+    DamageFlash,
+
 #pragma endregion
 
     // スカイボックス

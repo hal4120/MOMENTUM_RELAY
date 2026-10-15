@@ -43,6 +43,9 @@ private:
 	// ‰ñ“]—Ê
 	const float ROT_POWER;
 
+	// ‘€ìŠp“x
+	Vector3 controlAngle;
+
 	// XV
 	void NormalUpdate(void)override;
 

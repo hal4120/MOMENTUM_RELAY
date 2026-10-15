@@ -3,6 +3,7 @@
 #include "../CameraEventBase.h"
 
 #include "../../../../Common/Vector3.h"
+#include "../../../../Common/Quaternion.h"
 
 class MoveCameraEvent : public CameraEventBase
 {
@@ -41,12 +42,12 @@ private:
 
     // 開始時カメラ情報
     Vector3 startPos;
-    Vector3 startAngle;
+    Quaternion startRotation;
     float startFov;
 
     // 終了時カメラ情報
     const Vector3 endPos;
-    const Vector3 endAngle;
+    const Quaternion endRotation;
     const float endFov;
 
     // 時間

@@ -86,7 +86,7 @@ private:
 		if (Input::GetIns().GetInfo(KEY_TYPE::DebugObjectDown).now) { vec.y--; }
 
 		// ƒJƒƒ‰‚ÌŠp“x‚É‡‚í‚¹‚ÄˆÚ“®•ûŒü‚ğ‰ñ“]‚³‚¹‚é
-		vec.TransMatOwn(MGetRotY(CurrentCamera::Get().GetAngle().y));
+		vec.TransMatOwn(MGetRotY(CurrentCamera::Get().GetRotation().GetYaw()));
 
 		// ˆÚ“®
 		MoveAccel(vec);

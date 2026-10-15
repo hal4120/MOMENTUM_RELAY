@@ -16,12 +16,17 @@ float CameraBase::controllerRotSensi = CameraBase::DEFAULT_CONTROLLER_ROT_SENSI;
 // カメラ移動における補間数値
 float CameraBase::smoothCameraMoveRate = CameraBase::DEFAULT_SMOOTH_CAMERA_MOVE_RATE;
 
-CameraBase::CameraBase(const Vector3& pos, const Vector3& angle, float fov) :
-	pos(pos), angle(angle), fov(fov),
+CameraBase::CameraBase(const Vector3& pos, const Quaternion& rotation, float fov) :
+	pos(pos), rotation(rotation.Normalized()), fov(fov),
 
 	useTimeScale(true),
 
 	cameraEvent(nullptr)
+{
+}
+
+CameraBase::CameraBase(const Vector3& pos, const Vector3& angle, float fov) :
+	CameraBase(pos, Quaternion::FromEulerXZY(angle), fov)
 {
 }
 
@@ -51,7 +56,11 @@ void CameraBase::Apply(void)
 	SetupCamera_Perspective(fov);
 
 	// カメラ情報の適用
-	SetCameraPositionAndAngle(pos.ToVECTOR(), angle.x, angle.y, angle.z);
+	const MATRIX viewMatrix = MMult(
+		MGetTranslate((-pos).ToVECTOR()),
+		rotation.Inversed().ToMatrix()
+	);
+	SetCameraViewMatrix(viewMatrix);
 }
 
 void CameraBase::DrawDebug(void) const
@@ -62,12 +71,16 @@ void CameraBase::DrawDebug(void) const
 			"カメラ座標　 ：(% .1f, % .1f, % .1f)",
 			pos.x, pos.y, pos.z
 		);
+		const Vector3 forward = rotation.Rotate(Vector3(0.0f, 0.0f, 1.0f));
 		DrawFormatString(
 			0, 90, 0xffffff,
-			"カメラ角度　 ：(% .1f, % .1f, % .1f)",
-			Rad2Deg(angle.x),
-			Rad2Deg(angle.y),
-			Rad2Deg(angle.z)
+			"カメラ前方向 ：(% .2f, % .2f, % .2f)",
+			forward.x, forward.y, forward.z
+		);
+		DrawFormatString(
+			0, 110, 0xffffff,
+			"カメラ回転Q ：(% .3f, % .3f, % .3f, % .3f)",
+			rotation.x, rotation.y, rotation.z, rotation.w
 		);
 	}
 }

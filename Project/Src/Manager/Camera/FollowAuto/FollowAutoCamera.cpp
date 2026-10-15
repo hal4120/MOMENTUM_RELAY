@@ -54,5 +54,5 @@ void FollowAutoCamera::NormalUpdate(void)
 	if (lookAtPos.y <= FOCUS_DOWN) { lookAtPos.y = FOCUS_DOWN; }
 
 	// Šp“x
-	angle = CalcCameraAngle(pos, lookAtPos);
+	rotation = CalcCameraRotation(pos, lookAtPos);
 }

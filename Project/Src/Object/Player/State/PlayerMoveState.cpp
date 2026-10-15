@@ -59,7 +59,7 @@ void PlayerMoveState::Update(void)
 	if (inputVec != 0.0f) {
 
 		// ˆÚ“®•ûŒü‚ğƒJƒƒ‰‚Å‰ñ“]‚³‚¹‚é
-		inputVec.TransMatOwn(MGetRotY(CurrentCamera::Get().GetAngle().y));
+		inputVec.TransMatOwn(MGetRotY(CurrentCamera::Get().GetRotation().GetYaw()));
 
 		// ˆÚ“®
 		moveAccel(inputVec);

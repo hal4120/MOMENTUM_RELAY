@@ -3,6 +3,7 @@
 #include "../CameraEventBase.h"
 
 #include "../../../../Common/Vector3.h"
+#include "../../../../Common/Quaternion.h"
 
 class CameraBase;
 
@@ -42,11 +43,11 @@ public:
 private:
 
     const Vector3 startPos;
-    const Vector3 startAngle;
+    const Quaternion startRotation;
     const float startFov;
 
     Vector3 endPos;
-    Vector3 endAngle;
+    Quaternion endRotation;
     float endFov;
 
     // ˆÚ“®ƒtƒŒ[ƒ€”

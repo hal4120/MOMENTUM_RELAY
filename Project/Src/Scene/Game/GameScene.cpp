@@ -18,6 +18,8 @@
 #include "../Common/PostEffect/CRTPostEffect/CRTPostEffect.h"
 #include "../Common/PostEffect/FocusLinesPostEffect/FocusLinesPostEffect.h"
 #include "../Common/PostEffect/MenacingPostEffect/MenacingPostEffect.h"
+#include "../Common/PostEffect/PurpleFlamePostEffect/PurpleFlamePostEffect.h"
+#include "../Common/PostEffect/DamageFlashPostEffect/DamageFlashPostEffect.h"
 
 #include "../Common/PostEffect/UnderWaterPostEffect/UnderWaterPostEffect.h"
 
@@ -83,12 +85,15 @@ void GameScene::SubPostUpdate(void)
 		RemovePostEffect<FocusLinesPostEffect>();
 		RemovePostEffect<CRTPostEffect>();
 		RemovePostEffect<MenacingPostEffect>();
+		//RemovePostEffect<PurpleFlamePostEffect>();
 		break; 
 	}
 	case 1: {
 		AddPostEffect(new FocusLinesPostEffect(1.5f, 18.0f, 100.0f));
 		AddPostEffect(new CRTPostEffect(1.0f, 0.05f));
 		AddPostEffect(new MenacingPostEffect(2.0f, 0.5f, 1.0f));
+		//AddPostEffect(new PurpleFlamePostEffect(10.0f, 0.4f, 1.75f));
+		//AddPostEffect(new DamageFlashPostEffect(10.0f, 10.0f));
 		break; 
 	}
 	}

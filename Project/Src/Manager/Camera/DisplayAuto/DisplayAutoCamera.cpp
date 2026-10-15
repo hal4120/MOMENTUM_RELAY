@@ -20,7 +20,7 @@ DisplayAutoCamera::DisplayAutoCamera(const Vector3& fixedLookAtPos, const Vector
 	pos = fixedLookAtPos + lookAtDiff.TransMat(MatrixAllMultXY({ Vector3::XYonly(controlAngle.x,controlAngle.y) }));
 
 	// Šp“x
-	this->angle = CalcCameraAngle(pos, fixedLookAtPos);
+	this->rotation = CalcCameraRotation(pos, fixedLookAtPos);
 }
 
 void DisplayAutoCamera::NormalUpdate(void)
@@ -35,5 +35,5 @@ void DisplayAutoCamera::NormalUpdate(void)
 	SmoothCameraMove(pos, fixedLookAtPos + lookAtDiff.TransMat(MatrixAllMultXY({ Vector3::XYonly(controlAngle.x,controlAngle.y) })));
 
 	// Šp“x
-	angle = CalcCameraAngle(pos, fixedLookAtPos);
+	rotation = CalcCameraRotation(pos, fixedLookAtPos);
 }

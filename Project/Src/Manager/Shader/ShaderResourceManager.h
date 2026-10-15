@@ -187,6 +187,19 @@ private:
 			PIXEL_SHADER_TYPE::Menacing,
 			"MenacingPS"
 		},
+
+		// 炎ポストエフェクト
+		{
+			PIXEL_SHADER_TYPE::PurpleFlame,
+			"PurpleFlamePS"
+		},
+
+		// ダメージフラッシュポストエフェクト
+		{
+			PIXEL_SHADER_TYPE::DamageFlash,
+			"DamageFlashPS"
+		},
+
 	#pragma endregion
 
 		// スカイボックス

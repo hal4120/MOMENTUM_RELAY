@@ -97,7 +97,7 @@ void PlayerJumpState::Update(void)
 		if (vec != 0.0f) {
 
 			// ˆÚ“®•ûŒü‚ğƒJƒƒ‰‚Å‰ñ“]‚³‚¹‚é
-			vec.TransMatOwn(MGetRotY(CurrentCamera::Get().GetAngle().y));
+			vec.TransMatOwn(MGetRotY(CurrentCamera::Get().GetRotation().GetYaw()));
 
 			// ˆÚ“®
 			moveAccel(vec);

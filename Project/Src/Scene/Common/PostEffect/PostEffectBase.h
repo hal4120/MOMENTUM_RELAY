@@ -18,6 +18,9 @@ public:
 	// ポストエフェクトを適用
 	void Apply(int srcScreenHandle, int dstScreenHandle);
 
+	/// エフェクトの再生が終了したか
+	virtual bool IsFinished(void) const { return false; }
+
 	// ポストエフェクト固有リソースの解放
 	virtual void Release(void) {}
 

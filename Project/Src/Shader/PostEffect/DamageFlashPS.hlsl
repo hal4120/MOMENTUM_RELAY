@@ -13,7 +13,7 @@ float4 main(PS_INPUT input) : SV_TARGET
     sceneTexture.GetDimensions(textureWidth, textureHeight);
     float2 screenSize = float2(textureWidth, textureHeight);
     float2 uv = input.uv;
-    float4 src = GetSceneColor(uv);
+    float4 src = GetSceneColor(input);
     float2 p = uv - 0.5f;
     p.x *= screenSize.x / screenSize.y;
     float edge = smoothstep(0.15f, 0.85f, length(p));

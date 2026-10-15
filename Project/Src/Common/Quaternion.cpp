@@ -408,3 +408,13 @@ Quaternion Quaternion::Slerp(
 
 	return result.Normalized();
 }
+
+float Quaternion::GetYaw(void) const
+{
+	const Vector3 forward = Rotate(Vector3(0.0f, 0.0f, 1.0f));
+
+	// 前方向がほぼ真上・真下の場合、Yawは一意に決まらない
+	if (forward.x * forward.x + forward.z * forward.z < 0.000001f) { return 0.0f; }
+
+	return atan2f(forward.x, forward.z);
+}
