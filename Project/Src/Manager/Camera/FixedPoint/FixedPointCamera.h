@@ -26,7 +26,7 @@ public:
 	/// <param name="pos">座標</param>
 	/// <param name="lookPos">注視点</param>
 	/// <param name="fov">視野角</param>
-	FixedPointCamera(LookAtTag, const Vector3& pos, const Vector3& lookPos, float fov = 60.0f * (DX_PI_F / 180.0f)) : CameraBase(pos, CalcCameraAngle(pos, lookPos), fov) {}
+	FixedPointCamera(LookAtTag, const Vector3& pos, const Vector3& lookPos, float fov = 60.0f * (DX_PI_F / 180.0f)) : CameraBase(pos, CalcCameraRotation(pos, lookPos), fov) {}
 
 
 	// デストラクタ

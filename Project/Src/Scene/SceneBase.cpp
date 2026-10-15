@@ -186,6 +186,21 @@ void SceneBase::Draw(void)
 		tempIndex = 1 - tempIndex;
 	}
 
+	// ポストエフェクトの終了確認
+	for (auto it = postEffects.begin(); it != postEffects.end();) {
+		PostEffectBase* effect = *it;
+
+		if (effect == nullptr) { it = postEffects.erase(it); continue; }
+
+		// 再生が終了したら自動削除
+		if (effect->IsFinished()) {
+			effect->Release();
+			delete effect;
+			it = postEffects.erase(it);
+		}
+		else { ++it; }
+	}
+
 #pragma endregion
 
 	SetDrawScreen(DX_SCREEN_BACK);

@@ -161,4 +161,10 @@ struct Quaternion
 	);
 
 #pragma endregion
+
+	/// <summary>
+	/// Y軸回転角度を取得する
+	/// </summary>
+	/// <returns>Y軸回転角度（ラジアン）</returns>
+	float GetYaw(void) const;
 };
