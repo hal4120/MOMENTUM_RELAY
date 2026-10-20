@@ -20,6 +20,7 @@
 #include "State/PlayerMoveState.h"
 #include "State/PlayerJumpState.h"
 #include "State/PlayerAttackState.h"
+#include "State/PlayerRollingState.h"
 
 Player::Player() : CharacterBase()
 {
@@ -77,6 +78,7 @@ void Player::Load(void)
 		);
 	}
 
+	SetPositionCorrectionFrame("mixamorig:Hips");
 #pragma endregion
 
 #pragma region コライダーの生成
@@ -145,6 +147,23 @@ void Player::Load(void)
 		)
 	);
 
+	// 回避状態
+	AddState(
+		STATE::Rolling,
+		new PlayerRollingState(
+			10.0f,
+			100,
+			0.25f, 0.55f,
+			trans.rotation,
+			std::bind(&Player::MoveAccel, this, std::placeholders::_1),
+			ACCEL_MAX,
+			isInvincble,
+			[&]() { AnimePlay(ANIME_TYPE::Rolling); },
+			[&]() { return GetAnimeRatio(); },
+			[&]() { ChangeState(STATE::Idle); }
+		)
+	);
+
 	// 「待機状態」->「移動状態」の自動遷移登録
 	RegisterStateTransition(STATE::Idle, STATE::Move);
 	// 「移動状態」->「待機状態」の自動遷移登録
@@ -160,17 +179,17 @@ void Player::Load(void)
 	// 「移動状態」->「攻撃状態」の自動遷移登録
 	RegisterStateTransition(STATE::Move, STATE::Attack);
 
+	// 「待機状態」->「回避状態」の自動遷移登録
+	RegisterStateTransition(STATE::Idle, STATE::Rolling);
+	// 「移動状態」->「回避状態」の自動遷移登録
+	RegisterStateTransition(STATE::Move, STATE::Rolling);
+
 #pragma endregion
 }
 
 void Player::OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result)
 {
-
 	if (other.GetTag() == COLLIDER_TAG::Stage) {
-
-		int aaaa = 0;
-
-		aaaa++;
 	}
 }
 
@@ -178,17 +197,7 @@ void Player::SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other)
 {
 	ActorBase::SubOnGrounded(ownTag, other);
 
-	switch (other.GetTag()) {
-
-	case COLLIDER_TAG::IceStage: {
-		nowIsOnIce = true;
-		DECEL_RATE = 0.05f;
-		break; 
-	}
-
-	default: { DECEL_RATE = 3.0f; break; }
-
-	}
+	if (other.GetTag() == COLLIDER_TAG::IceStage) { nowIsOnIce = true; }
 }
 
 void Player::SubUpdate(void)

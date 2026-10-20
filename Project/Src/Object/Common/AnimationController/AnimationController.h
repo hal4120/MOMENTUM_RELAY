@@ -1,6 +1,7 @@
 #pragma once
 #include<map>
 #include<string>
+#include "../../../Common/Vector3.h"
 
 
 class AnimationController
@@ -56,6 +57,11 @@ public:
 	// 再生ステップを設定
 	void SetAnimeStep(float step);
 
+	// 指定フレームのXYZ移動をモデル空間で打ち消す
+	bool SetPositionCorrectionFrame(const std::string& frameName);
+	void SetPositionCorrection(bool enabled);
+	Vector3 GetPositionCorrection(void) const;
+
 private:
 	// アニメーションするモデルのハンドルID
 	int modelId;
@@ -76,4 +82,13 @@ private:
 	int isDetach;
 
 	void Add(int type, float speed, bool loop, Animation animation);
+
+	Vector3 GetCorrectionFramePos(void) const;
+	void RefreshPositionCorrection(void);
+	void ResetPositionCorrection(void);
+	int correctionFrame = -1;
+	bool correctionEnabled = false;
+	bool correctionHasOrigin = false;
+	Vector3 correctionOrigin;
+	Vector3 correctionOffset;
 };

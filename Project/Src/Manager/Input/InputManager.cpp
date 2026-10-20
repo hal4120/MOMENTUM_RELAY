@@ -62,6 +62,8 @@ void InputManager::Init(void)
 
 	SET_MOUSE_BUTTON(KEY_TYPE::PlayerKickDownAttack, MOUSE_INPUT_LEFT);
 
+	SET_KEYBOARD(KEY_TYPE::PlayerRolling, KEY_INPUT_LCONTROL);
+
 #pragma endregion
 
 #pragma region カメラ操作

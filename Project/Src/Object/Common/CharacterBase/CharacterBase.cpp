@@ -38,7 +38,10 @@ void CharacterBase::BaseUpdate(void)
 	}
 
 	// アニメーション更新
-	if (anime) { anime->Update(); }
+	if (anime) {
+		anime->Update();
+		trans.animationOffset = anime->GetPositionCorrection();
+	}
 }
 
 void CharacterBase::BaseRelease(void)
@@ -137,5 +140,9 @@ int CharacterBase::GetAnimePlayType(void)const { return anime->GetAnimePlayType(
 float CharacterBase::GetAnimeStep(void)const { return anime->GetAnimeStep(); }
 
 void CharacterBase::SetAnimeStep(float step) { anime->SetAnimeStep(step); }
+
+bool CharacterBase::SetPositionCorrectionFrame(const std::string& frameName) { return anime->SetPositionCorrectionFrame(frameName); }
+
+void CharacterBase::SetPositionCorrection(bool enabled) { anime->SetPositionCorrection(enabled); }
 
 #pragma endregion
