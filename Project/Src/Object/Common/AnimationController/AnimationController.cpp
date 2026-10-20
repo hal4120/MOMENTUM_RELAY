@@ -141,6 +141,9 @@ void AnimationController::Update(void)
 
 	// アニメーション設定
 	MV1SetAttachAnimTime(modelId, playAnim.attachNo, playAnim.step);
+
+	// アニメーションによる位置のズレを計算
+	RefreshPositionCorrection();
 }
 
 
@@ -181,6 +184,8 @@ void AnimationController::SetAnimeStep(float step)
 
 	}
 	MV1SetAttachAnimTime(modelId, playAnim.attachNo, playAnim.step);
+
+	RefreshPositionCorrection();
 }
 
 void AnimationController::Add(int type, float speed, bool loop, Animation animation)
@@ -194,3 +199,52 @@ void AnimationController::Add(int type, float speed, bool loop, Animation animat
 }
 
 
+bool AnimationController::SetPositionCorrectionFrame(const std::string& frameName)
+{
+    correctionFrame = MV1SearchFrame(modelId, frameName.c_str());
+    ResetPositionCorrection();
+	SetPositionCorrection(true);
+	return correctionFrame >= 0;
+}
+
+void AnimationController::SetPositionCorrection(bool enabled)
+{
+    correctionEnabled = enabled;
+    ResetPositionCorrection();
+    RefreshPositionCorrection();
+}
+
+Vector3 AnimationController::GetPositionCorrection(void) const
+{
+    return correctionOffset;
+}
+
+Vector3 AnimationController::GetCorrectionFramePos(void) const
+{
+    const MATRIX frameWorld = MV1GetFrameLocalWorldMatrix(modelId, correctionFrame);
+    const MATRIX modelWorld = MV1GetMatrix(modelId);
+    const MATRIX frameLocal = MMult(frameWorld, MInverse(modelWorld));
+    return Vector3(frameLocal.m[3][0], frameLocal.m[3][1], frameLocal.m[3][2]);
+}
+
+void AnimationController::ResetPositionCorrection(void)
+{
+    correctionHasOrigin = false;
+    correctionOffset = Vector3();
+}
+
+void AnimationController::RefreshPositionCorrection(void)
+{
+    if (!correctionEnabled || correctionFrame < 0 || playType == -1) {
+        correctionOffset = Vector3();
+        return;
+    }
+    const Vector3 current = GetCorrectionFramePos();
+    if (!correctionHasOrigin) {
+        correctionOrigin = current;
+        correctionHasOrigin = true;
+    }
+    correctionOffset = correctionOrigin - current;
+	// Y方向の補正を無効化
+	correctionOffset.y = 0.0f;
+}

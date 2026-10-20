@@ -66,6 +66,7 @@
     <ClCompile Include="Src\Scene\Common\PostEffect\MenacingPostEffect\MenacingPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\PurpleFlamePostEffect\PurpleFlamePostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\DamageFlashPostEffect\DamageFlashPostEffect.cpp" />
+    <ClCompile Include="Src\Object\Player\State\PlayerRollingState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Src\Scene\Common\PostEffect\MenacingPostEffect\MenacingPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\PurpleFlamePostEffect\PurpleFlamePostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\DamageFlashPostEffect\DamageFlashPostEffect.h" />
+    <ClInclude Include="Src\Object\Player\State\PlayerRollingState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />

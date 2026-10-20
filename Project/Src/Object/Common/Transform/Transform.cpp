@@ -147,7 +147,8 @@ MATRIX Transform::GetWorldMatrix(void) const
 		);
 
 	// ÉXÉPÅ[Éã
-	MATRIX modelMat = MGetScale(scale.ToVECTOR());
+	MATRIX modelMat = MGetTranslate(animationOffset.ToVECTOR());
+	modelMat = MMult(modelMat, MGetScale(scale.ToVECTOR()));
 
 	// âÒì]
 	modelMat = MMult(modelMat, rotationMat);

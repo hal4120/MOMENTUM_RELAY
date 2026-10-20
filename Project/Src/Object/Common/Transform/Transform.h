@@ -18,6 +18,9 @@ struct Transform
 	// モデルの中心を軸に描画するために使用
 	Vector3 centerDiff;
 
+	// アニメーション移動の打ち消し量（モデル空間）
+	Vector3 animationOffset;
+
 	// 回転
 	Quaternion rotation;
 
@@ -43,6 +46,7 @@ struct Transform
 		prevPos(),
 
 		centerDiff(),
+		animationOffset(),
 
 		rotation(),
 		localRotation(),

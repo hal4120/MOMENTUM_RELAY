@@ -196,6 +196,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Object\Player\State\PlayerJumpState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerAttackState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerMoveState.cpp" />
+    <ClCompile Include="Src\Object\Player\State\PlayerRollingState.cpp" />
     <ClCompile Include="Src\Object\Player\Wepon\PlayerAttackCollOperator.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\DamageFlashPostEffect\DamageFlashPostEffect.cpp" />
@@ -281,6 +282,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\Player\State\PlayerJumpState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerAttackState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerMoveState.h" />
+    <ClInclude Include="Src\Object\Player\State\PlayerRollingState.h" />
     <ClInclude Include="Src\Object\Player\Wepon\PlayerAttackCollOperator.h" />
     <ClInclude Include="Src\Object\TestStage.h" />
     <ClInclude Include="Src\Object\Water.h" />

@@ -15,7 +15,12 @@ public:
 	void OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result)override;
 
 	char OnIcePostEffectSwitch(void) {
+
+		if (nowIsOnIce) { DECEL_RATE = 0.05f; }
+		else { DECEL_RATE = 3.0f; }
+
 		if (prevIsOnIce == nowIsOnIce) { return -1; }
+
 		return (char)nowIsOnIce;
 	}
 
@@ -31,6 +36,8 @@ private:
 		Jump,
 
 		Attack,
+
+		Rolling,
 
 		Max
 	};
@@ -53,6 +60,8 @@ private:
 
 		Totta,
 
+		Rolling,
+
 		Max
 	};
 
@@ -69,6 +78,8 @@ private:
 		2.5f,	// JumpEnd,
 
 		1.0f,	// Totta
+
+		2.5f,	// Rolling
 	};
 
 	// アニメーションループ再生フラグテーブル
@@ -84,6 +95,8 @@ private:
 		false,	// JumpEnd
 
 		false,	// Totta
+		
+		false,	// Rolling
 	};
 
 	// アニメーションファイルパス
@@ -102,6 +115,8 @@ private:
 		"JumpEnd",		// JumpEnd
 
 		"Totta",		// Totta
+
+		"Rolling",		// Rolling
 	};
 
 	// アニメーションファイル拡張子
@@ -127,4 +142,7 @@ private:
 
 	bool nowIsOnIce = false;
 	bool prevIsOnIce = false;
+
+	// 回避無敵判定
+	bool isInvincble = false;
 };
