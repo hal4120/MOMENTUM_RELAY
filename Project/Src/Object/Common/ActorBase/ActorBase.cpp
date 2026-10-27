@@ -136,7 +136,12 @@ void ActorBase::Draw(void)
 	trans.Draw();
 
 	// シェーダーのリセット
-	if (shader != nullptr) { shader->ResetApply(); }
+	if (shader != nullptr) { 
+		shader->ResetApply();
+
+		// ついでにシェーダーの終了判定
+		if (shader->IsEnd()) { ResetShader(); }
+	}
 }
 
 void ActorBase::Release(void)

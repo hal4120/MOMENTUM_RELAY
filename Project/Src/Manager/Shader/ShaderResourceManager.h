@@ -99,6 +99,33 @@ private:
 
 	#pragma region リムライト
 		{
+			VERTEX_SHADER_TYPE::ModelDamageFlash1Frame,
+			"ModelDamageFlashVS_1Frame"
+		},
+		{
+			VERTEX_SHADER_TYPE::ModelDamageFlash4Frame,
+			"ModelDamageFlashVS_4Frame"
+		},
+		{
+			VERTEX_SHADER_TYPE::ModelDamageFlash8Frame,
+			"ModelDamageFlashVS_8Frame"
+		},
+		{
+			VERTEX_SHADER_TYPE::ModelDamageFlashNMap1Frame,
+			"ModelDamageFlashVS_NMap1Frame"
+		},
+		{
+			VERTEX_SHADER_TYPE::ModelDamageFlashNMap4Frame,
+			"ModelDamageFlashVS_NMap4Frame"
+		},
+		{
+			VERTEX_SHADER_TYPE::ModelDamageFlashNMap8Frame,
+			"ModelDamageFlashVS_NMap8Frame"
+		},
+	#pragma endregion
+
+	#pragma region ダメージ（モデル）
+		{
 			VERTEX_SHADER_TYPE::RimLight1Frame,
 			"RimLightVS_1Frame"
 		},
@@ -154,6 +181,12 @@ private:
 		{
 			PIXEL_SHADER_TYPE::RimLight,
 			"RimLightPS"
+		},
+
+		// ダメージ（モデル）
+		{
+			PIXEL_SHADER_TYPE::ModelDamageFlash,
+			"ModelDamageFlashPS"
 		},
 
 		// 水面

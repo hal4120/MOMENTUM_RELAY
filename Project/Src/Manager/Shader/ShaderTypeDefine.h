@@ -19,6 +19,14 @@ enum class VERTEX_SHADER_TYPE
     RimLightNMap4Frame,
     RimLightNMap8Frame,
 
+    // ダメージ（モデル）
+    ModelDamageFlash1Frame,
+    ModelDamageFlash4Frame,
+    ModelDamageFlash8Frame,
+    ModelDamageFlashNMap1Frame,
+    ModelDamageFlashNMap4Frame,
+    ModelDamageFlashNMap8Frame,
+
 	// 水面
     Water,
 
@@ -35,6 +43,9 @@ enum class PIXEL_SHADER_TYPE
 
     // リムライト
     RimLight,
+
+    // ダメージ（モデル）
+    ModelDamageFlash,
 
     // 水面
     Water,
