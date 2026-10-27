@@ -13,6 +13,7 @@
 #include "../Common/Shader/DefaultShader.h"
 #include "../Common/Shader/RimLightShader.h"
 #include "../Common/Shader/WaterShader.h"
+#include "../Common/Shader/ModelDamageFlashShader.h"
 
 #include "Wepon/PlayerAttackCollOperator.h"
 
@@ -160,7 +161,10 @@ void Player::Load(void)
 			isInvincble,
 			[&]() { AnimePlay(ANIME_TYPE::Rolling); },
 			[&]() { return GetAnimeRatio(); },
-			[&]() { ChangeState(STATE::Idle); }
+			[&]() { 
+				ChangeState(STATE::Idle);
+				CreateShader(new ModelDamageFlashShader());
+			}
 		)
 	);
 

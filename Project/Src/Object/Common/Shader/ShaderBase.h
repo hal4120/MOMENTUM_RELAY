@@ -20,6 +20,9 @@ public:
     // シェーダーの設定リセット
     virtual void ResetApply(void);
 
+    // このシェーダーの終了判定
+    virtual bool IsEnd(void)const { return false; }
+
     // シェーダー固有リソースの解放
     virtual void Release(void);
 
