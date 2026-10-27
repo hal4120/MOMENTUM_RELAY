@@ -114,7 +114,7 @@ void Player::Load(void)
 	AddState(
 		STATE::Move,
 		new PlayerMoveState(
-			10.0f, 1.5f, 300,
+			100.0f, 1.5f, 300,
 			std::bind(&Player::MoveAccel, this, std::placeholders::_1),
 			ACCEL_MAX,
 			[&]() { AnimePlay(ANIME_TYPE::Walk); },
