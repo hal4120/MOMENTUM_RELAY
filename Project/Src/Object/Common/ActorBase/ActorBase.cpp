@@ -67,6 +67,9 @@ ActorBase::ActorBase(const std::string& parameterPath) :
 
 void ActorBase::Init(void)
 {
+	// デフォルトのシェーダーを生成
+	DefaultCreateShader();
+
 	// 最終派生固有
 	SubInit();
 
@@ -140,7 +143,13 @@ void ActorBase::Draw(void)
 		shader->ResetApply();
 
 		// ついでにシェーダーの終了判定
-		if (shader->IsEnd()) { ResetShader(); }
+		if (shader->IsEnd()) {
+			// シェーダーを消去
+			ResetShader();
+
+			// デフォルトのシェーダーを生成
+			DefaultCreateShader();
+		}
 	}
 }
 

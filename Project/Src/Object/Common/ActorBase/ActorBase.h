@@ -179,10 +179,13 @@ protected:
 	/// <param name="weight">0 ～ 100 で設定（数値が大きいほど重い）</param>
 	void SetPushWeight(unsigned char weight) { pushWeight = weight; }
 
+
 	// シェーダーを設定
 	void CreateShader(ShaderBase* newShader);
 	// シェーダーを消去
 	void ResetShader();
+	// シェーダーのデフォルト設定
+	virtual void DefaultCreateShader(void) {}
 
 	// 子クラスを追加する
 	void AddChildActor(ActorBase* child) {
