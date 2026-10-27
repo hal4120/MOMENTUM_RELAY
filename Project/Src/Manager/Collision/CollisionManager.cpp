@@ -1885,23 +1885,12 @@ bool CollisionManager::SphereToMesh(SphereCollider* sphere, MeshCollider* mesh, 
 
 		const Vector3 closestPoint = ClosestPointOnTriangle(spherePos, p0, p1, p2);
 
-		Vector3 normal = spherePos - closestPoint;
-
-		const float distanceSq = normal.LengthSq();
-
-		if (distanceSq > radiusSq) { continue; }
-
-		const float distance = std::sqrt((std::max)(distanceSq, 0.0f));
-
-		if (distance > COLLISION_EPSILON) { normal /= distance; }
-		else
-		{
-			normal = triangleNormal;
-
-			if ((spherePos - p0).Dot(normal) < 0.0f) { normal = -normal; }
-		}
-
-		const float penetration = radius - distance;
+		// ポリゴン法線方向に押し出す（面の表側を衝突可能側とする）
+		if (triangleNormal.LengthSq() <= COLLISION_EPSILON) { continue; }
+		const Vector3 normal = triangleNormal.Normalized();
+		const float signedDistance = (spherePos - p0).Dot(normal);
+		const float penetration = radius - signedDistance;
+		if (penetration <= 0.0f) { continue; }
 
 		if (penetration <= maximumPenetration) { continue; }
 
@@ -2258,16 +2247,12 @@ bool CollisionManager::CapsuleToMesh(CapsuleCollider* capsule, MeshCollider* mes
 
 		const float distance = std::sqrt((std::max)(distanceSq, 0.0f));
 
-		Vector3 normal = capsulePoint - trianglePoint;
-
-		if (distance > COLLISION_EPSILON) { normal /= distance; }
-		else {
-			normal = triangleNormal;
-
-			if ((capsule->GetPos() - p0).Dot(normal) < 0.0f) { normal = -normal; }
-		}
-
-		const float penetration = radius - distance;
+		// ポリゴン法線方向に押し出す（面の表側を衝突可能側とする）
+		if (triangleNormal.LengthSq() <= COLLISION_EPSILON) { continue; }
+		const Vector3 normal = triangleNormal.Normalized();
+		const float signedDistance = (capsulePoint - p0).Dot(normal);
+		const float penetration = radius - signedDistance;
+		if (penetration <= 0.0f) { continue; }
 
 		if (penetration <= maximumPenetration) { continue; }
 
@@ -2461,6 +2446,17 @@ bool CollisionManager::BoxToMesh(BoxCollider* box, MeshCollider* mesh, Collision
 
 		if (!TriangleToOBB(p0, p1, p2, *box, normal, penetration)) { continue; }
 
+		// SATは衝突判定だけに使用し、押し出しはポリゴン法線に固定
+		if (triangleNormal.LengthSq() <= COLLISION_EPSILON) { continue; }
+		normal = triangleNormal.Normalized();
+		const auto axes = box->GetAxes();
+		const Vector3 half = box->GetHalfSize();
+		const float radius =
+			std::abs(normal.Dot(axes[0])) * half.x +
+			std::abs(normal.Dot(axes[1])) * half.y +
+			std::abs(normal.Dot(axes[2])) * half.z;
+		penetration = radius - (box->GetPos() - p0).Dot(normal) + COLLISION_EPSILON;
+		if (penetration <= 0.0f) { continue; }
 		if (penetration >= minimumPenetration) { continue; }
 
 		minimumPenetration = penetration;
