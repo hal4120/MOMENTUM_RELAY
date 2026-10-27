@@ -124,6 +124,9 @@ private:
 
 #pragma endregion
 
+	// デフォルトシェーダー
+	void DefaultCreateShader(void);
+
 	// 初期化処理
 	void SubInit(void)override {
 

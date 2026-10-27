@@ -59,9 +59,6 @@ void Player::Load(void)
 	// モデルの角度のズレの補正
 	trans.SetLocalRotation(Quaternion::FromRotationY(Deg2Rad(180.0f)));
 
-	// シェーダー登録
-	CreateShader(new DefaultShader());
-
 #pragma endregion
 
 #pragma region アニメーション読み込み
@@ -114,7 +111,7 @@ void Player::Load(void)
 	AddState(
 		STATE::Move,
 		new PlayerMoveState(
-			100.0f, 1.5f, 300,
+			10.0f, 1.5f, 300,
 			std::bind(&Player::MoveAccel, this, std::placeholders::_1),
 			ACCEL_MAX,
 			[&]() { AnimePlay(ANIME_TYPE::Walk); },
@@ -189,6 +186,12 @@ void Player::Load(void)
 	RegisterStateTransition(STATE::Move, STATE::Rolling);
 
 #pragma endregion
+}
+
+void Player::DefaultCreateShader(void)
+{
+	// シェーダー登録
+	CreateShader(new DefaultShader());
 }
 
 void Player::OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result)
