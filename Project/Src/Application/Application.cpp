@@ -44,10 +44,7 @@ void Application::Init(void)
 	ChangeWindowMode(true);
 #endif // _DEBUG
 
-	// ネットワーク動作テストの為、多重起動を可能な仕様に設定しておく
-	SetDoubleStartValidFlag(true);
-
-	SetAlwaysRunFlag(true);
+	SetAlwaysRunFlag(false);
 
 	// DxLibの初期化
 	isInitFail = false;

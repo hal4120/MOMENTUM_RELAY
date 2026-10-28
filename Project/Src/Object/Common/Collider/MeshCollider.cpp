@@ -88,7 +88,7 @@ MeshCollider::MeshCollider(COLLIDER_TAG type, int modelHandle, int frameIndex, c
 
 void MeshCollider::Init(void)
 {
-	SetupFromModel((modelHandle == -1) ? GetTransform().model : modelHandle, frameIndex);
+	SetupFromModel((modelHandle == -1) ? GetActor()->GetTrans().model : modelHandle, frameIndex);
 }
 
 bool MeshCollider::SetupFromModel(int modelHandle, int frameIndex)
@@ -328,7 +328,7 @@ Vector3 MeshCollider::ToWorldPoint(
 	const Vector3& localPoint
 ) const
 {
-	const MATRIX worldMat = GetTransform().GetWorldMatrix();
+	const MATRIX worldMat = GetActor()->GetTrans().GetWorldMatrix();
 
 	return Vector3(
 		VTransform(localPoint.ToVECTOR(), worldMat)
@@ -340,7 +340,7 @@ Vector3 MeshCollider::ToLocalPoint(
 ) const
 {
 	const MATRIX inverseMat =
-		MInverse(GetTransform().GetWorldMatrix());
+		MInverse(GetActor()->GetTrans().GetWorldMatrix());
 
 	return Vector3(
 		VTransform(worldPoint.ToVECTOR(), inverseMat)
@@ -354,7 +354,7 @@ Vector3 MeshCollider::ToWorldDirection(
 	Vector3 direction = Vector3(
 		VTransformSR(
 			localDirection.ToVECTOR(),
-			GetTransform().FinalRotationMat()
+			GetActor()->GetTrans().FinalRotationMat()
 		)
 	);
 
@@ -370,7 +370,7 @@ Vector3 MeshCollider::ToLocalDirection(
 ) const
 {
 	const MATRIX inverseRotation =
-		MInverse(GetTransform().FinalRotationMat());
+		MInverse(GetActor()->GetTrans().FinalRotationMat());
 
 	Vector3 direction = Vector3(
 		VTransformSR(

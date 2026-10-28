@@ -263,7 +263,7 @@ void ActorBase::AddCollider(ColliderBase* newCollider)
 {
 	newCollider->SetActorPtr(this);
 	newCollider->SetOnCollisionFunc([this](COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result) { this->OnCollision(ownTag, other, result); });
-	newCollider->SetOnGroundedFunc([this](COLLIDER_TAG ownTag, const ColliderBase& other) { this->OnGrounded(ownTag, other); });
+	newCollider->SetOnGroundedFunc([this](COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) { this->OnGrounded(ownTag, other, pushVec); });
 	colliders.emplace_back(newCollider);
 }
 

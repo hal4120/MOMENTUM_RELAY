@@ -56,13 +56,13 @@ public:
 	virtual void OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result) {}
 
 	// 接地判定の通知
-	virtual void OnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other) {
+	virtual void OnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) {
 
 		// 接地判定
 		isGroundMaster = true;
 
 		// 挙動
-		SubOnGrounded(ownTag, other);
+		SubOnGrounded(ownTag, other, pushVec);
 	}
 
 	// コライダーすべてを取得
@@ -141,11 +141,11 @@ protected:
 	Vector3 velocity;
 
 	// 横軸加速度の1フレームごとの加速量
-	float ACCEL_RATE = 3.0f;
+	float ACCEL_RATE = 1.0f;
 	// 横軸加速度の1フレームごとの減速量
-	float DECEL_RATE = 3.0f;
+	float DECEL_RATE = 1.0f;
 	// 横軸加速度の最大値
-	float ACCEL_MAX = 30.0f;
+	float ACCEL_MAX = 100.0f;
 
 	// 接地判定(派生先で参照用)
 	const bool& isGround = isGroundMaster;
@@ -280,7 +280,7 @@ protected:
 	virtual void SubRelease(void) {}
 
 	// 派生先追加接地判定（デフォルトはY軸加速度の打ち消し）
-	virtual void SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other) {
+	virtual void SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) {
 
 		// 動的オブジェクトの場合のみ、下方向のY軸加速度のみを打ち消す
 		if (dynamicFlg) { velocity.y = (velocity.y < 0.0f) ? 0.0f : velocity.y; }

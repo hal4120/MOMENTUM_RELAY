@@ -200,11 +200,11 @@ void Player::OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const C
 	}
 }
 
-void Player::SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other)
+void Player::SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)
 {
-	ActorBase::SubOnGrounded(ownTag, other);
+	ActorBase::SubOnGrounded(ownTag, other, pushVec);
 
-	if (other.GetTag() == COLLIDER_TAG::IceStage) { nowIsOnIce = true; }
+	if (other.GetTag() == COLLIDER_TAG::IceStage && pushVec.Abs().MaxElement().y > 0.0f) { nowIsOnIce = true; }
 }
 
 void Player::SubUpdate(void)
