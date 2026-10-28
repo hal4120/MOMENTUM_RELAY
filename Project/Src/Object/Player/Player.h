@@ -141,7 +141,7 @@ private:
 
 	void SubUpdate(void)override;
 
-	void SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other)override;
+	void SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)override;
 
 	bool nowIsOnIce = false;
 	bool prevIsOnIce = false;

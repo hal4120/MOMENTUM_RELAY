@@ -395,7 +395,7 @@ void CollisionManager::InitBuildChunks(void)
 			if (!collider) { continue; }
 
 			// 動的コライダーの場合
-			if (collider->GetDynamicFlg()) { RegisterToChunks(group.dynamicChunks, collider); }
+			if (collider->GetActor()->GetDynamicFlg()) { RegisterToChunks(group.dynamicChunks, collider); }
 			// 静的コライダーの場合
 			else { RegisterToChunks(group.staticChunks, collider); }
 		}
@@ -464,7 +464,7 @@ void CollisionManager::BuildChunks(void)
 			if (!collider) { continue; }
 
 			// 静的コライダーは変更なし
-			if (!collider->GetDynamicFlg()) { continue; }
+			if (!collider->GetActor()->GetDynamicFlg()) { continue; }
 
 			// 動的コライダーチャンク分け配列に割り当てなおす
 			RegisterToChunks(group.dynamicChunks, collider);
@@ -551,6 +551,9 @@ void CollisionManager::CheckPairOnce(ColliderBase* a, ColliderBase* b)
 
 	// 同じもの同士は判定しない
 	if (a == b) { return; }
+
+	// 同じアクターに紐づいているコライダー同士も判定しない
+	if (a->GetActor() == b->GetActor()) { return; }
 
 	// 2つセットの構造体を生成
 	ColliderPairKey key(a, b);
@@ -850,7 +853,7 @@ bool CollisionManager::SphereToSphere(SphereCollider* a, SphereCollider* b, Coll
 	if (distanceSq <= 0.000001f) {
 
 		// 第一候補：Aの移動方向
-		const Vector3 velocity = a->GetTransform().Velocity();
+		const Vector3 velocity = a->GetActor()->GetTrans().Velocity();
 
 		// 第一候補がゼロベクトルなら、第二候補：Y軸方向を使用する
 		normal = (velocity.LengthSq() > 0.000001f) ? velocity.Normalized() : Vector3::Yonly(1.0f);
@@ -967,7 +970,7 @@ bool CollisionManager::CapsuleToCapsule(CapsuleCollider* a, CapsuleCollider* b, 
 	// 最近点が完全に同じ位置だった場合
 	else {
 		// 第一候補：Aの移動方向
-		Vector3 velocity = -a->GetTransform().Velocity();
+		Vector3 velocity = -a->GetActor()->GetTrans().Velocity();
 
 		// 第一候補がゼロベクトルなら、第二候補：Y軸方向を使用する
 		collisionNormal = (velocity.LengthSq() > 1e-6f) ? velocity.Normalized() : Vector3::Yonly(1.0f);
@@ -1669,7 +1672,7 @@ bool CollisionManager::SphereToCapsule(SphereCollider* sphere, CapsuleCollider* 
 	else {
 		// 球中心がカプセル中心軸と完全に一致している場合、
 		// 接触方向を一意に決められない
-		Vector3 fallbackNormal = -sphere->GetTransform().Velocity();
+		Vector3 fallbackNormal = -sphere->GetActor()->GetTrans().Velocity();
 
 		if (fallbackNormal.LengthSq() <= epsilon * epsilon) { fallbackNormal = Vector3::Yonly(1.0f); }
 
@@ -1689,7 +1692,7 @@ bool CollisionManager::SphereToCapsule(SphereCollider* sphere, CapsuleCollider* 
 	if (dist < epsilon) {
 			// 完全一致時は先ほど決めた予備方向を使用
 			if (normal.LengthSq() <= epsilon * epsilon) {
-				normal = -sphere->GetTransform().Velocity();
+				normal = -sphere->GetActor()->GetTrans().Velocity();
 
 				if (normal.LengthSq() <= epsilon * epsilon) { normal = Vector3::Yonly(1.0f); }
 			}
@@ -1980,7 +1983,7 @@ bool CollisionManager::SphereToXZCircle(SphereCollider* sphere, XZCircleCollider
 			そのため、Sphereの移動方向の逆方向を使う。
 		*/
 
-		Vector3 fallbackNormal = -sphere->GetTransform().Velocity();
+		Vector3 fallbackNormal = -sphere->GetActor()->GetTrans().Velocity();
 
 		// Y方向は使用しない
 		fallbackNormal.y = 0.0f;
@@ -2380,7 +2383,7 @@ bool CollisionManager::CapsuleToXZCircle(CapsuleCollider* capsule, XZCircleColli
 	else {
 
 		// 移動方向の逆をXZ平面へ投影して使用する。
-		Vector3 fallbackNormal = -capsule->GetTransform().Velocity();
+		Vector3 fallbackNormal = -capsule->GetActor()->GetTrans().Velocity();
 		fallbackNormal.y = 0.0f;
 
 		if (fallbackNormal.LengthSq() > epsilon * epsilon) { pushNormal = fallbackNormal.Normalized(); }
@@ -2489,8 +2492,13 @@ void CollisionManager::MoveCollider(ColliderBase* ownCollider, const Vector3& pu
 
 	ownCollider->SetTransformPosAdd(pushVector);
 
-	const Vector3 pushNormal = pushVector.Normalized();
-	if (pushNormal.y > 0.5f) { ownCollider->CallOnGrounded(ownCollider->GetTag(), otherCollider); }
+	ownCollider->CallOnGrounded(ownCollider->GetTag(), otherCollider, pushVector);
+}
+
+bool CollisionManager::NeedPush(ColliderBase* a, ColliderBase* b) const
+{
+	if (a->GetActor()->GetPushFlg() && b->GetActor()->GetPushFlg()) { return true; }
+	return false;
 }
 
 void CollisionManager::ApplyPush(ColliderBase* a, ColliderBase* b, const Vector3& normal, float overlap)const
@@ -2502,13 +2510,13 @@ void CollisionManager::ApplyPush(ColliderBase* a, ColliderBase* b, const Vector3
 {
 	if (a == nullptr || b == nullptr) { return; }
 
-	const bool aDynamic = a->GetDynamicFlg();
-	const bool bDynamic = b->GetDynamicFlg();
+	const bool aDynamic = a->GetActor()->GetDynamicFlg();
+	const bool bDynamic = b->GetActor()->GetDynamicFlg();
 
 	// 両方動的な場合は重みに応じて分配する
 	if (aDynamic && bDynamic) {
 		float aRatio = 0.0f, bRatio = 0.0f;
-		WeightRatioCalculation(a->GetPushWeight(), b->GetPushWeight(), aRatio, bRatio);
+		WeightRatioCalculation(a->GetActor()->GetPushWeight(), b->GetActor()->GetPushWeight(), aRatio, bRatio);
 
 		MoveCollider(a, overlapVec * aRatio, *b);
 		MoveCollider(b, -overlapVec * bRatio, *a);

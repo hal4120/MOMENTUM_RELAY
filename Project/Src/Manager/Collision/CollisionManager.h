@@ -291,10 +291,7 @@ private:
 	/// <param name="a">コライダー１</param>
 	/// <param name="b">コライダー２</param>
 	/// <returns></returns>
-	bool NeedPush(ColliderBase* a, ColliderBase* b)const {
-		if (a->GetPushFlg() && b->GetPushFlg()) { return true; }
-		return false;
-	}
+	bool NeedPush(ColliderBase* a, ColliderBase* b)const;
 
 	/// <summary>
 	/// 重みづけの割合を計算

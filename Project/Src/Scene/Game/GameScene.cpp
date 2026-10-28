@@ -33,6 +33,7 @@
 #include "../../Object/CameraCollOperator/CameraLineCollOperator.h"
 
 #include "../../Object/TestStage.h"
+#include "../../Object/TestObject.h"
 
 #include "../../Object/Player/Player.h"
 
@@ -48,10 +49,16 @@ void GameScene::SubPostLoad(void)
 
 	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false));
 	AddActor(new IceBoxDebugObject(Vector3(1000, 100, 1000), Vector3::XZonly(-1500.0f, 1500.0f), false));
-	AddActor(new IceBoxDebugObject(Vector3(1000, 1000, 10), Vector3::XZonly(1500.0f, -1500.0f), false));
+	//AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 100), Vector3::YZonly(5000.0f, 5000.0f), false));
+	//AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 100), Vector3::YZonly(5000.0f, -5000.0f), false));
+	//AddActor(new IceBoxDebugObject(Vector3(100, 10000, 10000), Vector3::XYonly(5000.0f, 5000.0f), false));
+	//AddActor(new IceBoxDebugObject(Vector3(100, 10000, 10000), Vector3::XYonly(-5000.0f, 5000.0f), false));
 
 	//AddActor(new CapsuleDebugObject(Vector3(50, 0, 0), Vector3(-50, 0, 0), 50.0f, Vector3(), true, true, true, 50, true));
 	//AddActor(new TestStage);
+	AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Xonly(50.0f)));
+	AddActor(new TestObject(Vector3(-400, 300, -400), Vector3::Zonly(50.0f)));
+	AddActor(new TestObject(Vector3(-600, 300, -600), Vector3::XZonly(25.0f, 25.0f)));
 	AddActor(new Player);
 	AddActor(new Water);
 
