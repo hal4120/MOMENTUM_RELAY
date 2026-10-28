@@ -69,6 +69,8 @@
     <ClCompile Include="Src\Object\Player\State\PlayerRollingState.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\ModelDamageFlashShader.cpp" />
     <ClCompile Include="Src\Object\TestObject.cpp" />
+    <ClCompile Include="Src\Object\Player\State\PlayerMomentumAimState.cpp" />
+    <ClCompile Include="Src\Object\Player\State\PlayerMomentumStealStartState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -165,6 +167,8 @@
     <ClInclude Include="Src\Object\Player\State\PlayerRollingState.h" />
     <ClInclude Include="Src\Object\Common\Shader\ModelDamageFlashShader.h" />
     <ClInclude Include="Src\Object\TestObject.h" />
+    <ClInclude Include="Src\Object\Player\State\PlayerMomentumAimState.h" />
+    <ClInclude Include="Src\Object\Player\State\PlayerMomentumStealStartState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />

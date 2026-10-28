@@ -55,6 +55,9 @@ public:
 
 		PlayerKickDownAttack,
 
+		// ¨‚¢‚ğ’D‚¤
+		PlayerMomentumSteal,
+
 		// ‰ñ”ğ
 		PlayerRolling,
 

@@ -22,6 +22,8 @@ struct RaycastHit
 	Vector3 normal;
 
 	float distance = 0.0f;
+
+	bool IsHit() const { return collider != nullptr; }
 };
 
 class CollisionManager
@@ -126,6 +128,7 @@ public:
 	/// <param name="result">最も近くで命中したコライダーと命中情報</param>
 	/// <returns></returns>
 	bool Raycast(const Vector3& origin, const Vector3& direction, float maxDistance, RaycastHit& result);
+	RaycastHit Raycast(const Vector3& origin, const Vector3& direction, float maxDistance);
 
 	// チャンク描画
 	void DrawChunkGrid(const Vector3& cameraPos) const;

@@ -2534,63 +2534,172 @@ void CollisionManager::ApplyPushOneSide(ColliderBase* dynamicColl, ColliderBase*
 
 #pragma region レイキャスト
 
+// レイと登録済みコライダーの交差判定。最短距離のヒットのみ返す。
+RaycastHit CollisionManager::Raycast(const Vector3& origin, const Vector3& direction, float maxDistance)
+{
+    RaycastHit hit;
+    Raycast(origin, direction, maxDistance, hit);
+    return hit;
+}
+
 bool CollisionManager::Raycast(const Vector3& origin, const Vector3& direction, float maxDistance, RaycastHit& result)
 {
-	result = RaycastHit{};
+    result = RaycastHit{};
+    constexpr float eps = 1.0e-6f;
+    if (maxDistance <= 0.0f || direction.LengthSq() <= eps) { return false; }
 
-	if (maxDistance <= 0.0f || direction.LengthSq() < 0.000001f) { return false; }
+    const Vector3 dir = direction.Normalized();
+    float nearest = maxDistance;
 
-	const Vector3 dir = direction.Normalized();
+    // 1つの候補が命中した場合、これまでの最短距離より近ければ更新
+    auto Accept = [&](ColliderBase* collider, float t, const Vector3& normal) {
+        if (t < 0.0f || t > nearest) { return; }
+        nearest = t;
+        result.collider = collider;
+        result.distance = t;
+        result.point = origin + dir * t;
+        result.normal = normal;
+        if (result.normal.LengthSq() > eps) { result.normal.Normalize(); }
+        else { result.normal = -dir; }
+    };
 
-	float nearestDistance = maxDistance;
-	bool isHit = false;
+    // 球（カプセルの両端にも利用）
+    auto TestSphere = [&](ColliderBase* collider, const Vector3& center, float radius) {
+        const Vector3 oc = origin - center;
+        const float b = oc.Dot(dir);
+        const float d = b * b - (oc.Dot(oc) - radius * radius);
+        if (d < 0.0f) { return; }
+        const float root = std::sqrt(d);
+        float t = -b - root;
+        if (t < 0.0f) { t = -b + root; }
+        if (t >= 0.0f && t <= nearest) {
+            const Vector3 p = origin + dir * t;
+            Accept(collider, t, p - center);
+        }
+    };
 
-	for (const ColliderGroupData& group : groupColliders) {
+	for (int i = 0; i < (int)COLLIDER_GROUP::Max; i++) {
 
-		for (ColliderBase* collider : group.colliders) {
+		if (i == (int)COLLIDER_GROUP::Player) { continue; }
 
-			if (!collider || !collider->GetJudgeFlg()) { continue; }
+        for (ColliderBase* collider : groupColliders[i].colliders) {
+            if (!collider || !collider->GetJudgeFlg()) { continue; }
+			if (
+				collider->GetTag() == COLLIDER_TAG::CameraLine ||
+				collider->GetTag() == COLLIDER_TAG::CameraPoint
+				) {
+				continue;
+			}
 
-			// 今回は球体のみ対応
-			if (collider->GetShape() != COLLIDER_SHAPE::Sphere) { continue; }
-
-			SphereCollider* sphere = static_cast<SphereCollider*>(collider);
-
-			const Vector3 center = sphere->GetPos();
-			const float radius = sphere->GetRadius();
-
-			// レイ開始点から球中心へのベクトル
-			const Vector3 oc = origin - center;
-
-			const float b = oc.Dot(dir);
-			const float c = oc.Dot(oc) - radius * radius;
-
-			const float discriminant = b * b - c;
-
-			if (discriminant < 0.0f) { continue; }
-
-			const float sqrtD = std::sqrt(discriminant);
-
-			// 手前側の交点
-			float distance = -b - sqrtD;
-
-			// 球内部から開始している場合は出口側
-			if (distance < 0.0f) { distance = -b + sqrtD; }
-
-			if (distance < 0.0f || distance > nearestDistance) { continue; }
-
-			nearestDistance = distance;
-
-			result.collider = collider;
-			result.distance = distance;
-			result.point = origin + dir * distance;
-			result.normal = (result.point - center).Normalized();
-
-			isHit = true;
-		}
-	}
-
-	return isHit;
+            switch (collider->GetShape()) {
+            case COLLIDER_SHAPE::Sphere: {
+                auto* sphere = static_cast<SphereCollider*>(collider);
+                TestSphere(collider, sphere->GetPos(), sphere->GetRadius());
+                break;
+            }
+            case COLLIDER_SHAPE::Capsule: {
+                auto* capsule = static_cast<CapsuleCollider*>(collider);
+                const Vector3 a = capsule->GetStartPos();
+                const Vector3 b = capsule->GetEndPos();
+                const float radius = capsule->GetRadius();
+                const Vector3 axis = b - a;
+                const float length = axis.Length();
+                if (length <= eps) { TestSphere(collider, a, radius); break; }
+                const Vector3 n = axis / length;
+                const Vector3 m = origin - a;
+                const float md = m.Dot(n);
+                const float nd = dir.Dot(n);
+                const Vector3 perpM = m - n * md;
+                const Vector3 perpD = dir - n * nd;
+                const float A = perpD.Dot(perpD);
+                const float B = 2.0f * perpM.Dot(perpD);
+                const float C = perpM.Dot(perpM) - radius * radius;
+                if (A > eps) {
+                    const float disc = B * B - 4.0f * A * C;
+                    if (disc >= 0.0f) {
+                        const float root = std::sqrt(disc);
+                        const float candidates[2] = { (-B - root) / (2.0f * A), (-B + root) / (2.0f * A) };
+                        for (float t : candidates) {
+                            const float h = md + nd * t;
+                            if (t >= 0.0f && h >= 0.0f && h <= length) {
+                                Accept(collider, t, origin + dir * t - (a + n * h));
+                            }
+                        }
+                    }
+                }
+                // 球部分は各端点の外側半球だけを採用する
+                auto TestCap = [&](const Vector3& center, bool first) {
+                    const Vector3 oc = origin - center;
+                    const float v = oc.Dot(dir);
+                    const float disc = v * v - (oc.Dot(oc) - radius * radius);
+                    if (disc < 0.0f) { return; }
+                    const float root = std::sqrt(disc);
+                    const float candidates[2] = { -v - root, -v + root };
+                    for (float t : candidates) {
+                        if (t < 0.0f || t > nearest) { continue; }
+                        const Vector3 p = origin + dir * t;
+                        const float axial = (p - a).Dot(n);
+                        if ((first && axial <= 0.0f) || (!first && axial >= length)) {
+                            Accept(collider, t, p - center);
+                        }
+                    }
+                };
+                TestCap(a, true);
+                TestCap(b, false);
+                break;
+            }
+            case COLLIDER_SHAPE::Box: {
+                auto* box = static_cast<BoxCollider*>(collider);
+                const auto axes = box->GetAxes();
+                const Vector3 half = box->GetHalfSize();
+                const float extent[3] = { half.x, half.y, half.z };
+                const Vector3 relative = origin - box->GetPos();
+                float enter = -FLT_MAX, leave = FLT_MAX;
+                Vector3 enterNormal, leaveNormal;
+                bool valid = true;
+                for (int i = 0; i < 3; ++i) {
+                    const float o = relative.Dot(axes[i]);
+                    const float d = dir.Dot(axes[i]);
+                    if (std::abs(d) <= eps) {
+                        if (o < -extent[i] || o > extent[i]) { valid = false; break; }
+                        continue;
+                    }
+                    float t0 = (-extent[i] - o) / d;
+                    float t1 = (extent[i] - o) / d;
+                    Vector3 n0 = -axes[i], n1 = axes[i];
+                    if (t0 > t1) { std::swap(t0, t1); std::swap(n0, n1); }
+                    if (t0 > enter) { enter = t0; enterNormal = n0; }
+                    if (t1 < leave) { leave = t1; leaveNormal = n1; }
+                    if (enter > leave) { valid = false; break; }
+                }
+                if (valid && leave >= 0.0f) {
+                    if (enter >= 0.0f) { Accept(collider, enter, enterNormal); }
+                    else { Accept(collider, leave, leaveNormal); }
+                }
+                break;
+            }
+            case COLLIDER_SHAPE::Mesh: {
+                auto* mesh = static_cast<MeshCollider*>(collider);
+                const Vector3 end = origin + dir * nearest;
+                for (unsigned int i = 0; i < mesh->GetTriangleNum(); ++i) {
+                    Vector3 a, b, c, normal, point;
+                    mesh->GetWorldTriangle(i, a, b, c, normal);
+                    float rate = 0.0f;
+                    Vector3 faceNormal;
+                    if (SegmentToTriangle(origin, end, a, b, c, rate, point, faceNormal)) {
+                        // endはこのメッシュの検査開始時点での最短距離
+                        const float t = (point - origin).Dot(dir);
+                        if (faceNormal.Dot(dir) > 0.0f) { faceNormal = -faceNormal; }
+                        Accept(collider, t, faceNormal);
+                    }
+                }
+                break;
+            }
+            default: break; // Line / XzCircle はこの3Dレイでは対象外
+            }
+        }
+    }
+    return result.IsHit();
 }
 
 #pragma endregion
