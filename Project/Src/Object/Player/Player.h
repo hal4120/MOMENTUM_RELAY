@@ -39,7 +39,7 @@ private:
 
 		Rolling,
 
-		MomentumStealStart,
+		MomentumStealInput,
 		MomentumStealQuick,
 		MomentumStealAim,
 		MomentumSteal,
@@ -172,4 +172,9 @@ private:
 
 	// ターゲットアクター
 	ActorBase* target;
+
+	// 奪って保持している勢い
+	Vector3 stealVelocity;
+	// 今勢いを保持しているか（true = している、false = していない）
+	bool IsSteal(void)const { return stealVelocity != 0.0f; }
 };

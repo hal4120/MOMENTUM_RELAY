@@ -1,4 +1,4 @@
-#include "PlayerMomentumStealAimState.h"
+#include "PlayerMomentumAimState.h"
 
 #include "../../../Manager/Input/InputManager.h"
 
@@ -22,7 +22,7 @@
 
 #include "../../Common/Shader/RimLightShader.h"
 
-PlayerMomentumStealAimState::PlayerMomentumStealAimState(
+PlayerMomentumAimState::PlayerMomentumAimState(
 	float LIMIT_TIME,
 
 	float TIME_SCALE,
@@ -34,7 +34,7 @@ PlayerMomentumStealAimState::PlayerMomentumStealAimState(
 
 	const std::function<void(void)>& playAnimeAim,
 
-	const std::function<void(void)>& changeStateSteal,
+	const std::function<void(void)>& changeStateMomentum,
 	const std::function<void(void)>& changeStateDefault
 ) :
 	LIMIT_TIME(LIMIT_TIME),
@@ -48,14 +48,14 @@ PlayerMomentumStealAimState::PlayerMomentumStealAimState(
 
 	playAnimeAim(playAnimeAim),
 
-	changeStateSteal(changeStateSteal),
+	changeStateMomentum(changeStateMomentum),
 	changeStateDefault(changeStateDefault),
 
 	limitTimeCounter()
 {
 }
 
-void PlayerMomentumStealAimState::Enter(void)
+void PlayerMomentumAimState::Enter(void)
 {
 	// ŽžŠÔ”{—¦‚ð’x‚­‚·‚éi’´ƒXƒ[j
 	TimeScale::GetIns().ChangeTimeScale(TIME_SCALE);
@@ -76,7 +76,7 @@ void PlayerMomentumStealAimState::Enter(void)
 	limitTimeCounter = 0.0f;
 }
 
-void PlayerMomentumStealAimState::Update(void)
+void PlayerMomentumAimState::Update(void)
 {
 #pragma region ƒ^[ƒQƒbƒg‘I‘ð
 
@@ -104,8 +104,8 @@ void PlayerMomentumStealAimState::Update(void)
 	// ƒAƒbƒvƒgƒŠƒK[‚Å‘I‘ðŠm’è
 	if (Input::GetIns().GetInfo(KEY_TYPE::PlayerMomentumSteal).up) {
 
-		// ŽÀÛ‚É¨‚¢‚ð’D‚¤ó‘Ô‚Ö‘JˆÚ
-		changeStateSteal();
+		// ŽÀÛ‚É¨‚¢‘€ì‚ðŽÀs‚·‚éó‘Ô‚É‘JˆÚ
+		changeStateMomentum();
 
 		return;
 	}
@@ -122,7 +122,7 @@ void PlayerMomentumStealAimState::Update(void)
 	}
 }
 
-void PlayerMomentumStealAimState::Exit(void)
+void PlayerMomentumAimState::Exit(void)
 {
 #pragma region ƒvƒŒƒCƒ„[‚Ì‰ñ“]‚ð‚à‚Ç‚·
 	// ƒJƒƒ‰‚Ì‰ñ“]‚©‚çYŽ²‰ñ“]‚¾‚¯‚ðŽæ“¾
@@ -150,7 +150,7 @@ void PlayerMomentumStealAimState::Exit(void)
 	CurrentCamera::Get().EndEvent();
 }
 
-void PlayerMomentumStealAimState::ChangeTarget(ActorBase* target)
+void PlayerMomentumAimState::ChangeTarget(ActorBase* target)
 {
 	// “¯‚¶‚¾‚Á‚½‚ç‰½‚à‚µ‚È‚¢
 	if (this->target == target) { return; }

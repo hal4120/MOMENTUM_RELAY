@@ -4,13 +4,13 @@
 
 #include "../../../Manager/Input/InputManager.h"
 
-#include "../Wepon/PlayerAttackCollOperator.h"
+#include "../Weapon/PlayerCollOperator.h"
 
 PlayerAttackState::PlayerAttackState(
 	float COLL_START_TIME,
 	float COLL_END_TIME,
 
-	PlayerAttackCollOperator& collOperator,
+	PlayerCollOperator& collOperator,
 
 	std::function<void(void)> playAnimeAttack,
 	std::function<float(void)> getAnimeRatio,
