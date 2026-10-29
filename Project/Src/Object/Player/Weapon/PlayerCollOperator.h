@@ -4,16 +4,26 @@
 
 class SphereCollider;
 
-class PlayerAttackCollOperator : public ActorBase
+class PlayerCollOperator : public ActorBase
 {
 public:
-	PlayerAttackCollOperator(
+
+	/// <summary>
+	/// プレイヤーの汎用コライダー管理
+	/// </summary>
+	/// <param name="COLL_TAG">コライダーのタグ</param>
+	/// <param name="COLL_RADIUS">コライダーの半径</param>
+	/// <param name="COLL_LOCAL_POS">コライダーの相対座標</param>
+	/// <param name="playerTrans">追従対象</param>
+	PlayerCollOperator(
+		COLLIDER_TAG COLL_TAG,
 		float COLL_RADIUS,
+
 		const Vector3& COLL_LOCAL_POS,
 
 		const Transform& playerTrans
 	);
-	~PlayerAttackCollOperator()override = default;
+	~PlayerCollOperator()override = default;
 
 	void Load(void)override;
 

@@ -278,6 +278,14 @@ const Vector3& ActorBase::VelSteal(void)
 	return ret;
 }
 
+void ActorBase::VelGive(const Vector3& vel)
+{
+	velocity = vel;
+
+	// “®‚«o‚³‚¹‚é
+	SetDynamicFlg(true);
+}
+
 void ActorBase::OnTargeted()
 {
 	// ƒŠƒ€ƒ‰ƒCƒg‚ğ‚Â‚¯‚é

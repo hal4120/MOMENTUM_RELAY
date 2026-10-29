@@ -6,10 +6,22 @@ class ActorBase;
 
 struct Transform;
 
-class PlayerMomentumStealAimState : public CharacterStateBase
+class PlayerMomentumAimState : public CharacterStateBase
 {
 public:
-	PlayerMomentumStealAimState(
+
+	/// <summary>
+	/// 勢い操作「エイム発動」（ターゲット照準選択）
+	/// </summary>
+	/// <param name="LIMIT_TIME">ターゲット照準選択の猶予時間（フレーム数）</param>
+	/// <param name="TIME_SCALE">照準選択中のゲーム進行スピード倍率（超スロー）</param>
+	/// <param name="RAYCAST_LENGTH">照準選択のレイキャストの長さ</param>
+	/// <param name="playerTrans">プレイヤーのモデル制御情報の参照</param>
+	/// <param name="target">ターゲット格納先</param>
+	/// <param name="playAnimeAim">エイム状態アニメーション再生関数</param>
+	/// <param name="changeStateMomentum">実際に勢い操作を実行する状態へ遷移する関数</param>
+	/// <param name="changeStateDefault">通常状態へ遷移する関数</param>
+	PlayerMomentumAimState(
 		float LIMIT_TIME,
 
 		float TIME_SCALE,
@@ -21,10 +33,11 @@ public:
 
 		const std::function<void(void)>& playAnimeAim,
 
-		const std::function<void(void)>& changeStateSteal,
+		const std::function<void(void)>& changeStateMomentum,
 		const std::function<void(void)>& changeStateDefault
 	);
-	~PlayerMomentumStealAimState()override = default;
+
+	~PlayerMomentumAimState()override = default;
 
 	// 状態遷移後1度行う初期化処理
 	void Enter(void)override;
@@ -50,7 +63,7 @@ private:
 
 #pragma region 参照
 
-	// プレイヤーの回転の参照
+	// プレイヤーのモデル制御情報の参照
 	Transform& playerTrans;
 
 	// ターゲット格納先
@@ -59,8 +72,8 @@ private:
 	// エイム状態アニメーション再生関数
 	const std::function<void(void)> playAnimeAim;
 
-	// 実際に勢いを奪う状態へ遷移する関数
-	const std::function<void(void)> changeStateSteal;
+	// 実際に勢い操作を実行する状態へ遷移する関数
+	const std::function<void(void)> changeStateMomentum;
 	// 通常状態へ遷移する関数
 	const std::function<void(void)> changeStateDefault;
 

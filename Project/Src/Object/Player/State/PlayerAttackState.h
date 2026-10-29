@@ -6,7 +6,7 @@
 
 struct Transform;
 
-class PlayerAttackCollOperator;
+class PlayerCollOperator;
 
 class PlayerAttackState : public CharacterStateBase
 {
@@ -25,7 +25,7 @@ public:
 		float COLL_START_TIME,
 		float COLL_END_TIME,
 
-		PlayerAttackCollOperator& collOperator,
+		PlayerCollOperator& collOperator,
 
 		std::function<void(void)> playAnimeAttack,
 		std::function<float(void)> getAnimeRatio,
@@ -72,7 +72,7 @@ private:
 #pragma region 受け取る参照変数・関数
 
 	// 攻撃の当たり判定管理クラスの参照
-	PlayerAttackCollOperator& collOperator;
+	PlayerCollOperator& collOperator;
 
 	// 攻撃アニメーションの再生関数のポインタ
 	const std::function<void(void)> playAnimeAttack;

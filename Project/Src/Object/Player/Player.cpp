@@ -15,7 +15,8 @@
 #include "../Common/Shader/WaterShader.h"
 #include "../Common/Shader/ModelDamageFlashShader.h"
 
-#include "Wepon/PlayerAttackCollOperator.h"
+#include "Weapon/PlayerCollOperator.h"
+#include "Weapon/PlayerMomentumQuickStealFind.h"
 
 #include "State/PlayerIdleState.h"
 #include "State/PlayerMoveState.h"
@@ -23,8 +24,9 @@
 #include "State/PlayerAttackState.h"
 #include "State/PlayerRollingState.h"
 
-#include "State/PlayerMomentumStealStartState.h"
-#include "State/PlayerMomentumStealAimState.h"
+#include "State/PlayerMomentumInputState.h"
+#include "State/PlayerMomentumQuickState.h"
+#include "State/PlayerMomentumAimState.h"
 
 Player::Player() :
 	CharacterBase(),
@@ -100,8 +102,17 @@ void Player::Load(void)
 
 #pragma region 下位アクターの生成
 
-	PlayerAttackCollOperator* kickDownAttackCollOperator = new PlayerAttackCollOperator(10.0f, Vector3::Zonly(50.0f), trans);
+	PlayerCollOperator* kickDownAttackCollOperator =
+		new PlayerCollOperator(
+			COLLIDER_TAG::PlayerKickDownAttack,
+			10.0f,
+			Vector3::Zonly(50.0f),
+			trans
+		);
 	AddChildActor(kickDownAttackCollOperator);
+
+	PlayerMomentumQuickStealFind* momentumQuickStealFind = new PlayerMomentumQuickStealFind(trans);
+	AddChildActor(momentumQuickStealFind);
 
 #pragma endregion
 
@@ -164,29 +175,41 @@ void Player::Load(void)
 			isInvincble,
 			[&]() { AnimePlay(ANIME_TYPE::Rolling); },
 			[&]() { return GetAnimeRatio(); },
-			[&]() { 
-				ChangeState(STATE::Idle);
-				CreateShader(new ModelDamageFlashShader());
-			}
+			[&]() { ChangeState(STATE::Idle); }
 		)
 	);
 
-	// 勢いを奪う行動開始状態
+	// 勢いを奪う行動の入力管理状態
 	AddState(
-		STATE::MomentumStealStart,
-		new PlayerMomentumStealStartState(
+		STATE::MomentumStealInput,
+		new PlayerMomentumInputState(
 			0.0f,
-			0.0f,
-			[&]() { ChangeState(STATE::MomentumStealAim); },
+			10.0f,
+			std::bind(&Player::IsSteal,this),
+			[&]() { ChangeState(STATE::MomentumStealQuick); },
 			[&]() { ChangeState(STATE::MomentumStealAim); }
 		)
 	);
 
-	// エイム状態
+	// 勢いを奪う行動の自動選択中状態
+	AddState(
+		STATE::MomentumStealQuick,
+		new PlayerMomentumQuickState(
+			5.0f,
+			std::bind(&Player::IsSteal, this),
+			this,
+			target,
+			*momentumQuickStealFind,
+			[&]() { ChangeState(STATE::MomentumStealAim); },
+			[&]() { ChangeState(STATE::Idle); }
+		)
+	);
+
+	// 勢いを奪う行動のエイム選択中状態
 	AddState(
 		STATE::MomentumStealAim,
-		new PlayerMomentumStealAimState(
-			100000.0f,
+		new PlayerMomentumAimState(
+			300.0f,
 			0.01f,
 			1000.0f,
 			trans,
@@ -218,9 +241,9 @@ void Player::Load(void)
 	RegisterStateTransition(STATE::Move, STATE::Rolling);
 
 	// 「待機状態」->「勢いを奪う状態」の自動遷移登録
-	RegisterStateTransition(STATE::Idle, STATE::MomentumStealStart);
+	RegisterStateTransition(STATE::Idle, STATE::MomentumStealInput);
 	// 「移動状態」->「勢いを奪う状態」の自動遷移登録
-	RegisterStateTransition(STATE::Move, STATE::MomentumStealStart);
+	RegisterStateTransition(STATE::Move, STATE::MomentumStealInput);
 
 #pragma endregion
 }

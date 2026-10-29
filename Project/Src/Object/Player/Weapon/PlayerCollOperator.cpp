@@ -1,9 +1,11 @@
-#include "PlayerAttackCollOperator.h"
+#include "PlayerCollOperator.h"
 
 #include "../../Common/Collider/SphereCollider.h"
 
-PlayerAttackCollOperator::PlayerAttackCollOperator(
+PlayerCollOperator::PlayerCollOperator(
+	COLLIDER_TAG COLL_TAG,
 	float COLL_RADIUS,
+
 	const Vector3& COLL_LOCAL_POS,
 
 	const Transform& playerTrans
@@ -12,11 +14,11 @@ PlayerAttackCollOperator::PlayerAttackCollOperator(
 
 	playerTrans(playerTrans),
 
-	attackColl(new SphereCollider(COLLIDER_TAG::PlayerKickDownAttack, COLL_RADIUS))
+	attackColl(new SphereCollider(COLL_TAG, COLL_RADIUS))
 {
 }
 
-void PlayerAttackCollOperator::Load(void)
+void PlayerCollOperator::Load(void)
 {
 #pragma region オブジェクト設定
 
@@ -37,7 +39,7 @@ void PlayerAttackCollOperator::Load(void)
 	AddCollider(attackColl);
 }
 
-void PlayerAttackCollOperator::SubUpdate(void)
+void PlayerCollOperator::SubUpdate(void)
 {
 	// 判定が発生しているときだけ処理する
 	if (!attackColl->GetJudgeFlg()) { return; }
@@ -46,7 +48,7 @@ void PlayerAttackCollOperator::SubUpdate(void)
 	trans.pos = playerTrans.pos + playerTrans.VTrans(COLL_LOCAL_POS);
 }
 
-void PlayerAttackCollOperator::On(void)
+void PlayerCollOperator::On(void)
 {
 	attackColl->SetJudgeFlg(true);
 
@@ -55,7 +57,7 @@ void PlayerAttackCollOperator::On(void)
 	trans.pos = playerTrans.pos + playerTrans.VTrans(COLL_LOCAL_POS);
 }
 
-void PlayerAttackCollOperator::Off(void)
+void PlayerCollOperator::Off(void)
 {
 	attackColl->SetJudgeFlg(false);
 }
