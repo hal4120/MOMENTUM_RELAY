@@ -140,7 +140,6 @@ struct Transform
 
 #pragma endregion
 
-
 	/// <summary>
 	/// モデルをロード
 	/// </summary>
@@ -151,12 +150,6 @@ struct Transform
 	/// モデルを複製
 	/// </summary>
 	void Duplicate(int model);
-
-	/// <summary>
-	/// エフェクトをロード
-	/// </summary>
-	/// <param name="path">エフェクトのパス（Data/Effect/～.efk）</param>
-	void LoadEffect(std::string path);
 
 	/// モデル描画に使用するワールド変換行列を取得する
 	MATRIX GetWorldMatrix(void) const;

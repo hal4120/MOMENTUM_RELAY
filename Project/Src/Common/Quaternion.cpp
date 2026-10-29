@@ -418,3 +418,35 @@ float Quaternion::GetYaw(void) const
 
 	return atan2f(forward.x, forward.z);
 }
+
+Vector3 Quaternion::ToEulerXZY(void) const
+{
+	// 正規化
+	Quaternion q = Normalized();
+
+	// 回転行列へ変換
+	MATRIX m = q.ToMatrix();
+
+	Vector3 angle;
+
+	// Z軸回転を取得
+	angle.z = asinf(std::clamp(m.m[0][1], -1.0f, 1.0f));
+
+	// ジンバルロック付近の判定
+	if (fabsf(cosf(angle.z)) > 0.00001f) {
+
+		// X軸回転
+		angle.x = atan2f(-m.m[2][1], m.m[1][1]);
+
+		// Y軸回転
+		angle.y = atan2f(-m.m[0][2], m.m[0][0]);
+	}
+	else {
+
+		// ジンバルロック時
+		angle.x = atan2f(m.m[1][2], m.m[2][2]);
+		angle.y = 0.0f;
+	}
+
+	return angle;
+}

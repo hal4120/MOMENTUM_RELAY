@@ -73,7 +73,7 @@ void PlayerRollingState::Enter(void)
 	playDodgeAnime();
 
 	// 攻撃のクールタイムをセットする
-	coolTimeCounter = COOL_TIME;
+	coolTimeCounter = (float)COOL_TIME;
 }
 
 void PlayerRollingState::Update(void)

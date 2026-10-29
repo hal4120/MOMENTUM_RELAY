@@ -23,7 +23,13 @@
 #include "State/PlayerAttackState.h"
 #include "State/PlayerRollingState.h"
 
-Player::Player() : CharacterBase()
+#include "State/PlayerMomentumStealStartState.h"
+#include "State/PlayerMomentumStealAimState.h"
+
+Player::Player() :
+	CharacterBase(),
+
+	target(nullptr)
 {
 }
 
@@ -165,6 +171,32 @@ void Player::Load(void)
 		)
 	);
 
+	// ¨‚¢‚ð’D‚¤s“®ŠJŽnó‘Ô
+	AddState(
+		STATE::MomentumStealStart,
+		new PlayerMomentumStealStartState(
+			0.0f,
+			0.0f,
+			[&]() { ChangeState(STATE::MomentumStealAim); },
+			[&]() { ChangeState(STATE::MomentumStealAim); }
+		)
+	);
+
+	// ƒGƒCƒ€ó‘Ô
+	AddState(
+		STATE::MomentumStealAim,
+		new PlayerMomentumStealAimState(
+			100000.0f,
+			0.01f,
+			1000.0f,
+			trans,
+			target,
+			[&]() { AnimePlay(ANIME_TYPE::MomentumStealAim, false); },
+			[&]() { ChangeState(STATE::Idle); },
+			[&]() { ChangeState(STATE::Idle); }
+		)
+	);
+
 	// u‘Ò‹@ó‘Ôv->uˆÚ“®ó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
 	RegisterStateTransition(STATE::Idle, STATE::Move);
 	// uˆÚ“®ó‘Ôv->u‘Ò‹@ó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
@@ -185,6 +217,11 @@ void Player::Load(void)
 	// uˆÚ“®ó‘Ôv->u‰ñ”ðó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
 	RegisterStateTransition(STATE::Move, STATE::Rolling);
 
+	// u‘Ò‹@ó‘Ôv->u¨‚¢‚ð’D‚¤ó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
+	RegisterStateTransition(STATE::Idle, STATE::MomentumStealStart);
+	// uˆÚ“®ó‘Ôv->u¨‚¢‚ð’D‚¤ó‘Ôv‚ÌŽ©“®‘JˆÚ“o˜^
+	RegisterStateTransition(STATE::Move, STATE::MomentumStealStart);
+
 #pragma endregion
 }
 
@@ -200,9 +237,9 @@ void Player::OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const C
 	}
 }
 
-void Player::SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)
+void Player::SubOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)
 {
-	ActorBase::SubOnGrounded(ownTag, other, pushVec);
+	ActorBase::SubOnPushed(ownTag, other, pushVec);
 
 	if (other.GetTag() == COLLIDER_TAG::IceStage && pushVec.Abs().MaxElement().y > 0.0f) { nowIsOnIce = true; }
 }

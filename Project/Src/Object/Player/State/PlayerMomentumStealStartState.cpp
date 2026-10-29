@@ -49,6 +49,9 @@ void PlayerMomentumStealStartState::Update(void)
 		return;
 	}
 
+	// 長押し時間更新
+	keyHoldCounter += TimeScale::Get();
+
 	// 長押し時間が達していたら、「エイム発動」
 	if (keyHoldCounter >= AIM_KEY_HOLD_TIME) {
 
@@ -57,9 +60,6 @@ void PlayerMomentumStealStartState::Update(void)
 
 		return;
 	}
-
-	// 長押し時間更新
-	keyHoldCounter += TimeScale::Get();
 }
 
 void PlayerMomentumStealStartState::Exit(void)

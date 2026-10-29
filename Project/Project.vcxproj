@@ -156,6 +156,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Manager\Camera\CameraBase.cpp" />
     <ClCompile Include="Src\Manager\Camera\CameraEvent\LookAtCameraEvent\LookAtCameraEvent.cpp" />
+    <ClCompile Include="Src\Manager\Camera\CameraEvent\MomentumStealAimCameraEvent\MomentumStealAimCameraEvent.cpp" />
     <ClCompile Include="Src\Manager\Camera\CameraEvent\MoveCameraEvent\MoveCameraEvent.cpp" />
     <ClCompile Include="Src\Manager\Camera\CameraEvent\StartCameraEvent\StartCameraEvent.cpp" />
     <ClCompile Include="Src\Manager\Camera\CameraEvent\WaitCameraEvent\WaitCameraEvent.cpp" />
@@ -196,12 +197,13 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Object\Player\State\PlayerIdleState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerJumpState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerAttackState.cpp" />
-    <ClCompile Include="Src\Object\Player\State\PlayerMomentumAimState.cpp" />
+    <ClCompile Include="Src\Object\Player\State\PlayerMomentumStealAimState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerMomentumStealStartState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerMoveState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerRollingState.cpp" />
     <ClCompile Include="Src\Object\Player\Wepon\PlayerAttackCollOperator.cpp" />
     <ClCompile Include="Src\Object\TestObject.cpp" />
+    <ClCompile Include="Src\Scene\Common\PostEffect\AimCrosshairPostEffect\AimCrosshairPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\DamageFlashPostEffect\DamageFlashPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\FocusLinesPostEffect\FocusLinesPostEffect.cpp" />
@@ -209,6 +211,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Scene\Common\PostEffect\MenacingPostEffect\MenacingPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\PostEffectBase.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\PurpleFlamePostEffect\PurpleFlamePostEffect.cpp" />
+    <ClCompile Include="Src\Scene\Common\PostEffect\TimeFreezePostEffect\TimeFreezePostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\UnderWaterPostEffect\UnderWaterPostEffect.cpp" />
     <ClCompile Include="Src\Scene\GameClear\GameClearScene.cpp" />
     <ClCompile Include="Src\Scene\Common\Fade\Default\DefaultFadeScene.cpp" />
@@ -228,6 +231,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Common\Vector3.h" />
     <ClInclude Include="Src\Manager\Camera\CameraBase.h" />
     <ClInclude Include="Src\Manager\Camera\CameraEvent\LookAtCameraEvent\LookAtCameraEvent.h" />
+    <ClInclude Include="Src\Manager\Camera\CameraEvent\MomentumStealAimCameraEvent\MomentumStealAimCameraEvent.h" />
     <ClInclude Include="Src\Manager\Camera\CameraEvent\StartCameraEvent\StartCameraEvent.h" />
     <ClInclude Include="Src\Manager\Camera\CameraEvent\MoveCameraEvent\MoveCameraEvent.h" />
     <ClInclude Include="Src\Manager\Camera\CameraEvent\WaitCameraEvent\WaitCameraEvent.h" />
@@ -286,7 +290,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\Player\State\PlayerIdleState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerJumpState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerAttackState.h" />
-    <ClInclude Include="Src\Object\Player\State\PlayerMomentumAimState.h" />
+    <ClInclude Include="Src\Object\Player\State\PlayerMomentumStealAimState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerMomentumStealStartState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerMoveState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerRollingState.h" />
@@ -295,6 +299,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\TestStage.h" />
     <ClInclude Include="Src\Object\Water.h" />
     <ClInclude Include="Src\pch.h" />
+    <ClInclude Include="Src\Scene\Common\PostEffect\AimCrosshairPostEffect\AimCrosshairPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\DamageFlashPostEffect\DamageFlashPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\FocusLinesPostEffect\FocusLinesPostEffect.h" />
@@ -302,6 +307,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Scene\Common\PostEffect\MenacingPostEffect\MenacingPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\PostEffectBase.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\PurpleFlamePostEffect\PurpleFlamePostEffect.h" />
+    <ClInclude Include="Src\Scene\Common\PostEffect\TimeFreezePostEffect\TimeFreezePostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\UnderWaterPostEffect\UnderWaterPostEffect.h" />
     <ClInclude Include="Src\Scene\GameClear\GameClearScene.h" />
     <ClInclude Include="Src\Scene\Common\Fade\Default\DefaultFadeScene.h" />
@@ -420,6 +426,10 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="Src\Shader\PostEffect\AimCrosshairPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
     <FxCompile Include="Src\Shader\PostEffect\Bloom\BrightPassPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
@@ -493,6 +503,10 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Src\Shader\PostEffect\SepiaPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PostEffect\TimeFreezePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>

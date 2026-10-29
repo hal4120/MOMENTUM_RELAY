@@ -38,9 +38,9 @@ public:
 
 private:
 
-	void SubInit(void)override {
-		CreateShader(new WaterShader());
+	void DefaultCreateShader(void)override { CreateShader(new WaterShader()); }
 
+	void SubInit(void)override {
 		SetDrawType(ACTOR_DRAW_TYPE::Alpha);
 	}
 
