@@ -9,9 +9,12 @@
 
 #include "../../../Manager/TimeScale/TimeScale.h"
 
+#include "../../../Manager/Collision/CurrentCollisionManager.h"
+
 #include "../Collider/ColliderBase.h"
 
 #include "../Shader/ShaderBase.h"
+#include "../Shader/RimLightShader.h"
 
 #include "../DataLoad/ParameterLoad.h"
 
@@ -259,11 +262,41 @@ void ActorBase::VelocityUpdate(bool	deceleration)
 	if (velocity != 0.0f) { trans.pos += velocity * TimeScale::Get(); }
 }
 
+const Vector3& ActorBase::VelSteal(void)
+{
+	// 現在加速度を保持
+	Vector3 ret = velocity;
+
+	// 加速度を打ち消し
+	velocity = 0.0f;
+
+	// 停止
+	SetDynamicFlg(false);
+	CurrentCollisionManager::Get().InitBuildChunks();
+
+	// 保持した加速度を返す
+	return ret;
+}
+
+void ActorBase::OnTargeted()
+{
+	// リムライトをつける
+	CreateShader(new RimLightShader(SHADER_VERTEX_TYPE::Frame1));
+}
+
+void ActorBase::OnUntargeted()
+{
+	// 現在のシェーダー破棄
+	ResetShader();
+	// デフォルトシェーダーに戻す
+	DefaultCreateShader();
+}
+
 void ActorBase::AddCollider(ColliderBase* newCollider)
 {
 	newCollider->SetActorPtr(this);
 	newCollider->SetOnCollisionFunc([this](COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result) { this->OnCollision(ownTag, other, result); });
-	newCollider->SetOnGroundedFunc([this](COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) { this->OnGrounded(ownTag, other, pushVec); });
+	newCollider->SetOnGroundedFunc([this](COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) { this->OnPushed(ownTag, other, pushVec); });
 	colliders.emplace_back(newCollider);
 }
 
@@ -371,4 +404,24 @@ void ActorBase::MoveAccel(const Vector3& vec)
 			0.25f * TimeScale::Get()
 		)
 	);
+}
+
+void ActorBase::ReflexiveBehavior(Vector3& velocity, const Vector3& pushVec)
+{
+	if (pushVec.Length() <= 0.0001f) { return; }
+
+	// 押し出し方向
+	Vector3 normal = pushVec.Normalized();
+
+	// 押し出し方向に対する速度成分
+	float dot = velocity.Dot(normal);
+
+	// すでに離れる方向へ移動しているなら反射しない
+	if (dot >= 0.0f) { return; }
+
+	// 反発係数
+	constexpr float restitution = 0.75f;
+
+	// 衝突面に向かう速度成分だけを反射
+	velocity -= normal * ((1.0f + restitution) * dot);
 }

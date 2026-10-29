@@ -38,7 +38,7 @@ void AnimationController::AddInFbx(int type, float speed, bool loop, int animInd
 	Add(type, speed, loop, animation);
 }
 
-void AnimationController::Play(int type, signed char loop)
+void AnimationController::Play(int type, bool blendFlg, signed char loop)
 {
 	// 同じアニメーションが再生されている場合は何もしない
 	if (playType == type) {
@@ -93,7 +93,7 @@ void AnimationController::Play(int type, signed char loop)
 	playAnim.totalTime = MV1GetAttachAnimTotalTime(modelId, playAnim.attachNo);
 
 	// ブレンド用
-	blendRate = 0.1f;
+	blendRate = blendFlg ? 0.1f : 1.0f;
 	isDetach = -1;
 
 	if (prevAnim.speed != 0) {

@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
-// ’¸“_ƒVƒF[ƒ_[‚Ìí—Ş
+// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ç¨®é¡
 enum class VERTEX_SHADER_TYPE
 {
-    // ƒfƒtƒHƒ‹ƒg
+    // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
     Default1Frame,
     Default4Frame,
     Default8Frame,
@@ -11,7 +11,7 @@ enum class VERTEX_SHADER_TYPE
     DefaultNMap4Frame,
     DefaultNMap8Frame,
 
-    // ƒŠƒ€ƒ‰ƒCƒg
+    // ãƒªãƒ ãƒ©ã‚¤ãƒˆ
     RimLight1Frame,
     RimLight4Frame,
     RimLight8Frame,
@@ -19,7 +19,7 @@ enum class VERTEX_SHADER_TYPE
     RimLightNMap4Frame,
     RimLightNMap8Frame,
 
-    // ƒ_ƒ[ƒWiƒ‚ƒfƒ‹j
+    // ãƒ€ãƒ¡ãƒ¼ã‚¸ï¼ˆãƒ¢ãƒ‡ãƒ«ï¼‰
     ModelDamageFlash1Frame,
     ModelDamageFlash4Frame,
     ModelDamageFlash8Frame,
@@ -27,59 +27,62 @@ enum class VERTEX_SHADER_TYPE
     ModelDamageFlashNMap4Frame,
     ModelDamageFlashNMap8Frame,
 
-	// …–Ê
+	// æ°´é¢
     Water,
 
 
-    // ƒXƒJƒCƒ{ƒbƒNƒX
+    // ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹
     SkyBox,
 };
 
-// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ìí—Ş
+// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ç¨®é¡
 enum class PIXEL_SHADER_TYPE
 {
-    // ƒfƒtƒHƒ‹ƒg
+    // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
     Default,
 
-    // ƒŠƒ€ƒ‰ƒCƒg
+    // ãƒªãƒ ãƒ©ã‚¤ãƒˆ
     RimLight,
 
-    // ƒ_ƒ[ƒWiƒ‚ƒfƒ‹j
+    // ãƒ€ãƒ¡ãƒ¼ã‚¸ï¼ˆãƒ¢ãƒ‡ãƒ«ï¼‰
     ModelDamageFlash,
 
-    // …–Ê
+    // æ°´é¢
     Water,
 
-#pragma region ƒ|ƒXƒgƒGƒtƒFƒNƒg
+#pragma region ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 
-	// ƒOƒŒ[ƒXƒP[ƒ‹ƒ|ƒXƒgƒGƒtƒFƒNƒg
+	// ã‚°ãƒ¬ãƒ¼ã‚¹ã‚±ãƒ¼ãƒ«ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
     GrayScale,
 
-    // ƒuƒ‰ƒEƒ“ŠÇƒ|ƒXƒgƒGƒtƒFƒNƒg
+    // ãƒ–ãƒ©ã‚¦ãƒ³ç®¡ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
     CRT,
 
-    // W’†üƒ|ƒXƒgƒGƒtƒFƒNƒg
+    // é›†ä¸­ç·šãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
     FocusLines,
 
-	// …’†ƒ|ƒXƒgƒGƒtƒFƒNƒg
+	// æ°´ä¸­ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
 	UnderWater,
 
-    // ƒSƒSƒSƒScƒGƒtƒFƒNƒg
+    // ã‚´ã‚´ã‚´ã‚´â€¦ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
     Menacing,
 
-    // ‰Šƒ|ƒXƒgƒGƒtƒFƒNƒg
+    // ç‚ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
     PurpleFlame,
 
-    // ƒ_ƒ[ƒWƒtƒ‰ƒbƒVƒ…ƒ|ƒXƒgƒGƒtƒFƒNƒg
+    // ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
     DamageFlash,
+
+    TimeFreeze,
+    AimCrosshair,
 
 #pragma endregion
 
-    // ƒXƒJƒCƒ{ƒbƒNƒX
+    // ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹
     SkyBox,
 };
 
-// ’¸“_ƒ^ƒCƒv
+// é ‚ç‚¹ã‚¿ã‚¤ãƒ—
 enum SHADER_VERTEX_TYPE
 {
     Frame1,

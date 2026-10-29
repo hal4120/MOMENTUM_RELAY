@@ -56,13 +56,13 @@ public:
 	virtual void OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result) {}
 
 	// 接地判定の通知
-	virtual void OnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) {
+	virtual void OnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) {
 
 		// 接地判定
-		isGroundMaster = true;
+		if (pushVec.y > 0.0f && pushVec.Abs().MaxElement().y > 0.0f) { isGroundMaster = true; }
 
 		// 挙動
-		SubOnGrounded(ownTag, other, pushVec);
+		SubOnPushed(ownTag, other, pushVec);
 	}
 
 	// コライダーすべてを取得
@@ -85,6 +85,14 @@ public:
 
 	// 押し出しを行う際の重さ（0 ～ 100 で設定）
 	unsigned char GetPushWeight(void)const { return pushWeight; }
+
+	// 勢いを奪われる
+	const Vector3& VelSteal(void);
+
+	// プレイヤーのエイム状態でターゲットになった時
+	virtual void OnTargeted();
+	// プレイヤーのエイム状態でターゲットから外れた時
+	virtual void OnUntargeted();
 
 private:
 
@@ -179,6 +187,11 @@ protected:
 	/// <param name="weight">0 ～ 100 で設定（数値が大きいほど重い）</param>
 	void SetPushWeight(unsigned char weight) { pushWeight = weight; }
 
+	// 子クラスを追加する
+	void AddChildActor(ActorBase* child) {
+		child->Load();
+		childActors.push_back(child); 
+	}
 
 	// シェーダーを設定
 	void CreateShader(ShaderBase* newShader);
@@ -187,11 +200,6 @@ protected:
 	// シェーダーのデフォルト設定
 	virtual void DefaultCreateShader(void) {}
 
-	// 子クラスを追加する
-	void AddChildActor(ActorBase* child) {
-		child->Load();
-		childActors.push_back(child); 
-	}
 #pragma endregion
 
 
@@ -245,7 +253,6 @@ protected:
 
 #pragma endregion
 
-
 	/// <summary>
 	/// 当たり判定フラグの取得
 	/// </summary>
@@ -280,11 +287,14 @@ protected:
 	virtual void SubRelease(void) {}
 
 	// 派生先追加接地判定（デフォルトはY軸加速度の打ち消し）
-	virtual void SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) {
+	virtual void SubOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) {
 
 		// 動的オブジェクトの場合のみ、下方向のY軸加速度のみを打ち消す
 		if (dynamicFlg) { velocity.y = (velocity.y < 0.0f) ? 0.0f : velocity.y; }
 	}
+
+	// 反射挙動（SubOnGrounded()関数内で呼び出すことで反射挙動を行う）
+	static void ReflexiveBehavior(Vector3& velocity, const Vector3& pushVec);
 
 private:
 

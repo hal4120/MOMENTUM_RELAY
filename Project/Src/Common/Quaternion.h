@@ -167,4 +167,7 @@ struct Quaternion
 	/// </summary>
 	/// <returns>Y軸回転角度（ラジアン）</returns>
 	float GetYaw(void) const;
+
+	// Quaternionをオイラー角（XZY順）に変換
+	Vector3 ToEulerXZY(void) const;
 };

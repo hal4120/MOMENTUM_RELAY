@@ -37,7 +37,7 @@ public:
 	/// </summary>
 	/// <param name="type">再生タイプ</param>
 	/// <param name="loop">ループ再生フラグ。指定なし(-1)で登録された情報で再生</param>
-	void Play(int type, signed char loop = -1);
+	void Play(int type, bool blendFlg = true, signed char loop = -1);
 
 	void Stop(void);
 	void Update(void);

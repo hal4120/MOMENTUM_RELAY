@@ -59,5 +59,4 @@ private:
 
 	// クールタイム計測
 	float coolTimeCounter;
-
 };

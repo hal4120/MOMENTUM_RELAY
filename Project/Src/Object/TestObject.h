@@ -11,18 +11,13 @@ public:
 	// ƒ[ƒh
 	void Load(void)override;
 
-	// ¨‚¢‚ğ’D‚í‚ê‚é
-	const Vector3& VelGreed(void);
-
 private:
 
 	// ’Ç‰ÁXV
 	void SubUpdate(void)override;
-	// ’Ç‰Á•`‰æ
-	void SubDraw(void)override;
 
 	// ”h¶æ’Ç‰ÁÚ’n
-	void SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)override;
+	void SubOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)override;
 
 	// ¨‚¢‚ğ’D‚í‚ê‚Ä‚¢‚éó‘Ô
 	bool velocityGreed;

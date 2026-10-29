@@ -39,6 +39,11 @@ private:
 
 		Rolling,
 
+		MomentumStealStart,
+		MomentumStealQuick,
+		MomentumStealAim,
+		MomentumSteal,
+
 		Max
 	};
 
@@ -62,6 +67,10 @@ private:
 
 		Rolling,
 
+		MomentumStealAim,
+
+		Swim,
+
 		Max
 	};
 
@@ -80,6 +89,10 @@ private:
 		1.0f,	// Totta
 
 		2.5f,	// Rolling
+		
+		1.0f,	// MomentumStealAim
+
+		1.0f,	// Swim
 	};
 
 	// アニメーションループ再生フラグテーブル
@@ -97,6 +110,10 @@ private:
 		false,	// Totta
 		
 		false,	// Rolling
+
+		true,	// MomentumStealAim
+
+		true,	// Swim
 	};
 
 	// アニメーションファイルパス
@@ -105,18 +122,22 @@ private:
 	// アニメーションの名前テーブル
 	const std::string ANIME_NAME_TABLE[(int)ANIME_TYPE::Max] =
 	{
-		"Idle",			// Idle
+		"Idle",				// Idle
+		
+		"Walk",				// Walk
+		"Run",				// Run
 
-		"Walk",			// Walk
-		"Run",			// Run
+		"JumpStart",		// JumpStart
+		"JumpLoop",			// JumpLoop
+		"JumpEnd",			// JumpEnd
 
-		"JumpStart",	// JumpStart
-		"JumpLoop",		// JumpLoop
-		"JumpEnd",		// JumpEnd
+		"Totta",			// Totta
 
-		"Totta",		// Totta
-
-		"Rolling",		// Rolling
+		"Rolling",			// Rolling
+		
+		"MomentumStealAim",	// MomentumStealAim
+		
+		"Swim",				// Swim
 	};
 
 	// アニメーションファイル拡張子
@@ -141,11 +162,14 @@ private:
 
 	void SubUpdate(void)override;
 
-	void SubOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)override;
+	void SubOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)override;
 
 	bool nowIsOnIce = false;
 	bool prevIsOnIce = false;
 
 	// 回避無敵判定
 	bool isInvincble = false;
+
+	// ターゲットアクター
+	ActorBase* target;
 };

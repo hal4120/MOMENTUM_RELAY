@@ -130,11 +130,6 @@ void Transform::Duplicate(int model)
 	this->model = MV1DuplicateModel(model);
 }
 
-void Transform::LoadEffect(std::string path)
-{
-	model = LoadEffekseerEffect(("Data/Effect/" + path + ".efk").c_str());
-}
-
 MATRIX Transform::GetWorldMatrix(void) const
 {
 	// ç≈èIâÒì]

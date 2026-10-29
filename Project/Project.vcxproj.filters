@@ -69,8 +69,11 @@
     <ClCompile Include="Src\Object\Player\State\PlayerRollingState.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\ModelDamageFlashShader.cpp" />
     <ClCompile Include="Src\Object\TestObject.cpp" />
-    <ClCompile Include="Src\Object\Player\State\PlayerMomentumAimState.cpp" />
+    <ClCompile Include="Src\Object\Player\State\PlayerMomentumStealAimState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerMomentumStealStartState.cpp" />
+    <ClCompile Include="Src\Manager\Camera\CameraEvent\MomentumStealAimCameraEvent\MomentumStealAimCameraEvent.cpp" />
+    <ClCompile Include="Src\Scene\Common\PostEffect\AimCrosshairPostEffect\AimCrosshairPostEffect.cpp" />
+    <ClCompile Include="Src\Scene\Common\PostEffect\TimeFreezePostEffect\TimeFreezePostEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -167,8 +170,11 @@
     <ClInclude Include="Src\Object\Player\State\PlayerRollingState.h" />
     <ClInclude Include="Src\Object\Common\Shader\ModelDamageFlashShader.h" />
     <ClInclude Include="Src\Object\TestObject.h" />
-    <ClInclude Include="Src\Object\Player\State\PlayerMomentumAimState.h" />
+    <ClInclude Include="Src\Object\Player\State\PlayerMomentumStealAimState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerMomentumStealStartState.h" />
+    <ClInclude Include="Src\Manager\Camera\CameraEvent\MomentumStealAimCameraEvent\MomentumStealAimCameraEvent.h" />
+    <ClInclude Include="Src\Scene\Common\PostEffect\AimCrosshairPostEffect\AimCrosshairPostEffect.h" />
+    <ClInclude Include="Src\Scene\Common\PostEffect\TimeFreezePostEffect\TimeFreezePostEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />
@@ -249,5 +255,7 @@
     <FxCompile Include="Src\Shader\ModelDamageFlash\ModelDamageFlashVS_NMap1Frame.hlsl" />
     <FxCompile Include="Src\Shader\ModelDamageFlash\ModelDamageFlashVS_NMap4Frame.hlsl" />
     <FxCompile Include="Src\Shader\ModelDamageFlash\ModelDamageFlashVS_NMap8Frame.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\AimCrosshairPS.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\TimeFreezePS.hlsl" />
   </ItemGroup>
 </Project>

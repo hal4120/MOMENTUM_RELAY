@@ -3,21 +3,28 @@
 #include "../../Common/CharacterBase/CharacterStateBase.h"
 
 class ActorBase;
+
 struct Transform;
 
-class PlayerMomentumAimState : public CharacterStateBase
+class PlayerMomentumStealAimState : public CharacterStateBase
 {
 public:
-	PlayerMomentumAimState(
+	PlayerMomentumStealAimState(
 		float LIMIT_TIME,
 
 		float TIME_SCALE,
 
 		float RAYCAST_LENGTH,
 
-		ActorBase*& target
+		Transform& playerTrans,
+		ActorBase*& target,
+
+		const std::function<void(void)>& playAnimeAim,
+
+		const std::function<void(void)>& changeStateSteal,
+		const std::function<void(void)>& changeStateDefault
 	);
-	~PlayerMomentumAimState()override = default;
+	~PlayerMomentumStealAimState()override = default;
 
 	// 状態遷移後1度行う初期化処理
 	void Enter(void)override;
@@ -41,14 +48,27 @@ private:
 
 #pragma endregion
 
+#pragma region 参照
+
+	// プレイヤーの回転の参照
+	Transform& playerTrans;
+
 	// ターゲット格納先
 	ActorBase*& target;
+
+	// エイム状態アニメーション再生関数
+	const std::function<void(void)> playAnimeAim;
+
+	// 実際に勢いを奪う状態へ遷移する関数
+	const std::function<void(void)> changeStateSteal;
+	// 通常状態へ遷移する関数
+	const std::function<void(void)> changeStateDefault;
+
+#pragma endregion
 
 	// 制限時間計測
 	float limitTimeCounter;
 
-
 	// ターゲット変更
 	void ChangeTarget(ActorBase* target);
-
 };
