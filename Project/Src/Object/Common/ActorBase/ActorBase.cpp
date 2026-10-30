@@ -262,7 +262,7 @@ void ActorBase::VelocityUpdate(bool	deceleration)
 	if (velocity != 0.0f) { trans.pos += velocity * TimeScale::Get(); }
 }
 
-const Vector3& ActorBase::VelSteal(void)
+Vector3 ActorBase::VelSteal(void)
 {
 	// åªç›â¡ë¨ìxÇï€éù
 	Vector3 ret = velocity;

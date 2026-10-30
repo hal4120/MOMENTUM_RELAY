@@ -39,10 +39,10 @@ private:
 
 		Rolling,
 
-		MomentumStealInput,
-		MomentumStealQuick,
-		MomentumStealAim,
-		MomentumSteal,
+		MomentumInput,
+		MomentumQuick,
+		MomentumAim,
+		Momentum,
 
 		Max
 	};
@@ -86,7 +86,7 @@ private:
 		0.5f,	// JumpLoop
 		2.5f,	// JumpEnd,
 
-		1.0f,	// Totta
+		5.0f,	// Totta
 
 		2.5f,	// Rolling
 		
@@ -170,11 +170,14 @@ private:
 	// 回避無敵判定
 	bool isInvincble = false;
 
-	// ターゲットアクター
+	// 勢い操作を実行するターゲット
 	ActorBase* target;
 
 	// 奪って保持している勢い
 	Vector3 stealVelocity;
+	// 奪って保持している勢いの元の持ち主
+	ActorBase* stealSource;
+
 	// 今勢いを保持しているか（true = している、false = していない）
-	bool IsSteal(void)const { return stealVelocity != 0.0f; }
+	bool IsSteal(void)const { return (stealVelocity != 0.0f && stealSource != nullptr); }
 };

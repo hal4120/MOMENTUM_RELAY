@@ -87,9 +87,9 @@ public:
 	unsigned char GetPushWeight(void)const { return pushWeight; }
 
 	// 勢いを奪われる
-	const Vector3& VelSteal(void);
+	Vector3 VelSteal(void);
 	// 勢いを与えられる
-	void VelGive(const Vector3& vel);
+	virtual void VelGive(const Vector3& vel);
 
 	// プレイヤーのエイム状態でターゲットになった時
 	virtual void OnTargeted();

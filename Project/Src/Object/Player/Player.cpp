@@ -27,11 +27,15 @@
 #include "State/PlayerMomentumInputState.h"
 #include "State/PlayerMomentumQuickState.h"
 #include "State/PlayerMomentumAimState.h"
+#include "State/PlayerMomentumState.h"
 
 Player::Player() :
 	CharacterBase(),
 
-	target(nullptr)
+	target(nullptr),
+
+	stealVelocity(),
+	stealSource(nullptr)
 {
 }
 
@@ -179,35 +183,35 @@ void Player::Load(void)
 		)
 	);
 
-	// 勢いを奪う行動の入力管理状態
+	// 勢い操作の入力管理状態
 	AddState(
-		STATE::MomentumStealInput,
+		STATE::MomentumInput,
 		new PlayerMomentumInputState(
 			0.0f,
 			10.0f,
 			std::bind(&Player::IsSteal,this),
-			[&]() { ChangeState(STATE::MomentumStealQuick); },
-			[&]() { ChangeState(STATE::MomentumStealAim); }
+			[&]() { ChangeState(STATE::MomentumQuick); },
+			[&]() { ChangeState(STATE::MomentumAim); }
 		)
 	);
 
-	// 勢いを奪う行動の自動選択中状態
+	// 勢い操作の自動選択中状態
 	AddState(
-		STATE::MomentumStealQuick,
+		STATE::MomentumQuick,
 		new PlayerMomentumQuickState(
 			5.0f,
 			std::bind(&Player::IsSteal, this),
 			this,
 			target,
 			*momentumQuickStealFind,
-			[&]() { ChangeState(STATE::MomentumStealAim); },
+			[&]() { ChangeState(STATE::Momentum); },
 			[&]() { ChangeState(STATE::Idle); }
 		)
 	);
 
-	// 勢いを奪う行動のエイム選択中状態
+	// 勢い操作のエイム選択中状態
 	AddState(
-		STATE::MomentumStealAim,
+		STATE::MomentumAim,
 		new PlayerMomentumAimState(
 			300.0f,
 			0.01f,
@@ -215,7 +219,20 @@ void Player::Load(void)
 			trans,
 			target,
 			[&]() { AnimePlay(ANIME_TYPE::MomentumStealAim, false); },
-			[&]() { ChangeState(STATE::Idle); },
+			[&]() { ChangeState(STATE::Momentum); },
+			[&]() { ChangeState(STATE::Idle); }
+		)
+	);
+
+	// 勢い操作状態
+	AddState(
+		STATE::Momentum,
+		new PlayerMomentumState(
+			target,
+			stealVelocity,
+			stealSource,
+			[&]() { AnimePlay(ANIME_TYPE::Totta); },
+			[&]() { return GetAnimeRatio(); },
 			[&]() { ChangeState(STATE::Idle); }
 		)
 	);
@@ -240,10 +257,12 @@ void Player::Load(void)
 	// 「移動状態」->「回避状態」の自動遷移登録
 	RegisterStateTransition(STATE::Move, STATE::Rolling);
 
-	// 「待機状態」->「勢いを奪う状態」の自動遷移登録
-	RegisterStateTransition(STATE::Idle, STATE::MomentumStealInput);
-	// 「移動状態」->「勢いを奪う状態」の自動遷移登録
-	RegisterStateTransition(STATE::Move, STATE::MomentumStealInput);
+	// 「待機状態」->「勢い操作入力状態」の自動遷移登録
+	RegisterStateTransition(STATE::Idle, STATE::MomentumInput);
+	// 「移動状態」->「勢い操作入力状態」の自動遷移登録
+	RegisterStateTransition(STATE::Move, STATE::MomentumInput);
+	// 「ジャンプ状態」->「勢い操作入力状態」の自動遷移登録
+	RegisterStateTransition(STATE::Jump, STATE::MomentumInput);
 
 #pragma endregion
 }

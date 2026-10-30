@@ -101,23 +101,24 @@ void PlayerMomentumAimState::Update(void)
 
 #pragma endregion
 
-	// アップトリガーで選択確定
-	if (Input::GetIns().GetInfo(KEY_TYPE::PlayerMomentumSteal).up) {
-
-		// 実際に勢い操作を実行する状態に遷移
-		changeStateMomentum();
-
-		return;
-	}
-
 	// 制限時間計測
 	limitTimeCounter++;
 
-	// 制限時間に達していたら
-	if (limitTimeCounter >= LIMIT_TIME) {
+	// アップトリガー または 制限時間 で 遷移
+	if (Input::GetIns().GetInfo(KEY_TYPE::PlayerMomentumSteal).up || limitTimeCounter >= LIMIT_TIME) {
 
-		// 通常状態へ遷移
-		changeStateDefault();
+		// ターゲットの補足が完了していたら、選択確定
+		if (target != nullptr) {
+			// 実際に勢い操作を実行する状態に遷移
+			changeStateMomentum();
+		}
+		// ただし、ターゲットが補足されていなければ、不発
+		else {
+			// 通常状態へ遷移
+			changeStateDefault();
+		}
+
+		// 終了
 		return;
 	}
 }
@@ -133,10 +134,7 @@ void PlayerMomentumAimState::Exit(void)
 #pragma endregion
 
 	// ターゲットの選択状態を解除
-	if (target) {
-		target->OnUntargeted();
-		target->VelSteal();
-	}
+	if (target) { target->OnUntargeted(); }
 
 	// 時間倍率をもとにもどす
 	TimeScale::GetIns().ChangeDefaultTimeScale();
