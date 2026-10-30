@@ -77,6 +77,9 @@
     <ClCompile Include="Src\Object\Player\State\PlayerMomentumQuickState.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerMomentumState.cpp" />
+    <ClCompile Include="Src\Object\Common\PhysicsBody\CharacterMotionController.cpp" />
+    <ClCompile Include="Src\Object\Common\PhysicsBody\PhysicsBody.cpp" />
+    <ClCompile Include="Src\Object\TestBoxObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -181,6 +184,9 @@
     <ClInclude Include="Src\Object\Player\State\PlayerMomentumQuickState.h" />
     <ClInclude Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerMomentumState.h" />
+    <ClInclude Include="Src\Object\Common\PhysicsBody\PhysicsBody.h" />
+    <ClInclude Include="Src\Object\Common\PhysicsBody\CharacterMotionController.h" />
+    <ClInclude Include="Src\Object\TestBoxObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />

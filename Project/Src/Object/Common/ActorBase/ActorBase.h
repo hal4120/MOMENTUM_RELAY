@@ -10,6 +10,8 @@
 
 #include "ActorDrawTypeDefine.h"
 
+#include "../PhysicsBody/PhysicsBody.h"
+
 class ColliderBase;
 struct CollisionResult;
 
@@ -65,6 +67,9 @@ public:
 		SubOnPushed(ownTag, other, pushVec);
 	}
 
+	// 物理挙動管理を取得
+	PhysicsBody* GetPhysicsBody(void)const { return physicsBody; }
+
 	// コライダーすべてを取得
 	virtual std::vector<ColliderBase*> GetColliders(void)const;
 
@@ -78,7 +83,7 @@ public:
 	const std::vector<ActorBase*>& GetChildActors(void)const { return childActors; }
 
 	// 動的オブジェクトかどうか（true = 動的、false = 静的）
-	bool GetDynamicFlg(void)const { return dynamicFlg; }
+	bool GetDynamicFlg(void)const { return colliderMobility == COLLIDER_MOBILITY::Movable; }
 
 	// 衝突時押し出しを行うかどうか（true = 押し出す、false = 押し出さず通り抜ける）
 	bool GetPushFlg(void)const { return pushFlg; }
@@ -98,11 +103,14 @@ public:
 
 private:
 
+	// 物理挙動制御
+	PhysicsBody* physicsBody;
+
 	// 当たり判定情報
 	std::vector<ColliderBase*> colliders;
 	
-	// 動的オブジェクトかどうか（true = 動的、false = 静的）
-	bool dynamicFlg;
+	// 動的オブジェクトかどうか（Static = 静的、Movable = 動的）
+	COLLIDER_MOBILITY colliderMobility = COLLIDER_MOBILITY::Movable;
 
 	// 重力を適用するかどうか（true = する、false = しない）
 	bool gravityFlg;
@@ -112,12 +120,6 @@ private:
 
 	// 押し出しを行う際の重さ（0 ～ 100 で設定）
 	unsigned char pushWeight;
-
-	// 加速度の更新
-	void VelocityUpdate(bool deceleration);
-
-	// 重力更新
-	void Gravity(void);
 
 	// 重力加速度
 	static constexpr float GRAVITY = -0.9f;
@@ -148,7 +150,7 @@ protected:
 	Transform trans;
 
 	// 移動量
-	Vector3 velocity;
+	// 移動速度はPhysicsBodyで一元管理する
 
 	// 横軸加速度の1フレームごとの加速量
 	float ACCEL_RATE = 1.0f;
@@ -162,6 +164,9 @@ protected:
 
 #pragma region 初期設定
 
+	// 物理挙動管理を生成
+	void CreatePhysicsBody(void);
+
 	// コライダー追加
 	void AddCollider(ColliderBase* newCollider);
 
@@ -169,13 +174,16 @@ protected:
 	/// 移動するかを切り替える
 	/// </summary>
 	/// <param name="flg">true = 「移動する」に切り替える、false = 「移動しない」に切り替える</param>
-	void SetDynamicFlg(bool flg) { dynamicFlg = trans.dynamicFlg = flg; }
+	void SetDynamicFlg(bool flg);
+
+	// 物理演算とは独立したチャンク区分を設定
+	void SetColliderMobility(COLLIDER_MOBILITY value);
 
 	/// <summary>
 	/// 重力を適用するかを切り替える
 	/// </summary>
 	/// <param name="flg">true = 「する」に切り替える、false = 「しない」に切り替える</param>
-	void SetGravityFlg(bool flg) { gravityFlg = flg; }
+	void SetGravityFlg(bool flg);
 
 	/// <summary>
 	/// 衝突時押し出しを行うかを設定する
@@ -290,12 +298,10 @@ protected:
 
 	// 派生先追加接地判定（デフォルトはY軸加速度の打ち消し）
 	virtual void SubOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) {
-
-		// 動的オブジェクトの場合のみ、下方向のY軸加速度のみを打ち消す
-		if (dynamicFlg) { velocity.y = (velocity.y < 0.0f) ? 0.0f : velocity.y; }
+		// 速度の補正はCollisionManagerがPhysicsBodyに通知する
 	}
 
-	// 反射挙動（SubOnGrounded()関数内で呼び出すことで反射挙動を行う）
+	// 反射挙動（個別の特殊な反射演出用）
 	static void ReflexiveBehavior(Vector3& velocity, const Vector3& pushVec);
 
 private:

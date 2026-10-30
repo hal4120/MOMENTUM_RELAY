@@ -156,7 +156,7 @@ void SceneBase::Draw(void)
 	ActorsColliderDebugDraw(actors);
 
 	// デバッグ用チャンク描画
-	//if (collision != nullptr && camera != nullptr) { collision->DrawChunkGrid(camera->GetPos()); }
+	if (collision != nullptr && camera != nullptr) { collision->DrawChunkGrid(camera->GetPos()); }
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 

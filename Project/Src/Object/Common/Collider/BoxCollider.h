@@ -130,6 +130,28 @@ public:
 		// ‰ñ“]Œã‚Ìƒ{ƒbƒNƒX‚Ì8’¸“_‚ğæ“¾
 		const std::array<Vector3, 8> vertices = GetVertices();
 
+
+		// ‰ñ“]Œã‚Ì8’¸“_‚©‚ç12–‡‚ÌOŠpŒ`‚ğ•`‰æ‚·‚é
+		// DrawCube3D‚Í²•½sƒ{ƒbƒNƒXê—p‚Ì‚½‚ßg—p‚µ‚È‚¢
+		static constexpr int triangles[12][3] = {
+			{0, 2, 1}, {1, 2, 3}, // -Z
+			{4, 5, 6}, {5, 7, 6}, // +Z
+			{0, 4, 2}, {2, 4, 6}, // -X
+			{1, 3, 5}, {3, 7, 5}, // +X
+			{0, 1, 4}, {1, 5, 4}, // -Y
+			{2, 6, 3}, {3, 6, 7}  // +Y
+		};
+
+		//for (const auto& triangle : triangles) {
+		//	DrawTriangle3D(
+		//		vertices[triangle[0]].ToVECTOR(),
+		//		vertices[triangle[1]].ToVECTOR(),
+		//		vertices[triangle[2]].ToVECTOR(),
+		//		0xffff00,
+		//		true
+		//	);
+		//}
+
 		// ‘O–Ê````````````````````````````````
 		DrawLine3D(vertices[0].ToVECTOR(), vertices[1].ToVECTOR(), color);
 
@@ -160,7 +182,6 @@ public:
 		DrawLine3D(vertices[3].ToVECTOR(), vertices[7].ToVECTOR(), color);
 		// ``````````````````````````‘O–Ê‚Æ”w–Ê‚ğÚ‘±
 
-		DrawCube3D(vertices[0].ToVECTOR(), vertices[7].ToVECTOR(), 0xffff00, 0xddddff, true);
 	}
 private:
 	Vector3 size;

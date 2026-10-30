@@ -11,6 +11,7 @@
 #include "../../Common/Vector2I.h"
 
 #include "../../Object/Common/ActorBase/ActorBase.h"
+#include "../../Object/Common/PhysicsBody/PhysicsBody.h"
 
 #include"../../Object/Common/Collider/LineCollider.h"
 #include"../../Object/Common/Collider/SphereCollider.h"
@@ -18,6 +19,76 @@
 #include"../../Object/Common/Collider/BoxCollider.h"
 #include"../../Object/Common/Collider/MeshCollider.h"
 #include"../../Object/Common/Collider/XZCircleCollider.h"
+
+// 回転後のBoxの指定方向側の面中心を求める。
+// 支持点（角）ではなく面の中心を返す。
+namespace
+{
+    Vector3 BoxFaceCenter(const BoxCollider* box, const Vector3& direction)
+    {
+        if (box == nullptr) { return Vector3(0.0f); }
+
+        const auto axes = box->GetAxes();
+        const Vector3 half = box->GetHalfSize();
+        const float lengths[3] = { half.x, half.y, half.z };
+
+        int faceAxis = 0;
+        float best = std::abs(direction.Dot(axes[0]));
+        for (int i = 1; i < 3; ++i) {
+            const float alignment = std::abs(direction.Dot(axes[i]));
+            if (alignment > best) {
+                best = alignment;
+                faceAxis = i;
+            }
+        }
+        const float sign = direction.Dot(axes[faceAxis]) >= 0.0f ? 1.0f : -1.0f;
+        return box->GetPos() + axes[faceAxis] * (lengths[faceAxis] * sign);
+    }
+}
+
+// Capsule(プレイヤー)からBoxを押したときの接触回転。
+// CapsuleToBoxで求めた最近接点を使用し、Boxの面中心には置き換えない。
+namespace
+{
+    void ResolveCapsuleBoxRotation(CapsuleCollider* capsule, BoxCollider* box,
+        const Vector3& contactPoint, const Vector3& capsuleNormal, float penetration)
+    {
+        if (!capsule || !box || !capsule->GetActor() || !box->GetActor()) { return; }
+        PhysicsBody* body = box->GetActor()->GetPhysicsBody();
+        if (!body || body->GetMode() != PhysicsBody::MotionMode::Dynamic ||
+            !body->IsRotationEnabled() || body->IsFrozen() ||
+            box->GetMobility() != COLLIDER_MOBILITY::Movable) { return; }
+        if (capsuleNormal.LengthSq() <= 1.0e-8f) { return; }
+
+        // 法線はBoxからCapsule方向。箱を押す向きはその逆。
+        const Vector3 pushDir = -capsuleNormal.Normalized();
+        const PhysicsBody* playerBody = capsule->GetActor()->GetPhysicsBody();
+        const Vector3 playerVelocity = playerBody ? playerBody->GetVelocity() :
+            capsule->GetActor()->GetTrans().Velocity();
+        const Vector3 lever = contactPoint - box->GetPos();
+        const Vector3 boxPointVelocity = body->GetPointVelocity(lever);
+        const float approach = (playerVelocity - boxPointVelocity).Dot(pushDir);
+        // 接触点が離れる方向へ動いているなら追加の回転を与えない。
+        if (approach <= 0.01f) { return; }
+
+        const float invMass = body->GetInverseMass();
+        const float invInertia = body->GetInverseAngularInertia();
+        const Vector3 torqueArm = lever.Cross(pushDir);
+        const float angularTerm = torqueArm.LengthSq() * invInertia;
+        const float denominator = invMass + angularTerm;
+        if (denominator <= 1.0e-8f) { return; }
+
+        // 接触点の相対速度を減らすのに必要なインパルス。
+        // 並進応答は既存のResolvePairが担当するため、ここでは角速度のみ更新。
+        const float impulse = (std::min)(approach, 10.0f) / denominator;
+        Vector3 delta = torqueArm * (impulse * invInertia);
+        const float maxDelta = 0.012f;
+        const float len = delta.Length();
+        if (len > maxDelta) { delta *= maxDelta / len; }
+        body->AddAngularVelocity(delta);
+    }
+
+}
 
 // 衝突判定のための補助関数群をまとめた名前空間
 namespace
@@ -369,6 +440,7 @@ void CollisionManager::Add(ColliderBase* collider)
 
 	// 最終的なグループで格納
 	groupColliders[(int)group].colliders.emplace_back(collider);
+	groupColliders[(int)group].staticCacheDirty = true;
 }
 
 // コライダーを追加（複数）
@@ -381,25 +453,11 @@ void CollisionManager::Add(std::vector<ColliderBase*> collider)
 // 現状抱えているコライダーすべてのチャンク分けを実行
 void CollisionManager::InitBuildChunks(void)
 {
-	// すべてのグループを範囲for文で参照していく
-	for (ColliderGroupData& group : groupColliders) {
-
-		// チャンク分け情報を完全リセット～～～
-		group.staticChunks.clear();
-		group.dynamicChunks.clear();
-		// ～～～チャンク分け情報を完全リセット
-
-		// 抱えるコライダーを1つずつ範囲for文で参照していく
-		for (ColliderBase* collider : group.colliders) {
-			// 安全処理
-			if (!collider) { continue; }
-
-			// 動的コライダーの場合
-			if (collider->GetActor()->GetDynamicFlg()) { RegisterToChunks(group.dynamicChunks, collider); }
-			// 静的コライダーの場合
-			else { RegisterToChunks(group.staticChunks, collider); }
-		}
-	}
+    // 明示的な再構築要求。Staticの座標や形状を変更した場合にも呼び出す
+    for (ColliderGroupData& group : groupColliders) {
+        group.staticCacheDirty = true;
+    }
+    BuildChunks();
 }
 
 #pragma endregion
@@ -454,22 +512,32 @@ void CollisionManager::Check(void)
 
 void CollisionManager::BuildChunks(void)
 {
-	for (ColliderGroupData& group : groupColliders) {
+    for (ColliderGroupData& group : groupColliders) {
+        // Movableは毎フレーム更新。PhysicsBodyの有無には依存しない
+        group.dynamicChunks.clear();
 
-		// 動的コライダーチャンク分け配列をリセット
-		group.dynamicChunks.clear();
+        // Static/Movableの切り替えを検出。Staticの座標変更は明示的な再構築で対応
+        std::vector<ColliderBase*> currentStatic;
+        currentStatic.reserve(group.staticCache.size());
+        for (ColliderBase* collider : group.colliders) {
+            if (!collider) { continue; }
+            if (collider->GetMobility() == COLLIDER_MOBILITY::Movable) {
+                RegisterToChunks(group.dynamicChunks, collider);
+            }
+            else {
+                currentStatic.emplace_back(collider);
+            }
+        }
 
-		for (ColliderBase* collider : group.colliders) {
-			// 安全処理
-			if (!collider) { continue; }
-
-			// 静的コライダーは変更なし
-			if (!collider->GetActor()->GetDynamicFlg()) { continue; }
-
-			// 動的コライダーチャンク分け配列に割り当てなおす
-			RegisterToChunks(group.dynamicChunks, collider);
-		}
-	}
+        if (group.staticCacheDirty || currentStatic != group.staticCache) {
+            group.staticChunks.clear();
+            for (ColliderBase* collider : currentStatic) {
+                RegisterToChunks(group.staticChunks, collider);
+            }
+            group.staticCache.swap(currentStatic);
+            group.staticCacheDirty = false;
+        }
+    }
 }
 
 // 指定のグループ同士を判定(2グループ指定)
@@ -666,7 +734,9 @@ bool CollisionManager::IsHit(ColliderBase* a, ColliderBase* b, CollisionResult& 
 		return CapsuleToCapsule(dynamic_cast<CapsuleCollider*>(a), dynamic_cast<CapsuleCollider*>(b), result);
 	}
 
-	// ボックス×ボックス
+	
+
+// ボックス×ボックス
 	if (aShape == COLLIDER_SHAPE::Box && bShape == COLLIDER_SHAPE::Box) {
 		return BoxToBox(dynamic_cast<BoxCollider*>(a), dynamic_cast<BoxCollider*>(b), result);
 	}
@@ -1102,6 +1172,8 @@ bool CollisionManager::BoxToBox(BoxCollider* a, BoxCollider* b, CollisionResult&
 
 	// 必要なら押し出し
 	if (NeedPush(a, b)) {
+        // 接触点をBox面中心同士の中点で近似し、双方に回転を与える。
+        const Vector3 contact = (BoxFaceCenter(a, -minimumAxis) + BoxFaceCenter(b, minimumAxis)) * 0.5f;
 		ApplyPush(a, b, minimumAxis, minimumOverlap);
 	}
 
@@ -2212,6 +2284,9 @@ bool CollisionManager::CapsuleToBox(CapsuleCollider* capsule, BoxCollider* box, 
 	if (NeedPush(capsule, box)) {
 		if (overlap < 0.0f) { overlap = 0.0f; }
 
+        // プレイヤーのCapsuleがBoxの端を押す場合に接触位置から回転を与える。
+        // 並進方向の衝突応答は従来のApplyPushに任せる。
+        ResolveCapsuleBoxRotation(capsule, box, result.point, pushNormal, overlap);
 		ApplyPush(capsule, box, pushNormal, overlap);
 	}
 
@@ -2466,14 +2541,14 @@ bool CollisionManager::BoxToMesh(BoxCollider* box, MeshCollider* mesh, Collision
 		result.normal = normal;
 		result.penetration = penetration;
 
-		const Vector3 triangleCenter = (p0 + p1 + p2) / 3.0f;
 
-		result.point = ClosestPointOnTriangle(box->GetPos(), p0, p1, p2);
+		result.point = ClosestPointOnTriangle(BoxFaceCenter(box, -normal), p0, p1, p2);
 
 		isHit = true;
 	}
 
 	if (isHit && NeedPush(box, mesh)) {
+
 		ApplyPush(box, mesh, result.normal, result.penetration);
 	}
 
@@ -2484,15 +2559,92 @@ bool CollisionManager::BoxToMesh(BoxCollider* box, MeshCollider* mesh, Collision
 
 #pragma region 押し出し
 
+// 物理応答はApplyPush側で一組につき一度だけ実行する。
+// MoveColliderは位置補正と従来の押し出し通知のみを担当する。
 void CollisionManager::MoveCollider(ColliderBase* ownCollider, const Vector3& pushVector, const ColliderBase& otherCollider)const
 {
-	if (ownCollider == nullptr) { return; }
+    if (ownCollider == nullptr || pushVector.LengthSq() <= 0.000001f) { return; }
+    ownCollider->SetTransformPosAdd(pushVector);
+    ownCollider->CallOnGrounded(ownCollider->GetTag(), otherCollider, pushVector);
+}
 
-	if (pushVector.LengthSq() <= 0.000001f) { return; }
+namespace
+{
+    // aを押し出す向きが法線。bには反対向きの衝撃が加わる。
+    // 法線に向いた支持点を用いて、接触点を近似する。
+    // Boxは最遠頂点の平均ではなく、法線方向の面中心に近い点を使う。
+    Vector3 ContactSupport(const ColliderBase* collider, const Vector3& direction)
+    {
+        const Vector3 center = collider->GetPos();
+        switch (collider->GetShape()) {
+        case COLLIDER_SHAPE::Box:
+            return static_cast<const BoxCollider*>(collider)->GetSupportPoint(direction);
+        case COLLIDER_SHAPE::Sphere:
+            return center + direction * static_cast<const SphereCollider*>(collider)->GetRadius();
+        case COLLIDER_SHAPE::Capsule: {
+            const CapsuleCollider* capsule = static_cast<const CapsuleCollider*>(collider);
+            const Vector3 p = capsule->GetStartPos();
+            const Vector3 q = capsule->GetEndPos();
+            return (p.Dot(direction) > q.Dot(direction) ? p : q) + direction * capsule->GetRadius();
+        }
+        default:
+            return center;
+        }
+    }
 
-	ownCollider->SetTransformPosAdd(pushVector);
+    // 安定性優先：接触位置が正確に得られるまで、並進インパルスのみを適用する。
+    // Boxの支持点（最遠頂点）を接触点として使用すると、偽のトルクが発生する。
+    void ResolvePair(ColliderBase* a, ColliderBase* b, const Vector3& overlapVec)
+    {
+        if (overlapVec.LengthSq() <= 1.0e-8f) { return; }
+        ActorBase* actorA = a->GetActor();
+        ActorBase* actorB = b->GetActor();
+        if (!actorA || !actorB || actorA == actorB) { return; }
+        PhysicsBody* bodyA = actorA->GetPhysicsBody();
+        PhysicsBody* bodyB = actorB->GetPhysicsBody();
+        const float invA = a->GetMobility() == COLLIDER_MOBILITY::Movable && bodyA ? bodyA->GetInverseMass() : 0.0f;
+        const float invB = b->GetMobility() == COLLIDER_MOBILITY::Movable && bodyB ? bodyB->GetInverseMass() : 0.0f;
+        const float total = invA + invB;
+        if (total <= 1.0e-8f) { return; }
 
-	ownCollider->CallOnGrounded(ownCollider->GetTag(), otherCollider, pushVector);
+        const Vector3 n = overlapVec.Normalized(); // bからaへの法線
+        const Vector3 va = bodyA ? bodyA->GetVelocity() : Vector3(0.0f);
+        const Vector3 vb = bodyB ? bodyB->GetVelocity() : Vector3(0.0f);
+        const Vector3 relative = va - vb;
+        const float vn = relative.Dot(n);
+        if (vn >= 0.0f) { return; }
+
+        const float restA = bodyA && bodyA->GetMode() == PhysicsBody::MotionMode::Dynamic ? bodyA->GetRestitution() : 0.0f;
+        const float restB = bodyB && bodyB->GetMode() == PhysicsBody::MotionMode::Dynamic ? bodyB->GetRestitution() : 0.0f;
+        const float restitution = (std::max)(restA, restB);
+        const float j = -(1.0f + restitution) * vn / total;
+        if (invA > 0.0f) { bodyA->AddVelocity(n * (j * invA)); }
+        if (invB > 0.0f) { bodyB->AddVelocity(-n * (j * invB)); }
+
+        // 接線方向の相対速度を摩擦で抑える（回転への誤った力は加えない）。
+        const Vector3 tangent = relative - n * vn;
+        const float tangentLength = tangent.Length();
+        if (tangentLength > 1.0e-6f) {
+            const Vector3 t = tangent / tangentLength;
+            const float muA = bodyA ? bodyA->GetFriction() : 0.5f;
+            const float muB = bodyB ? bodyB->GetFriction() : 0.5f;
+            const float mu = std::sqrt(muA * muB);
+            const float jt = (std::min)(tangentLength / total, j * mu);
+            if (invA > 0.0f) { bodyA->AddVelocity(-t * (jt * invA)); }
+            if (invB > 0.0f) { bodyB->AddVelocity(t * (jt * invB)); }
+        }
+
+        // 球体の転がり補正は、並進速度の解決後に実行する。
+        if (invA > 0.0f && a->GetShape() == COLLIDER_SHAPE::Sphere) {
+            bodyA->ResolveRollingContact(n, static_cast<SphereCollider*>(a)->GetRadius());
+        }
+        if (invB > 0.0f && b->GetShape() == COLLIDER_SHAPE::Sphere) {
+            bodyB->ResolveRollingContact(-n, static_cast<SphereCollider*>(b)->GetRadius());
+        }
+    }
+
+
+
 }
 
 bool CollisionManager::NeedPush(ColliderBase* a, ColliderBase* b) const
@@ -2508,26 +2660,45 @@ void CollisionManager::ApplyPush(ColliderBase* a, ColliderBase* b, const Vector3
 
 void CollisionManager::ApplyPush(ColliderBase* a, ColliderBase* b, const Vector3& overlapVec)const
 {
-	if (a == nullptr || b == nullptr) { return; }
+    if (!a || !b) { return; }
+    const bool movableA = a->GetMobility() == COLLIDER_MOBILITY::Movable;
+    const bool movableB = b->GetMobility() == COLLIDER_MOBILITY::Movable;
+    if (!movableA && !movableB) { return; }
 
-	const bool aDynamic = a->GetActor()->GetDynamicFlg();
-	const bool bDynamic = b->GetActor()->GetDynamicFlg();
-
-	// 両方動的な場合は重みに応じて分配する
-	if (aDynamic && bDynamic) {
-		float aRatio = 0.0f, bRatio = 0.0f;
-		WeightRatioCalculation(a->GetActor()->GetPushWeight(), b->GetActor()->GetPushWeight(), aRatio, bRatio);
-
-		MoveCollider(a, overlapVec * aRatio, *b);
-		MoveCollider(b, -overlapVec * bRatio, *a);
-	}
-	else if (aDynamic && !bDynamic) { MoveCollider(a, overlapVec, *b); }
-	else if (!aDynamic && bDynamic) { MoveCollider(b, -overlapVec, *a); }
+    // 位置補正は物理質量に従う。物理Bodyを持たないMovableは外部制御扱い。
+    PhysicsBody* bodyA = a->GetActor() ? a->GetActor()->GetPhysicsBody() : nullptr;
+    PhysicsBody* bodyB = b->GetActor() ? b->GetActor()->GetPhysicsBody() : nullptr;
+    const float invA = movableA && bodyA ? bodyA->GetInverseMass() : 0.0f;
+    const float invB = movableB && bodyB ? bodyB->GetInverseMass() : 0.0f;
+    const float total = invA + invB;
+    if (total > 0.0f) {
+        // 押し出し通知による旧反射処理を避けるため、先に物理応答を実行。
+        ResolvePair(a, b, overlapVec);
+        // 位置のめり込み解消は質量比に完全には依存させない。
+        // 両方が動ける場合、重い側にも最低20%の補正を与える。
+        float ratioA = invA / total;
+        if (invA > 0.0f && invB > 0.0f) {
+            ratioA = (std::max)(0.2f, (std::min)(0.8f, ratioA));
+        }
+        if (invA > 0.0f) { MoveCollider(a, overlapVec * ratioA, *b); }
+        if (invB > 0.0f) { MoveCollider(b, -overlapVec * (1.0f - ratioA), *a); }
+    }
+    else if (movableA && !movableB) { MoveCollider(a, overlapVec, *b); }
+    else if (!movableA && movableB) { MoveCollider(b, -overlapVec, *a); }
+    else if (movableA && movableB) {
+        // Bodyなしの移動Collider同士は従来の重みで位置のみ補正。
+        float ratioA = 0.0f, ratioB = 0.0f;
+        WeightRatioCalculation(a->GetActor()->GetPushWeight(), b->GetActor()->GetPushWeight(), ratioA, ratioB);
+        MoveCollider(a, overlapVec * ratioA, *b);
+        MoveCollider(b, -overlapVec * ratioB, *a);
+    }
 }
 
 void CollisionManager::ApplyPushOneSide(ColliderBase* dynamicColl, ColliderBase* staticColl, const Vector3& overlapVec)const
 {
-	MoveCollider(dynamicColl, overlapVec, *staticColl);
+    if (!dynamicColl || !staticColl) { return; }
+    ResolvePair(dynamicColl, staticColl, overlapVec);
+    MoveCollider(dynamicColl, overlapVec, *staticColl);
 }
 
 #pragma endregion

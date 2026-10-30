@@ -1,3 +1,4 @@
+#include "../Common/PhysicsBody/PhysicsBody.h"
 #include "Player.h"
 
 #include "../../Utility/Utility.h"
@@ -48,6 +49,8 @@ void Player::Load(void)
 
 	// 重力を有効にする
 	SetGravityFlg(true);
+	CreatePhysicsBody();
+	GetPhysicsBody()->SetMode(PhysicsBody::MotionMode::Character);
 
 	// 当たり判定による押し出しを有効にする
 	SetPushFlg(true);
@@ -144,7 +147,11 @@ void Player::Load(void)
 	AddState(
 		STATE::Jump,
 		new PlayerJumpState(
-			20.0f, velocity.y, isGround,
+			20.0f, [this](float y) {
+			if (PhysicsBody* body = GetPhysicsBody()) {
+				Vector3 v = body->GetVelocity(); v.y = y; body->SetVelocity(v);
+			}
+		}, isGround,
 			std::bind(&Player::MoveAccel, this, std::placeholders::_1),
 			[&]() { AnimePlay(ANIME_TYPE::JumpStart); },
 			[&]() { AnimePlay(ANIME_TYPE::JumpLoop); },

@@ -29,7 +29,6 @@ struct CollisionResult
 	CollisionResult(void);
 };
 
-
 class ColliderBase
 {
 public:
@@ -135,6 +134,10 @@ public:
 	// 当たり判定フラグセット
 	void SetJudgeFlg(bool flg);
 
+	// 物理演算とは独立したチャンク登録区分
+	void SetMobility(COLLIDER_MOBILITY value) { mobility = value; }
+	COLLIDER_MOBILITY GetMobility(void) const { return mobility; }
+
 #pragma endregion
 
 
@@ -142,6 +145,8 @@ private:
 
 	// 参照アクター
 	ActorBase* owner;
+
+	COLLIDER_MOBILITY mobility = COLLIDER_MOBILITY::Movable;
 
 	// 相対座標
 	Vector3 pos;

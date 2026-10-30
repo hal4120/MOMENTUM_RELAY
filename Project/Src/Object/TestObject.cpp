@@ -1,3 +1,4 @@
+#include "Common/PhysicsBody/PhysicsBody.h"
 #include "TestObject.h"
 
 #include "../Utility/Utility.h"
@@ -24,6 +25,16 @@ void TestObject::Load(void)
 	// 動的オブジェクト
 	SetDynamicFlg(true);
 
+	CreatePhysicsBody();
+
+	PhysicsBody* body = GetPhysicsBody();
+
+	body->SetRotationEnabled(true);
+	body->SetFriction(0.2f);
+	body->SetRollingResponse(0.8f);
+	body->SetAngularDragPerFrame(0.001f);
+	body->SetMaxFallSpeed(100.0f);
+
 	// 重力有効
 	SetGravityFlg(true);
 
@@ -47,7 +58,7 @@ void TestObject::SubUpdate(void)
 {
 	if (!GetDynamicFlg()) { return; }
 
-	if (velocity > 0.0f || !isGround) { return; }
+	if ((GetPhysicsBody() != nullptr && GetPhysicsBody()->GetVelocity() > 0.0f) || !isGround) { return; }
 
 	if (intervalCounter > 0) {
 		intervalCounter--;
@@ -56,14 +67,11 @@ void TestObject::SubUpdate(void)
 
 	intervalCounter = MOVE_INTERVAL;
 
-	velocity = (MOVE_POWER * reverse) + Vector3::Yonly(30.0f);
+	if (GetPhysicsBody() != nullptr) { GetPhysicsBody()->SetVelocity((MOVE_POWER * reverse) + Vector3::Yonly(30.0f)); }
 	reverse *= -1;
 }
 
 void TestObject::SubOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)
 {
-	if (!GetDynamicFlg()) { return; }
-
-	// 反射挙動
-	ReflexiveBehavior(velocity, pushVec);
+    // 反発・摩擦はCollisionManagerとPhysicsBodyが処理する。
 }

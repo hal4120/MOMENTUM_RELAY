@@ -139,6 +139,8 @@ public:
 			colliders.dynamicChunks.clear();
 			colliders.staticChunks.clear();
 			colliders.colliders.clear();
+			colliders.staticCache.clear();
+			colliders.staticCacheDirty = true;
 		}
 	}
 
