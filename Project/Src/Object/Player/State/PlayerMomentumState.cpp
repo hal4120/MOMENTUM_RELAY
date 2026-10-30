@@ -5,6 +5,7 @@
 PlayerMomentumState::PlayerMomentumState(
 	ActorBase*& target,
 	Vector3& stealVelocity,
+	ActorBase*& stealSource,
 
 	const std::function<void(void)>& playAnime,
 	const std::function<float(void)>& getAnimeRatio,
@@ -13,6 +14,7 @@ PlayerMomentumState::PlayerMomentumState(
 ) :
 	target(target),
 	stealVelocity(stealVelocity),
+	stealSource(stealSource),
 
 	playAnime(playAnime),
 	getAnimeRatio(getAnimeRatio),
@@ -42,7 +44,7 @@ void PlayerMomentumState::Update(void)
 	case PlayerMomentumState::STEP::FrontGap: {
 
 		// 設定アニメーション再生割合を超えたら実行
-		if (animeRatio >= getAnimeRatio()) {
+		if (animeRatio >= 0.35f) {
 
 			// 「実行」する
 			step = STEP::Do;
@@ -56,8 +58,14 @@ void PlayerMomentumState::Update(void)
 		// 勢いを保持している -> 勢いを「与える」行動
 		if (stealVelocity != 0.0f) {
 
+			// 勢いの持ち主のロックを解除
+			stealSource->VelGive(Vector3());
+
+			// 勢いの持ち主の参照を手放す
+			stealSource = nullptr;
+
 			// ターゲットに勢いを与える
-			target->VelGive(stealVelocity);
+			target->VelGive(stealVelocity * 4.0f);
 
 			// 保持していた勢いを消去
 			stealVelocity = 0.0f;
@@ -65,9 +73,15 @@ void PlayerMomentumState::Update(void)
 		// 勢いを保持していない -> 勢いを「奪う」行動
 		else {
 
-			// ターゲットから勢いを奪うい、保持する
+			// ターゲットから勢いを奪い、保持する
 			stealVelocity = target->VelSteal();
+
+			// 奪った対象の参照を保持する
+			stealSource = target;
 		}
+
+		// ターゲットリセット
+		target = nullptr;
 
 		// 実行終了。「後隙」にする
 		step = STEP::RearGap;

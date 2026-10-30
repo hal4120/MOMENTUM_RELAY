@@ -12,6 +12,7 @@ public:
 	PlayerMomentumState(
 		ActorBase*& target,
 		Vector3& stealVelocity,
+		ActorBase*& stealSource,
 
 		const std::function<void(void)>& playAnime,
 		const std::function<float(void)>& getAnimeRatio,
@@ -53,6 +54,8 @@ private:
 
 	// 奪って保持している勢い
 	Vector3& stealVelocity;
+	// 奪って保持している勢いの元の持ち主
+	ActorBase*& stealSource;
 
 	// アニメーション再生関数
 	std::function<void(void)> playAnime;
