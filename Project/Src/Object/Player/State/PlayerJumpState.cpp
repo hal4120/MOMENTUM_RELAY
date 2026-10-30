@@ -8,7 +8,7 @@
 PlayerJumpState::PlayerJumpState(
 	float JUMP_POWER,
 
-	float& velocityY,
+	std::function<void(float)> setJumpVelocity,
 	const bool& isGround,
 
 	std::function<void(const Vector3&)> moveAccel,
@@ -23,7 +23,7 @@ PlayerJumpState::PlayerJumpState(
 ):
 	JUMP_POWER(JUMP_POWER),
 
-	velocityY(velocityY),
+	setJumpVelocity(setJumpVelocity),
 	isGround(isGround),
 
 	moveAccel(moveAccel),
@@ -66,7 +66,7 @@ void PlayerJumpState::Update(void)
 		if (isAnimeEnd()) {
 
 			// 加速度加算
-			velocityY = JUMP_POWER;
+			setJumpVelocity(JUMP_POWER);
 
 			// 滞空アニメーションを再生
 			playAnimeJumpLoop();

@@ -11,6 +11,8 @@
 
 #include "../../../Manager/Collision/CurrentCollisionManager.h"
 
+#include "../PhysicsBody/PhysicsBody.h"
+
 #include "../Collider/ColliderBase.h"
 
 #include "../Shader/ShaderBase.h"
@@ -20,15 +22,15 @@
 
 ActorBase::ActorBase() :
 	trans(),
+	physicsBody(nullptr),
 	colliders(),
 
-	dynamicFlg(true),
+	colliderMobility(COLLIDER_MOBILITY::Movable),
 	gravityFlg(false),
 
 	pushFlg(true),
 	pushWeight(0),
 
-	velocity(),
 
 	isGroundMaster(false),
 
@@ -45,15 +47,15 @@ ActorBase::ActorBase() :
 
 ActorBase::ActorBase(const std::string& parameterPath) :
 	trans(),
+	physicsBody(nullptr),
 	colliders(),
 
-	dynamicFlg(true),
+	colliderMobility(COLLIDER_MOBILITY::Movable),
 	gravityFlg(false),
 
 	pushFlg(true),
 	pushWeight(0),
 
-	velocity(),
 
 	isGroundMaster(false),
 
@@ -98,10 +100,8 @@ void ActorBase::Init(void)
 
 void ActorBase::Update(void)
 {
-	// 1フレーム前の加速度を保持
-	Vector3 prevVelocity = velocity;
-	// 動的オブジェクトの場合1フレーム前の座標を保持
-	if (dynamicFlg) { trans.prevPos = trans.pos; }
+	// CCDのため、物理演算の有無に関係なく前フレーム座標を記録
+	trans.prevPos = trans.pos;
 
 	// 最終派生固有
 	SubUpdate();
@@ -109,13 +109,22 @@ void ActorBase::Update(void)
 	// 中間基底固有
 	BaseUpdate();
 
-	if (dynamicFlg) {
-		// 加速度更新
-		VelocityUpdate(velocity == prevVelocity);
+	// 物理挙動を持つActorのみ物理更新
+	if (physicsBody != nullptr) {
+        const float timeScale = TimeScale::Get();
+        trans.pos += physicsBody->Step(timeScale);
 
-		// 接地判定のリセット
-		isGroundMaster = false;
-	}
+        // 回転物理を有効化したActorだけ、角速度を回転へ反映
+        Vector3 rotationAxis(0.0f);
+        float rotationAngle = 0.0f;
+        if (physicsBody->StepRotation(timeScale, rotationAxis, rotationAngle)) {
+            // ワールド軸の回転を既存のQuaternionへ左から合成
+            trans.SetRotation(Quaternion::FromAxisAngle(rotationAxis, rotationAngle) * trans.rotation);
+        }
+    }
+
+	// 次の衝突判定で接地情報を再設定
+	isGroundMaster = false;
 
 	// 子アクターの更新
 	for (ActorBase* child : childActors) { child->Update(); }
@@ -182,6 +191,10 @@ void ActorBase::Release(void)
 		parameter = nullptr;
 	}
 
+	// 物理挙動を解放
+	delete physicsBody;
+	physicsBody = nullptr;
+
 	// 当たり判定情報を解放
 	for (ColliderBase*& collider : colliders) {
 		if (!collider) { continue; }
@@ -214,76 +227,20 @@ void ActorBase::DrawColliderDebug(void) const
 	}
 }
 
-void ActorBase::Gravity(void)
-{
-	if (!gravityFlg) { return; }
-
-	velocity.y += GRAVITY * TimeScale::Get();
-	if (velocity.y < GRAVITY_MAX) { velocity.y = GRAVITY_MAX; }
-}
-
-void ActorBase::VelocityUpdate(bool	deceleration)
-{
-	// 重力処理
-	Gravity();
-
-#pragma region 横軸（X,Z）
-	// 横軸のみの加速度の大きさを求める
-	float widthAccelLen = sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-
-	// 横軸の加速度がある場合
-	if (widthAccelLen > 0.0f) {
-
-		// 補正倍率
-		float scale = 1.0f;
-
-		// 減速処理
-		if (deceleration) {
-			// 横軸の加速度が減速の半分以下の場合は、横軸の加速度を0にする
-			if (widthAccelLen <= (DECEL_RATE * TimeScale::Get()) * 0.5f) { velocity.x = velocity.z = 0.0f; }
-
-			// 減速
-			scale = (widthAccelLen - (DECEL_RATE * TimeScale::Get())) / widthAccelLen;
-		}
-
-		// 最大加速制限～～～～～～～～～～～～～～～～～～～～～～～～～～～～～
-
-		// 最大加速を超えていれば、超過分を打ち消す補正倍率を組み込む
-		if (widthAccelLen > ACCEL_MAX) { scale = ACCEL_MAX / widthAccelLen; }
-
-		// 実際に補正
-		velocity.x *= scale;
-		velocity.z *= scale;
-		// ～～～～～～～～～～～～～～～～～～～～～～～～～～～～～最大加速制限
-	}
-#pragma endregion
-
-	// 加速度を座標に反映
-	if (velocity != 0.0f) { trans.pos += velocity * TimeScale::Get(); }
-}
-
 Vector3 ActorBase::VelSteal(void)
 {
-	// 現在加速度を保持
-	Vector3 ret = velocity;
-
-	// 加速度を打ち消し
-	velocity = 0.0f;
-
-	// 停止
-	SetDynamicFlg(false);
-	CurrentCollisionManager::Get().InitBuildChunks();
-
-	// 保持した加速度を返す
-	return ret;
+    if (physicsBody == nullptr) { return Vector3(0.0f); }
+    const Vector3 taken = physicsBody->StealVelocity();
+    // Collider区分は維持
+    
+    return taken;
 }
 
 void ActorBase::VelGive(const Vector3& vel)
 {
-	velocity = vel;
-
-	// 動き出させる
-	SetDynamicFlg(true);
+    if (physicsBody == nullptr) { CreatePhysicsBody(); }
+    physicsBody->GiveVelocity(vel);
+    // PhysicsBodyが再開
 }
 
 void ActorBase::OnTargeted()
@@ -300,9 +257,43 @@ void ActorBase::OnUntargeted()
 	DefaultCreateShader();
 }
 
+void ActorBase::SetColliderMobility(COLLIDER_MOBILITY value)
+{
+	colliderMobility = value;
+	trans.dynamicFlg = (value == COLLIDER_MOBILITY::Movable);
+	for (ColliderBase* collider : colliders) {
+		if (collider != nullptr) { collider->SetMobility(value); }
+	}
+	// チャンク区分変更時だけ静的・動的チャンクを再構築
+	// （初期化前に呼ばれる可能性があるため、登録済みColliderがある場合のみ）
+	// 登録タイミングが不明なため、ここでは再構築を呼ばず、Manager側の明示更新に委ねる。
+}
+
+void ActorBase::SetGravityFlg(bool flg)
+{
+	gravityFlg = flg;
+	if (flg && physicsBody == nullptr) { CreatePhysicsBody(); }
+	if (physicsBody != nullptr) { physicsBody->SetGravityEnabled(flg); }
+}
+
+void ActorBase::SetDynamicFlg(bool flg)
+{
+	// 旧API互換: 物理挙動ではなくチャンク登録区分のみ変更
+	SetColliderMobility(flg ? COLLIDER_MOBILITY::Movable : COLLIDER_MOBILITY::Static);
+}
+
+void ActorBase::CreatePhysicsBody(void)
+{
+	if (physicsBody != nullptr) { return; }
+	physicsBody = new PhysicsBody();
+	physicsBody->SetGravityEnabled(gravityFlg);
+	physicsBody->SetGravityPerFrame(GRAVITY);
+}
+
 void ActorBase::AddCollider(ColliderBase* newCollider)
 {
 	newCollider->SetActorPtr(this);
+	newCollider->SetMobility(colliderMobility);
 	newCollider->SetOnCollisionFunc([this](COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result) { this->OnCollision(ownTag, other, result); });
 	newCollider->SetOnGroundedFunc([this](COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) { this->OnPushed(ownTag, other, pushVec); });
 	colliders.emplace_back(newCollider);
@@ -394,9 +385,25 @@ void ActorBase::SetJudgeFlg(bool flg)
 void ActorBase::MoveAccel(const Vector3& vec)
 {
 	if (vec == 0.0f) { return; }
+	if (physicsBody == nullptr) { CreatePhysicsBody(); }
 
 	// 入力量に応じて加速
-	velocity += (vec * ACCEL_RATE) * TimeScale::Get();
+	if (physicsBody != nullptr && !physicsBody->IsFrozen()) {
+        const Vector3 v = physicsBody->GetVelocity();
+        const float speedXZ = sqrtf(v.x * v.x + v.z * v.z);
+        const float steer = speedXZ > ACCEL_MAX ? 0.2f : 1.0f;
+        physicsBody->AddVelocity((vec * ACCEL_RATE * steer) * TimeScale::Get());
+        // 通常速度だけを制限。付与された高速の勢いは維持する
+        if (speedXZ <= ACCEL_MAX) {
+            Vector3 next = physicsBody->GetVelocity();
+            const float nextXZ = sqrtf(next.x * next.x + next.z * next.z);
+            if (nextXZ > ACCEL_MAX && nextXZ > 0.0f) {
+                const float rate = ACCEL_MAX / nextXZ;
+                next.x *= rate; next.z *= rate;
+                physicsBody->SetVelocity(next);
+            }
+        }
+    }
 
 	// 移動方向から目標のY軸回転を取得
 	const float targetAngle = atan2f(vec.x, vec.z);

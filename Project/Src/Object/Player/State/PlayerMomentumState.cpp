@@ -65,7 +65,7 @@ void PlayerMomentumState::Update(void)
 			stealSource = nullptr;
 
 			// ターゲットに勢いを与える
-			target->VelGive(stealVelocity * 4.0f);
+			target->VelGive(stealVelocity);
 
 			// 保持していた勢いを消去
 			stealVelocity = 0.0f;

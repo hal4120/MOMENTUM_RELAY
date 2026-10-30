@@ -185,6 +185,8 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Object\Common\Collider\ColliderBase.cpp" />
     <ClCompile Include="Src\Object\Common\Collider\MeshCollider.cpp" />
     <ClCompile Include="Src\Object\Common\DataLoad\ParameterLoad.cpp" />
+    <ClCompile Include="Src\Object\Common\PhysicsBody\CharacterMotionController.cpp" />
+    <ClCompile Include="Src\Object\Common\PhysicsBody\PhysicsBody.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\DefaultShader.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\ModelDamageFlashShader.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\RimLightShader.cpp" />
@@ -205,6 +207,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Object\Player\State\PlayerRollingState.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\PlayerCollOperator.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.cpp" />
+    <ClCompile Include="Src\Object\TestBoxObject.cpp" />
     <ClCompile Include="Src\Object\TestObject.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\AimCrosshairPostEffect\AimCrosshairPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.cpp" />
@@ -280,6 +283,8 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\Common\Collider\XZCircleCollider.h" />
     <ClInclude Include="Src\Object\Common\DataLoad\ParameterLoad.h" />
     <ClInclude Include="Src\Object\Common\DebugObject\BoxDebugObject.h" />
+    <ClInclude Include="Src\Object\Common\PhysicsBody\CharacterMotionController.h" />
+    <ClInclude Include="Src\Object\Common\PhysicsBody\PhysicsBody.h" />
     <ClInclude Include="Src\Object\Common\Shader\DefaultShader.h" />
     <ClInclude Include="Src\Object\Common\Shader\ModelDamageFlashShader.h" />
     <ClInclude Include="Src\Object\Common\Shader\RimLightShader.h" />
@@ -301,6 +306,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\Player\State\PlayerRollingState.h" />
     <ClInclude Include="Src\Object\Player\Weapon\PlayerCollOperator.h" />
     <ClInclude Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.h" />
+    <ClInclude Include="Src\Object\TestBoxObject.h" />
     <ClInclude Include="Src\Object\TestObject.h" />
     <ClInclude Include="Src\Object\TestStage.h" />
     <ClInclude Include="Src\Object\Water.h" />

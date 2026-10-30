@@ -11,7 +11,7 @@ public:
 	PlayerJumpState(
 		float JUMP_POWER,
 
-		float& velocityY,
+		std::function<void(float)> setJumpVelocity,
 		const bool& isGround,
 
 		std::function<void(const Vector3&)> moveAccel,
@@ -47,7 +47,7 @@ private:
 #pragma region 受け取る参照変数・関数
 
 	// Y軸加速度
-	float& velocityY;
+	const std::function<void(float)> setJumpVelocity;
 
 	// 地面と設置しているか
 	const bool& isGround;

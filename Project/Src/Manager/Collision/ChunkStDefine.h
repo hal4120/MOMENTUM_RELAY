@@ -53,6 +53,10 @@ struct ColliderGroupData {
 
 	// 動的コライダー参照
 	ChunkMap dynamicChunks;
+
+	// 前回の静的Collider集合。Mobility変更を検出するために保持
+	std::vector<ColliderBase*> staticCache;
+	bool staticCacheDirty = true;
 };
 
 // 重複判定防止のペアキー(どのセットが判定を取ったか記録するため)

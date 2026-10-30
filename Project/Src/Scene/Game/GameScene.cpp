@@ -34,6 +34,7 @@
 
 #include "../../Object/TestStage.h"
 #include "../../Object/TestObject.h"
+#include "../../Object/TestBoxObject.h"
 
 #include "../../Object/Player/Player.h"
 
@@ -47,7 +48,7 @@ void GameScene::SubPostLoad(void)
 {
 	Snd::GetIns().ChangeScene("Game");
 
-	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false));
+	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false, false));
 	AddActor(new IceBoxDebugObject(Vector3(1000, 100, 1000), Vector3::XZonly(-1500.0f, 1500.0f), false));
 	//AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 100), Vector3::YZonly(5000.0f, 5000.0f), false));
 	//AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 100), Vector3::YZonly(5000.0f, -5000.0f), false));
@@ -59,8 +60,15 @@ void GameScene::SubPostLoad(void)
 	AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Xonly(50.0f)));
 	AddActor(new TestObject(Vector3(-400, 300, -400), Vector3::Zonly(50.0f)));
 	AddActor(new TestObject(Vector3(-600, 300, -600), Vector3::XZonly(25.0f, 25.0f)));
+
+	new TestBoxObject(
+		Vector3(100),
+		Vector3(0.0f, 300.0f, 0.0f),
+		TestBoxObject::TestMode::FreeFall
+	);
+
 	AddActor(new Player);
-	AddActor(new Water);
+	//AddActor(new Water);
 
 	//for (int i = 0; i < 50; i++) {
 	//	AddActor(new SphereDebugObject(50.0f, Vector3::Xonly(10.0f * 25 - (10.0f * i))));
@@ -106,11 +114,11 @@ void GameScene::SubPostUpdate(void)
 	}
 	}
 
-	switch (ActorSerch<Water>(actors)->UnderWaterPostEffectSwitch()) {
-	case -1: { break; }
-	case 0: { RemovePostEffect<UnderWaterPostEffect>(); break; }
-	case 1: { AddPostEffect(new UnderWaterPostEffect()); break; }
-	}
+	//switch (ActorSerch<Water>(actors)->UnderWaterPostEffectSwitch()) {
+	//case -1: { break; }
+	//case 0: { RemovePostEffect<UnderWaterPostEffect>(); break; }
+	//case 1: { AddPostEffect(new UnderWaterPostEffect()); break; }
+	//}
 }
 
 void GameScene::SubUiDraw(void)
