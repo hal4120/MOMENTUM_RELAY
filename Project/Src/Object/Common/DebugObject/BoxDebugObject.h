@@ -15,7 +15,6 @@ public:
 		bool dynamicFlg = true,
 		bool isGravity = true,
 		bool pushFlg = true,
-		unsigned char pushWeight = 0,
 		bool isOperator = false
 	) :
 		DebugObjectBase(
@@ -23,7 +22,6 @@ public:
 			dynamicFlg,
 			isGravity,
 			pushFlg,
-			pushWeight,
 			isOperator
 		),
 		size(size)
@@ -33,7 +31,7 @@ public:
 
 	void Load(void)override {
 
-		if (GetDynamicFlg()) {
+		if ((GetColliderMobility() == COLLIDER_MOBILITY::Movable)) {
 			CreatePhysicsBody();
 
 			PhysicsBody* body = GetPhysicsBody();

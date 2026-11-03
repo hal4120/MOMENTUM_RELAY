@@ -19,7 +19,6 @@ public:
 		bool dynamicFlg = true,
 		bool isGravity = true,
 		bool pushFlg = true,
-		unsigned char pushWeight = 50,
 		bool isOperator = false
 	) :
 		DebugObjectBase(
@@ -27,7 +26,6 @@ public:
 			dynamicFlg,
 			isGravity,
 			pushFlg,
-			pushWeight,
 			isOperator
 		),
 		startPos(startPos),

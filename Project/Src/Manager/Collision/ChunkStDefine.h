@@ -1,3 +1,4 @@
+#include <functional>
 #pragma once
 
 #include <unordered_map>
@@ -65,7 +66,8 @@ struct ColliderPairKey {
 	ColliderBase* b = nullptr;
 
 	ColliderPairKey(ColliderBase* lhs, ColliderBase* rhs) {
-		if (lhs < rhs) { a = lhs; b = rhs; }
+		// ポインタの順序を統一し、逆順の組み合わせも同じキーにする
+		if (std::less<ColliderBase*>()(lhs, rhs)) { a = lhs; b = rhs; }
 		else { a = rhs; b = lhs; }
 	}
 
@@ -77,6 +79,10 @@ struct ColliderPairKey {
 // 重複判定防止のペアキーのハッシュ
 struct ColliderPairKeyHash {
 	std::size_t operator()(const ColliderPairKey& key) const {
-		return std::hash<ColliderBase*>()(key.a) ^ (std::hash<ColliderBase*>()(key.b) << 1);
+		// 2つのポインタのハッシュを混合し、バケットの偏りを抑える
+		const std::size_t hashA = std::hash<ColliderBase*>()(key.a);
+		const std::size_t hashB = std::hash<ColliderBase*>()(key.b);
+		return hashA ^ (hashB + static_cast<std::size_t>(0x9e3779b9U) +
+			(hashA << 6) + (hashA >> 2));
 	}
 };

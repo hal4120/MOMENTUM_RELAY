@@ -16,6 +16,8 @@ private:
 	// ’Ç‰ÁXV
 	void SubUpdate(void)override;
 
+	void SubRelease(void)override;
+
 	// ”h¶æ’Ç‰ÁÚ’n
 	void SubOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)override;
 
@@ -30,4 +32,6 @@ private:
 	// ˆÚ“®—Ê
 	const Vector3 MOVE_POWER;
 
+
+	static int modelHandleOriginal;
 };

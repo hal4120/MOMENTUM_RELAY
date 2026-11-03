@@ -1,8 +1,10 @@
 #pragma once
 
 #include <map>
+#include <algorithm>
 
 #include "ChunkStDefine.h"
+#include "ContactSolver.h"
 
 #include "../../Object/Common/Collider/ColliderBase.h"
 
@@ -116,8 +118,21 @@ public:
 	// チャンク分け(初期化時)
 	void InitBuildChunks(void);
 
+	// 1フレーム分の衝突判定統計
+	struct CheckStats {
+		std::size_t pairCandidates = 0;
+		std::size_t uniquePairs = 0;
+		std::size_t hitPairs = 0;
+		double buildChunksMs = 0.0;
+		double matchingMs = 0.0;
+		double solverMs = 0.0;
+	};
+
 	// 判定実行
 	void Check(void);
+
+	// 最後に実行した判定の統計を取得
+	const CheckStats& GetCheckStats(void)const { return checkStats; }
 
 	/// <summary>
 	/// レイキャスト
@@ -133,8 +148,14 @@ public:
 	// チャンク描画
 	void DrawChunkGrid(const Vector3& cameraPos) const;
 
+	// 当たり判定ログ描画
+	void DrawCheckLog(void)const;
+
 	// 解放
 	void Clear(void) {
+		ContactSolver::Clear();
+		checkedPairs.clear();
+		checkStats = CheckStats{};
 		for (ColliderGroupData& colliders : groupColliders) {
 			colliders.dynamicChunks.clear();
 			colliders.staticChunks.clear();
@@ -151,6 +172,9 @@ private:
 
 	// 重複判定防止の判定記録
 	std::unordered_set<ColliderPairKey, ColliderPairKeyHash> checkedPairs;
+
+	// 最後の判定実行時の統計
+	CheckStats checkStats;
 
 	// MeshCollider内部BVH検索用の作業バッファ
 	// clearのみで再利用し、判定ごとのメモリ確保を抑える
@@ -250,43 +274,47 @@ private:
 
 #pragma region ユーティリティ
 
-	// 重なるチャンクインデックス(ChunkIndex)一覧を取得する
-	void GetOverlappedChunks(const ColliderBase::AABB& aabb, std::vector<ChunkIndex>& out) const {
-		out.clear();
+	// 指定のチャンクマップにコライダーを1つ登録
+	void RegisterToChunks(ChunkMap& chunks, ColliderBase* collider)const {
+		// コライダーが存在しない場合は終了
+		if (!collider) { return; }
 
-		ChunkIndex minIndex = {
-			ToChunkIndex(aabb.min.x, CHUNK_SIZE),
-			ToChunkIndex(aabb.min.y, CHUNK_SIZE),
-			ToChunkIndex(aabb.min.z, CHUNK_SIZE)
-		};
+		// コライダーのAABBを取得
+		ColliderBase::AABB bounds = collider->GetAABB();
 
-		ChunkIndex maxIndex = {
-			ToChunkIndex(aabb.max.x, CHUNK_SIZE),
-			ToChunkIndex(aabb.max.y, CHUNK_SIZE),
-			ToChunkIndex(aabb.max.z, CHUNK_SIZE)
-		};
+		// Movableは移動前の位置も含めた範囲を登録
+		// 高速移動時に壁のチャンクを飛び越さないようにする
+		if (collider->GetMobility() == COLLIDER_MOBILITY::Movable) {
+			const Vector3 delta = collider->GetPos() - collider->GetPrevPos();
+			const Vector3 previousMin = bounds.min - delta;
+			const Vector3 previousMax = bounds.max - delta;
 
+			bounds.min.x = (std::min)(bounds.min.x, previousMin.x);
+			bounds.min.y = (std::min)(bounds.min.y, previousMin.y);
+			bounds.min.z = (std::min)(bounds.min.z, previousMin.z);
+			bounds.max.x = (std::max)(bounds.max.x, previousMax.x);
+			bounds.max.y = (std::max)(bounds.max.y, previousMax.y);
+			bounds.max.z = (std::max)(bounds.max.z, previousMax.z);
+		}
+
+		// AABBと重なるチャンクの最小・最大インデックスを取得
+		const ChunkIndex minIndex(
+			ToChunkIndex(bounds.min.x, CHUNK_SIZE),
+			ToChunkIndex(bounds.min.y, CHUNK_SIZE),
+			ToChunkIndex(bounds.min.z, CHUNK_SIZE));
+
+		const ChunkIndex maxIndex(
+			ToChunkIndex(bounds.max.x, CHUNK_SIZE),
+			ToChunkIndex(bounds.max.y, CHUNK_SIZE),
+			ToChunkIndex(bounds.max.z, CHUNK_SIZE));
+
+		// 一時的な配列を作らず、重なるチャンクへ直接登録
 		for (int z = minIndex.z; z <= maxIndex.z; z++) {
 			for (int y = minIndex.y; y <= maxIndex.y; y++) {
 				for (int x = minIndex.x; x <= maxIndex.x; x++) {
-					out.push_back(ChunkIndex(x, y, z));
+					chunks[ChunkIndex(x, y, z)].colliders.emplace_back(collider);
 				}
 			}
-		}
-	}
-
-	// 指定のチャンクマップにコライダーを1つ登録
-	void RegisterToChunks(ChunkMap& chunks, ColliderBase* collider)const {
-		// 安全処理
-		if (!collider) { return; }
-
-		// 重なるチャンクインデックスを取得
-		std::vector<ChunkIndex> indexes;
-		GetOverlappedChunks(collider->GetAABB(), indexes);
-
-		// 取得したチャンクインデックスすべてに登録
-		for (const ChunkIndex& index : indexes) {
-			chunks[index].colliders.emplace_back(collider);
 		}
 	}
 
@@ -296,48 +324,26 @@ private:
 	/// <param name="a">コライダー１</param>
 	/// <param name="b">コライダー２</param>
 	/// <returns></returns>
-	bool NeedPush(ColliderBase* a, ColliderBase* b)const;
+	// 共通ソルバーへ接触を登録するか判定
+	bool NeedContactResponse(ColliderBase* a, ColliderBase* b)const;
+
 
 	/// <summary>
-	/// 重みづけの割合を計算
+	/// Line・XZCircleの位置補正を法線とめり込み量から登録する
 	/// </summary>
-	/// <param name="aWeight">（in） 重み</param>
-	/// <param name="bWeight">（in） 重み</param>
-	/// <param name="aWeightRatio">（out） 重みの割合</param>
-	/// <param name="bWeightRatio">（out） 重みの割合</param>
-	void WeightRatioCalculation(unsigned char aWeight, unsigned char bWeight, float& aWeightRatio, float& bWeightRatio)const {
-		// お互いの重みにおける割合を計算（相手の重み ÷ 自分と相手の重みの合計）
-
-		// 自分と相手の重みの合計
-		float abWeightSum = (float)(aWeight + bWeight);
-
-		if (abWeightSum != 0.0f) {
-			aWeightRatio = (float)bWeight / abWeightSum;
-			bWeightRatio = (float)aWeight / abWeightSum;
-		}
-		else {
-			// 両方重み０だったら半分ずつで返す（例外処理）
-			aWeightRatio = bWeightRatio = 0.5f;
-		}
-	}
+	void QueuePositionCorrection(ColliderBase* a, ColliderBase* b, const Vector3& normal, float overlap)const;
 
 	/// <summary>
-	/// 2つのコライダーを重みに合わせて押し出す
+	/// Line・XZCircleの位置補正をベクトルで登録する
 	/// </summary>
-	void ApplyPush(ColliderBase* a, ColliderBase* b, const Vector3& normal, float overlap)const;
+	void QueuePositionCorrection(ColliderBase* a, ColliderBase* b, const Vector3& overlapVec)const;
 
 	/// <summary>
-	/// 2つのコライダーを押し出しベクトルに合わせて押し出す
+	/// 片方のコライダーに対する位置補正を登録する
 	/// </summary>
-	void ApplyPush(ColliderBase* a, ColliderBase* b, const Vector3& overlapVec)const;
+	void QueueOneSidePositionCorrection(ColliderBase* dynamicColl, ColliderBase* staticColl, const Vector3& overlapVec)const;
 
-	/// <summary>
-	/// 指定した片方のコライダーだけを押し出す
-	/// </summary>
-	void ApplyPushOneSide(ColliderBase* dynamicColl, ColliderBase* staticColl, const Vector3& overlapVec)const;
-
-	// 押し出しベクトルをコライダーへ適用し、接地判定も行う
-	void MoveCollider(ColliderBase* ownCollider, const Vector3& pushVector, const ColliderBase& otherCollider)const;
+	
 #pragma endregion
 
 };

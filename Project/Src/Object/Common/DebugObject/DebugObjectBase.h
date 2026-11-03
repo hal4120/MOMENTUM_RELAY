@@ -16,7 +16,6 @@ public:
 		bool dynamicFlg,
 		bool isGravity,
 		bool pushFlg,
-		unsigned char pushWeight,
 
 		bool isOperator
 	) :
@@ -24,10 +23,9 @@ public:
 		isOperator(isOperator)
 	{
 		trans.pos = pos;
-		SetDynamicFlg(dynamicFlg);
+		SetColliderMobility(dynamicFlg ? COLLIDER_MOBILITY::Movable : COLLIDER_MOBILITY::Static);
 		SetGravityFlg(isGravity);
-		SetPushFlg(pushFlg);
-		SetPushWeight(pushWeight);
+		SetContactResponseEnabled(pushFlg);
 	}
 	DebugObjectBase(
 		const std::string& parameterPath,
@@ -37,7 +35,6 @@ public:
 		bool dynamicFlg,
 		bool isGravity,
 		bool pushFlg,
-		unsigned char pushWeight,
 
 		bool isOperator
 	) :
@@ -45,10 +42,9 @@ public:
 		isOperator(isOperator)
 	{
 		trans.pos = pos;
-		SetDynamicFlg(dynamicFlg);
+		SetColliderMobility(dynamicFlg ? COLLIDER_MOBILITY::Movable : COLLIDER_MOBILITY::Static);
 		SetGravityFlg(isGravity);
-		SetPushFlg(pushFlg);
-		SetPushWeight(pushWeight);
+		SetContactResponseEnabled(pushFlg);
 	}
 	~DebugObjectBase()override = default;
 

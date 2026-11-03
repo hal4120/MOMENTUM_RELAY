@@ -28,8 +28,7 @@ ActorBase::ActorBase() :
 	colliderMobility(COLLIDER_MOBILITY::Movable),
 	gravityFlg(false),
 
-	pushFlg(true),
-	pushWeight(0),
+	contactResponseEnabled(true),
 
 
 	isGroundMaster(false),
@@ -53,8 +52,7 @@ ActorBase::ActorBase(const std::string& parameterPath) :
 	colliderMobility(COLLIDER_MOBILITY::Movable),
 	gravityFlg(false),
 
-	pushFlg(true),
-	pushWeight(0),
+	contactResponseEnabled(true),
 
 
 	isGroundMaster(false),
@@ -112,6 +110,23 @@ void ActorBase::Update(void)
 	// 物理挙動を持つActorのみ物理更新
 	if (physicsBody != nullptr) {
         const float timeScale = TimeScale::Get();
+
+        // PlayerはCharacterMotionControllerを使用していないため、
+        // ActorBase側でCharacterの水平速度を継続的に減衰させる。
+        if (physicsBody->GetMode() == PhysicsBody::MotionMode::Character
+            && !physicsBody->IsFrozen() && timeScale > 0.0f) {
+            Vector3 velocity = physicsBody->GetVelocity();
+            const float speed = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
+            if (speed > 0.0f) {
+                // 接地情報は前フレームの結果。空中は弱い減速にする。
+                const float drag = (isGroundMaster ? 0.65f : 0.08f) * timeScale;
+                const float remaining = speed - drag;
+                const float ratio = remaining > 0.0f ? remaining / speed : 0.0f;
+                velocity.x *= ratio;
+                velocity.z *= ratio;
+                physicsBody->SetVelocity(velocity);
+            }
+        }
         trans.pos += physicsBody->Step(timeScale);
 
         // 回転物理を有効化したActorだけ、角速度を回転へ反映
@@ -238,7 +253,7 @@ Vector3 ActorBase::VelSteal(void)
 
 void ActorBase::VelGive(const Vector3& vel)
 {
-    if (physicsBody == nullptr) { CreatePhysicsBody(); }
+	if (physicsBody == nullptr) { return;/*CreatePhysicsBody();*/ }
     physicsBody->GiveVelocity(vel);
     // PhysicsBodyが再開
 }
@@ -276,11 +291,6 @@ void ActorBase::SetGravityFlg(bool flg)
 	if (physicsBody != nullptr) { physicsBody->SetGravityEnabled(flg); }
 }
 
-void ActorBase::SetDynamicFlg(bool flg)
-{
-	// 旧API互換: 物理挙動ではなくチャンク登録区分のみ変更
-	SetColliderMobility(flg ? COLLIDER_MOBILITY::Movable : COLLIDER_MOBILITY::Static);
-}
 
 void ActorBase::CreatePhysicsBody(void)
 {
@@ -295,7 +305,7 @@ void ActorBase::AddCollider(ColliderBase* newCollider)
 	newCollider->SetActorPtr(this);
 	newCollider->SetMobility(colliderMobility);
 	newCollider->SetOnCollisionFunc([this](COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result) { this->OnCollision(ownTag, other, result); });
-	newCollider->SetOnGroundedFunc([this](COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) { this->OnPushed(ownTag, other, pushVec); });
+	newCollider->SetOnPushedFunc([this](COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) { this->OnPushed(ownTag, other, pushVec); });
 	colliders.emplace_back(newCollider);
 }
 
@@ -439,4 +449,14 @@ void ActorBase::ReflexiveBehavior(Vector3& velocity, const Vector3& pushVec)
 
 	// 衝突面に向かう速度成分だけを反射
 	velocity -= normal * ((1.0f + restitution) * dot);
+}
+
+// 位置拘束の角度補正。角速度には加算しない。
+void ActorBase::ApplyPhysicsRotation(const Vector3& rotationVector)
+{
+    const float angle = rotationVector.Length();
+    if (angle <= 1.0e-7f) return;
+    trans.SetRotation(
+        (Quaternion::FromAxisAngle(rotationVector / angle, angle) * trans.rotation).Normalized()
+    );
 }

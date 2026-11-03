@@ -14,11 +14,11 @@ public:
 
 	void Load(void)override {};
 	void Init(void)override {
-		SetDynamicFlg(true);
+		SetColliderMobility(COLLIDER_MOBILITY::Movable);
 
 		SetGravityFlg(false);
 
-		SetPushFlg(false);
+		SetContactResponseEnabled(false);
 	};
 	void Draw(void)override {};
 	void Release(void)override {}

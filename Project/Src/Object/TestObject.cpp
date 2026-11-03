@@ -5,6 +5,8 @@
 
 #include "Common/Collider/SphereCollider.h"
 
+int TestObject::modelHandleOriginal = -1;
+
 TestObject::TestObject(const Vector3& initPos, const Vector3& MOVE_POWER) :
 	ActorBase(),
 
@@ -23,40 +25,48 @@ void TestObject::Load(void)
 #pragma region アクター挙動設定
 
 	// 動的オブジェクト
-	SetDynamicFlg(true);
+	SetColliderMobility(COLLIDER_MOBILITY::Movable);
 
 	CreatePhysicsBody();
 
 	PhysicsBody* body = GetPhysicsBody();
 
 	body->SetRotationEnabled(true);
-	body->SetFriction(0.2f);
-	body->SetRollingResponse(0.8f);
-	body->SetAngularDragPerFrame(0.001f);
+	body->SetStaticFriction(0.8f);
+	body->SetDynamicFriction(0.6f);
+	body->SetAngularDragPerFrame(0.005f);
+	body->SetHorizontalDragPerFrame(0.05f);
+	body->SetRollingResistance(0.001f);
 	body->SetMaxFallSpeed(100.0f);
 
 	// 重力有効
 	SetGravityFlg(true);
 
 	// 押し出し有効
-	SetPushFlg(true);
+	SetContactResponseEnabled(true);
 
 	// 押し出し重み設定
-	SetPushWeight(50);
-
 #pragma endregion
 
-	trans.LoadModel("Moon/Moon");
+	if (modelHandleOriginal == -1) { modelHandleOriginal = MV1LoadModel("Data/Model/Moon/Moon.mv1"); }
+
+	//trans.LoadModel("Moon/Moon");
+	trans.model = modelHandleOriginal;
+
 
 	trans.scale = 0.57282954884f;
 
-	// コライダーを生成
-	AddCollider(new SphereCollider(COLLIDER_TAG::DebugObject, 174.572f * trans.scale.MaxElementF()));
+	// コライダーと慣性モーメントで同じ半径を使う
+	const float radius = 174.572f * trans.scale.MaxElementF();
+	AddCollider(new SphereCollider(COLLIDER_TAG::DebugObject, radius));
+	body->SetShapeInertiaSphere(radius);
 }
 
 void TestObject::SubUpdate(void)
 {
-	if (!GetDynamicFlg()) { return; }
+	return;
+
+	if (!(GetColliderMobility() == COLLIDER_MOBILITY::Movable)) { return; }
 
 	if ((GetPhysicsBody() != nullptr && GetPhysicsBody()->GetVelocity() > 0.0f) || !isGround) { return; }
 
@@ -69,6 +79,14 @@ void TestObject::SubUpdate(void)
 
 	if (GetPhysicsBody() != nullptr) { GetPhysicsBody()->SetVelocity((MOVE_POWER * reverse) + Vector3::Yonly(30.0f)); }
 	reverse *= -1;
+}
+
+void TestObject::SubRelease(void)
+{
+	if (modelHandleOriginal != -1) {
+		MV1DeleteModel(modelHandleOriginal);
+		modelHandleOriginal = -1;
+	}
 }
 
 void TestObject::SubOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)

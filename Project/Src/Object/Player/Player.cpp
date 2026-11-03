@@ -45,19 +45,19 @@ void Player::Load(void)
 #pragma region オブジェクト設定
 
 	// 動的オブジェクトとしての処理を有効にする
-	SetDynamicFlg(true);
+	SetColliderMobility(COLLIDER_MOBILITY::Movable);
 
 	// 重力を有効にする
 	SetGravityFlg(true);
 	CreatePhysicsBody();
 	GetPhysicsBody()->SetMode(PhysicsBody::MotionMode::Character);
+	// 物理衝突時の押しやすさ。SetPushWeightとは独立。
+	GetPhysicsBody()->SetMass(1.0f);
 
 	// 当たり判定による押し出しを有効にする
-	SetPushFlg(true);
+	SetContactResponseEnabled(true);
 
 	// 押し出しだしによる重みを設定
-	SetPushWeight(50);
-
 #pragma endregion
 
 #pragma region モデル設定
@@ -148,10 +148,11 @@ void Player::Load(void)
 		STATE::Jump,
 		new PlayerJumpState(
 			20.0f, [this](float y) {
-			if (PhysicsBody* body = GetPhysicsBody()) {
-				Vector3 v = body->GetVelocity(); v.y = y; body->SetVelocity(v);
-			}
-		}, isGround,
+				if (PhysicsBody* body = GetPhysicsBody()) {
+					Vector3 v = body->GetVelocity(); v.y = y; body->SetVelocity(v);
+				}
+			},
+			isGround,
 			std::bind(&Player::MoveAccel, this, std::placeholders::_1),
 			[&]() { AnimePlay(ANIME_TYPE::JumpStart); },
 			[&]() { AnimePlay(ANIME_TYPE::JumpLoop); },
