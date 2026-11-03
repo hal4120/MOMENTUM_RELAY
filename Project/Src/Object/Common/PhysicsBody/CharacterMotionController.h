@@ -31,6 +31,9 @@ public:
     // 高速移動と判定する速度を設定
     void SetMomentumThreshold(float value) { momentumThreshold = value; }
 
+    // 高速移動中、入力を離した際の接地減速度（速度/フレーム）
+    void SetMomentumReleaseDeceleration(float value) { momentumReleaseDeceleration = value > 0.0f ? value : 0.0f; }
+
     // ジャンプ時の上方向の速度を設定
     void SetJumpSpeed(float value) { jumpSpeed = value; }
 
@@ -75,6 +78,9 @@ private:
 
     // 高速移動と判定する速度
     float momentumThreshold = 10.0f;
+
+    // 勢いを残しつつ、入力を離したときに停止できるようにする
+    float momentumReleaseDeceleration = 0.12f;
 
     // ジャンプ時の上方向の速度
     float jumpSpeed = 12.0f;

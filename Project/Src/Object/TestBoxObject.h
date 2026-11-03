@@ -21,10 +21,11 @@ public:
     void Load(void) override;
 
 private:
-    void SubDraw(void) override;
 
     TestMode testMode;
     Vector3 boxSize;
-    // ActorBase‚ªŠ—L‚·‚éCollider‚Ö‚Ì”ñŠ—LQÆ
-    BoxCollider* boxCollider = nullptr;
+
+    void SubRelease(void)override;
+
+    static int modelHandleOriginal;
 };

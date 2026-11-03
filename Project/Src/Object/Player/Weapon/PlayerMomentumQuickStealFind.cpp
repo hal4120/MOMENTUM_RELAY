@@ -18,11 +18,11 @@ PlayerMomentumQuickStealFind::PlayerMomentumQuickStealFind(Transform& playerTran
 void PlayerMomentumQuickStealFind::Load(void)
 {
 	// 動的有効
-	SetDynamicFlg(true);
+	SetColliderMobility(COLLIDER_MOBILITY::Movable);
 	// 重力無効
 	SetGravityFlg(false);
 	// 押し出し無効
-	SetPushFlg(false);
+	SetContactResponseEnabled(false);
 
 	// コライダー生成
 	collRef = new SphereCollider(COLLIDER_TAG::Player, 1000.0f);

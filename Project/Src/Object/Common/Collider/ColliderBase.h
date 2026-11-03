@@ -79,7 +79,7 @@ public:
 	void SetOnCollisionFunc(std::function<void(COLLIDER_TAG, const ColliderBase&, const CollisionResult&)> OnCollisionFunc);
 
 	// 接地判定通知用関数セット
-	void SetOnGroundedFunc(std::function<void(COLLIDER_TAG, const ColliderBase&, const Vector3&)> OnGroundedFunc);
+	void SetOnPushedFunc(std::function<void(COLLIDER_TAG, const ColliderBase&, const Vector3&)> OnPushedFunc);
 
 #pragma endregion
 
@@ -117,7 +117,7 @@ public:
 	void CallOnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result);
 
 	// 接地判定通知の呼び出し
-	void CallOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec);
+	void CallOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec);
 
 	// 自分が占有している範囲
 	virtual AABB GetAABB(void) const = 0;
@@ -167,7 +167,7 @@ private:
 	std::function<void(COLLIDER_TAG, const ColliderBase&, const CollisionResult&)> OnCollision;
 
 	// 接地したときに呼び出す関数
-	std::function<void(COLLIDER_TAG, const ColliderBase&, const Vector3&)> OnGrounded;
+	std::function<void(COLLIDER_TAG, const ColliderBase&, const Vector3&)> OnPushed;
 
 protected:
 

@@ -2,6 +2,7 @@
 #pragma once
 
 #include "../../../Common/Vector3.h"
+#include "../../../Common/Quaternion.h"
 
 // 物理挙動制御
 class PhysicsBody
@@ -37,16 +38,16 @@ public:
 #pragma region 速度・加速度
 
     // 速度を設定
-    void SetVelocity(const Vector3& value) { velocity = value; }
+    void SetVelocity(const Vector3& value) { velocity = value; if (value.LengthSq() > 1.0e-8f) WakeUp(); }
 
     // 速度を取得
     const Vector3& GetVelocity() const { return velocity; }
 
     // 速度を加算
-    void AddVelocity(const Vector3& delta) { velocity += delta; }
+    void AddVelocity(const Vector3& delta) { if (delta.LengthSq() > 1.0e-8f) WakeUp(); velocity += delta; }
 
     // 加速度を加算
-    void AddAcceleration(const Vector3& value) { acceleration += value; }
+    void AddAcceleration(const Vector3& value) { if (value.LengthSq() > 1.0e-8f) WakeUp(); acceleration += value; }
 
     // 速度を奪取して停止
     Vector3 StealVelocity();
@@ -84,34 +85,50 @@ public:
     float GetRestitution() const { return restitution; }
 
     // 摩擦係数を取得
-    float GetFriction() const { return friction; }
+    float GetFriction() const { return dynamicFriction; }
+
+    // Static and dynamic friction are independent. Values may exceed 1.
+    void SetStaticFriction(float value);
+    void SetDynamicFriction(float value);
+    float GetStaticFriction() const { return staticFriction; }
+    float GetDynamicFriction() const { return dynamicFriction; }
+
+    // 接触によって支持されている間のみ作用する、角度方向の抵抗。
+    void SetRollingResistance(float value);
+    float GetRollingResistance() const { return rollingResistance; }
+    void ApplyContactRollingResistance(const Vector3& normal);
 
     // 質量（0より大きい値）。衝突時の速度変化に使用
-    void SetMass(float value) { mass = value > 0.0001f ? value : 0.0001f; }
+    void SetMass(float value);
     float GetMass() const { return mass; }
     float GetInverseMass() const { return (frozen || mode == MotionMode::Kinematic) ? 0.0f : 1.0f / mass; }
 
-    // 接地時に目標角速度へ近づく割合（0.0f～1.0f）
-    void SetRollingResponse(float value) { rollingResponse = Clamp01(value); }
-    float GetRollingResponse() const { return rollingResponse; }
 
 #pragma endregion
 
 #pragma region 物理挙動制御
 
     // 物理挙動の停止・再開を設定
-    void SetFrozen(bool value) { frozen = value; }
+    void SetFrozen(bool value) { frozen = value; if (!value) WakeUp(); }
 
     // 物理挙動が停止中か取得
     bool IsFrozen() const { return frozen; }
+
+    // Dynamic剛体が接地中に十分静止した場合のみスリープする。
+    void SetSleepEnabled(bool value) { sleepEnabled = value; if (!value) WakeUp(); }
+    bool IsSleepEnabled() const { return sleepEnabled; }
+    bool IsSleeping() const { return sleeping; }
+    void WakeUp();
+    // 接触拘束の解決後に、床からの支持と運動量を評価する。
+    void UpdateSleepState(bool supported, bool movingSupport);
 
     // 物理挙動を更新して移動量を取得
     Vector3 Step(float timeScale);
 
     // 角速度（ワールド軸・ラジアン/フレーム）
-    void SetAngularVelocity(const Vector3& value) { angularVelocity = value; }
+    void SetAngularVelocity(const Vector3& value) { angularVelocity = value; if (value.LengthSq() > 1.0e-8f) WakeUp(); }
     const Vector3& GetAngularVelocity() const { return angularVelocity; }
-    void AddAngularVelocity(const Vector3& value) { angularVelocity += value; }
+    void AddAngularVelocity(const Vector3& value) { if (value.LengthSq() > 1.0e-8f) WakeUp(); angularVelocity += value; }
 
     // 角速度の減衰量（ラジアン/フレーム）
     void SetAngularDragPerFrame(float value);
@@ -150,10 +167,13 @@ public:
     void SetShapeInertiaCapsule(float radius, float segmentLength);
     float GetInverseAngularInertia() const;
 
+    // 剛体ローカル3軸の慣性モーメント。ワールドへの変換は姿勢で行う。
+    const Vector3& GetLocalInertia() const { return localInertia; }
+    Vector3 MultiplyInverseInertia(const Vector3& worldVector, const Quaternion& worldRotation) const;
+    void ApplyImpulseAtPoint(const Vector3& impulse, const Vector3& lever, const Quaternion& worldRotation);
+
     void ResolveSurfaceVelocity(const Vector3& normal);
 
-    // 球体の接地面に対する滑りを角速度へ近づける（簡易転がり）
-    void ResolveRollingContact(const Vector3& normal, float radius);
 
 #pragma endregion
 
@@ -177,7 +197,10 @@ private:
     Vector3 angularVelocity = Vector3(0.0f);
     float angularDragPerFrame = 0.0f;
     float boxGroundAngularDamping = 0.08f;
-    float angularInertia = 1.0f;
+    float angularInertia = 1.0f; // 旧APIの代表値
+    Vector3 inertiaPerMass = Vector3(1.0f);
+    Vector3 localInertia = Vector3(1.0f);
+    void RebuildInertia();
     // 既存Actorの意図しない回転を防ぐため明示的に有効化する
     bool rotationEnabled = false;
 
@@ -186,6 +209,10 @@ private:
 
     // 物理挙動を停止しているか
     bool frozen = false;
+    bool sleepEnabled = true;
+    bool sleeping = false;
+    int sleepFrames = 0;
+
 
 #pragma endregion
 
@@ -196,16 +223,17 @@ private:
     float maxFallSpeed = 100.0f;
 
     // 1フレームあたりの水平方向の減衰率
-    float horizontalDragPerFrame = 0.0f;
+    float horizontalDragPerFrame = 0.05f;
 
     // 反発係数
     float restitution = 0.25f;
 
     // 摩擦係数
-    float friction = 0.5f;
+    float friction = 0.5f; // legacy compatibility; synchronized by setters
+    float staticFriction = 0.65f;
+    float dynamicFriction = 0.5f;
+    float rollingResistance = 0.01f;
 
-    // 転がりの追従率（摩擦とは独立）
-    float rollingResponse = 0.125f;
 
     // 衝突応答に使用する質量
     float mass = 1.0f;

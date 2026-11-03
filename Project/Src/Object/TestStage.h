@@ -16,9 +16,9 @@ public:
 
 	void Load(void)override {
 
-		SetDynamicFlg(false);
+		SetColliderMobility(COLLIDER_MOBILITY::Static);
 
-		SetPushFlg(true);
+		SetContactResponseEnabled(true);
 
 		trans.LoadModel("TestStage/TestStage");
 

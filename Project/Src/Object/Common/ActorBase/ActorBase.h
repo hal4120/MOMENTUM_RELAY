@@ -50,6 +50,8 @@ public:
 
 	// モデル制御情報構造体のゲット関数
 	const Transform& GetTrans(void)const { return trans; }
+    // 物理ソルバーによる微小な姿勢補正（ワールド軸・ラジアン）
+    void ApplyPhysicsRotation(const Vector3& rotationVector);
 
 	// 座標セット
 	void SetPos(const Vector3& pos) { trans.pos = pos; }
@@ -82,15 +84,11 @@ public:
 	// 子クラスを取得する
 	const std::vector<ActorBase*>& GetChildActors(void)const { return childActors; }
 
-	// 動的オブジェクトかどうか（true = 動的、false = 静的）
-	bool GetDynamicFlg(void)const { return colliderMobility == COLLIDER_MOBILITY::Movable; }
+	// 当たり判定の移動区分を取得
+	COLLIDER_MOBILITY GetColliderMobility(void)const { return colliderMobility; }
 
-	// 衝突時押し出しを行うかどうか（true = 押し出す、false = 押し出さず通り抜ける）
-	bool GetPushFlg(void)const { return pushFlg; }
-
-	// 押し出しを行う際の重さ（0 ～ 100 で設定）
-	unsigned char GetPushWeight(void)const { return pushWeight; }
-
+	// 接触時の物理応答を行うかどうか（true = 応答する、false = 応答しない）
+	bool IsContactResponseEnabled(void)const { return contactResponseEnabled; }
 	// 勢いを奪われる
 	Vector3 VelSteal(void);
 	// 勢いを与えられる
@@ -115,12 +113,8 @@ private:
 	// 重力を適用するかどうか（true = する、false = しない）
 	bool gravityFlg;
 
-	// 衝突時押し出しを行うかどうか（true = 押し出す、false = 押し出さず通り抜ける）
-	bool pushFlg;
-
-	// 押し出しを行う際の重さ（0 ～ 100 で設定）
-	unsigned char pushWeight;
-
+	// 接触時の物理応答を行うかどうか（true = 応答する、false = 応答しない）
+	bool contactResponseEnabled;
 	// 重力加速度
 	static constexpr float GRAVITY = -0.9f;
 	// 重力の最大値
@@ -170,12 +164,6 @@ protected:
 	// コライダー追加
 	void AddCollider(ColliderBase* newCollider);
 
-	/// <summary>
-	/// 移動するかを切り替える
-	/// </summary>
-	/// <param name="flg">true = 「移動する」に切り替える、false = 「移動しない」に切り替える</param>
-	void SetDynamicFlg(bool flg);
-
 	// 物理演算とは独立したチャンク区分を設定
 	void SetColliderMobility(COLLIDER_MOBILITY value);
 
@@ -186,16 +174,10 @@ protected:
 	void SetGravityFlg(bool flg);
 
 	/// <summary>
-	/// 衝突時押し出しを行うかを設定する
+	/// 接触時の物理応答を行うかを設定する
 	/// </summary>
-	/// <param name="flg">true = 押し出す、false = 押し出さず通り抜ける</param>
-	void SetPushFlg(bool flg) { pushFlg = flg; }
-
-	/// <summary>
-	/// 押し出しを行う際の重さ
-	/// </summary>
-	/// <param name="weight">0 ～ 100 で設定（数値が大きいほど重い）</param>
-	void SetPushWeight(unsigned char weight) { pushWeight = weight; }
+	/// <param name="flg">true = 応答する、false = 応答しない</param>
+	void SetContactResponseEnabled(bool flg) { contactResponseEnabled = flg; }
 
 	// 子クラスを追加する
 	void AddChildActor(ActorBase* child) {

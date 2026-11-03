@@ -31,7 +31,36 @@ void PhysicsBody::SetRestitution(float value)
 // 摩擦係数を設定
 void PhysicsBody::SetFriction(float value)
 {
-    friction = Clamp01(value);
+    const float f = value < 0.0f ? 0.0f : value;
+    friction = f;
+    dynamicFriction = f;
+    staticFriction = f;
+}
+
+void PhysicsBody::SetStaticFriction(float value)
+{
+    staticFriction = value < 0.0f ? 0.0f : value;
+}
+
+void PhysicsBody::SetDynamicFriction(float value)
+{
+    dynamicFriction = value < 0.0f ? 0.0f : value;
+    friction = dynamicFriction;
+}
+
+void PhysicsBody::SetRollingResistance(float value)
+{
+    rollingResistance = value < 0.0f ? 0.0f : value;
+}
+
+void PhysicsBody::ApplyContactRollingResistance(const Vector3& normal)
+{
+    if (!rotationEnabled || frozen || mode != MotionMode::Dynamic || rollingResistance <= 0.0f) return;
+    if (normal.LengthSq() <= 1.0e-8f) return;
+    // Resistance is a per-contact angular-speed decrement, not an artificial spin impulse.
+    const float speed = angularVelocity.Length();
+    if (speed <= rollingResistance) angularVelocity = Vector3(0.0f);
+    else angularVelocity *= (speed - rollingResistance) / speed;
 }
 
 #pragma endregion
@@ -63,17 +92,48 @@ void PhysicsBody::GiveVelocity(const Vector3& value)
 
     // 物理挙動を再開
     frozen = false;
+    WakeUp();
 }
 
 #pragma endregion
 
 #pragma region 物理挙動制御
 
+void PhysicsBody::WakeUp()
+{
+    sleeping = false;
+    sleepFrames = 0;
+}
+
+void PhysicsBody::UpdateSleepState(bool supported, bool movingSupport)
+{
+    if (mode != MotionMode::Dynamic || !sleepEnabled || frozen || !supported || movingSupport) {
+        if (sleeping && (!supported || movingSupport)) WakeUp();
+        if (!sleeping) sleepFrames = 0;
+        return;
+    }
+    // 大きな速度や回転がある間は眠らせない。
+    constexpr float kLinearThresholdSq = 0.0025f; // 0.05 / frame
+    constexpr float kAngularThresholdSq = 0.000025f; // 0.005 rad / frame
+    constexpr int kRequiredFrames = 45;
+    if (velocity.LengthSq() > kLinearThresholdSq || angularVelocity.LengthSq() > kAngularThresholdSq) {
+        if (sleeping) WakeUp();
+        sleepFrames = 0;
+        return;
+    }
+    if (++sleepFrames >= kRequiredFrames) {
+        sleeping = true;
+        velocity = Vector3(0.0f);
+        angularVelocity = Vector3(0.0f);
+        acceleration = Vector3(0.0f);
+    }
+}
+
 // 物理挙動を更新して移動量を取得
 Vector3 PhysicsBody::Step(float timeScale)
 {
     // 外部制御・停止中・時間停止中は更新しない
-    if (mode == MotionMode::Kinematic || frozen || timeScale <= 0.0f)
+    if (mode == MotionMode::Kinematic || frozen || timeScale <= 0.0f || sleeping)
     {
         acceleration = Vector3(0.0f);
         return Vector3(0.0f);
@@ -167,24 +227,6 @@ void PhysicsBody::ResolveSurfaceVelocity(const Vector3& normal)
     if (mode == MotionMode::Dynamic) { velocity -= tangent * friction; }
 }
 
-// 球体が接地した際、接線速度に対応する角速度へ徐々に近づける
-// 衝突点を正確に求める剛体ソルバーではなく、球体専用の簡易転がり処理
-void PhysicsBody::ResolveRollingContact(const Vector3& normal, float radius)
-{
-    if (!rotationEnabled || frozen || mode != MotionMode::Dynamic || radius <= 1.0e-5f) { return; }
-    const float lengthSq = normal.LengthSq();
-    if (lengthSq <= 1.0e-8f) { return; }
-    const Vector3 n = normal / std::sqrt(lengthSq);
-    // 床に近い面だけを対象とし、壁への接触で不自然に転がらないようにする
-    if (n.y < 0.5f) { return; }
-
-    const Vector3 tangent = velocity - n * velocity.Dot(n);
-    const Vector3 desiredAngularVelocity = n.Cross(tangent) / radius;
-    // 転がり追従率に応じて目標角速度へ近づける
-    const float blend = rollingResponse;
-    angularVelocity += (desiredAngularVelocity - angularVelocity) * blend;
-}
-
 #pragma endregion
 
 #pragma region 回転物理
@@ -218,7 +260,7 @@ bool PhysicsBody::StepRotation(float timeScale, Vector3& axis, float& angle)
 {
     axis = Vector3(0.0f);
     angle = 0.0f;
-    if (!rotationEnabled || frozen || mode != MotionMode::Dynamic || timeScale <= 0.0f) { return false; }
+    if (!rotationEnabled || frozen || sleeping || mode != MotionMode::Dynamic || timeScale <= 0.0f) { return false; }
 
     const float speed = angularVelocity.Length();
     if (speed <= 1.0e-6f) { angularVelocity = Vector3(0.0f); return false; }
@@ -236,9 +278,23 @@ bool PhysicsBody::StepRotation(float timeScale, Vector3& axis, float& angle)
 
 #pragma region 接触による回転応答
 
+void PhysicsBody::RebuildInertia()
+{
+    localInertia = inertiaPerMass * mass;
+    angularInertia = (localInertia.x + localInertia.y + localInertia.z) / 3.0f;
+}
+
+void PhysicsBody::SetMass(float value)
+{
+    mass = value > 0.0001f ? value : 0.0001f;
+    RebuildInertia();
+}
+
 void PhysicsBody::SetAngularInertia(float value)
 {
-    angularInertia = value > 1.0e-6f ? value : 1.0e-6f;
+    const float inertia = value > 1.0e-6f ? value : 1.0e-6f;
+    inertiaPerMass = Vector3(inertia / mass);
+    RebuildInertia();
 }
 
 void PhysicsBody::ResolveContactAngularVelocity(const Vector3& normal, const Vector3& contactPoint, const Vector3& center, const Vector3& incomingVelocity)
@@ -278,33 +334,64 @@ float PhysicsBody::GetInverseAngularInertia() const
         ? 1.0f / angularInertia : 0.0f;
 }
 
-void PhysicsBody::ApplyImpulseAtPoint(const Vector3& impulse, const Vector3& lever)
+Vector3 PhysicsBody::MultiplyInverseInertia(const Vector3& worldVector, const Quaternion& worldRotation) const
+{
+    if (!rotationEnabled || frozen || sleeping || mode != MotionMode::Dynamic) return Vector3(0.0f);
+    const Quaternion q = worldRotation.Normalized();
+    const Vector3 v = q.Inversed().Rotate(worldVector);
+    const Vector3 result(
+        localInertia.x > 1.0e-6f ? v.x / localInertia.x : 0.0f,
+        localInertia.y > 1.0e-6f ? v.y / localInertia.y : 0.0f,
+        localInertia.z > 1.0e-6f ? v.z / localInertia.z : 0.0f);
+    return q.Rotate(result);
+}
+
+void PhysicsBody::ApplyImpulseAtPoint(const Vector3& impulse, const Vector3& lever, const Quaternion& worldRotation)
 {
     const float invMass = GetInverseMass();
-    if (invMass <= 0.0f) { return; }
+    if (invMass <= 0.0f) return;
+    if (impulse.LengthSq() > 1.0e-8f) WakeUp();
     velocity += impulse * invMass;
-    const float invInertia = GetInverseAngularInertia();
-    if (invInertia > 0.0f) { angularVelocity += lever.Cross(impulse) * invInertia; }
+    angularVelocity += MultiplyInverseInertia(lever.Cross(impulse), worldRotation);
+}
+
+void PhysicsBody::ApplyImpulseAtPoint(const Vector3& impulse, const Vector3& lever)
+{
+    // 従来API互換。姿勢を持つ呼び出し元は3引数版を使用する。
+    ApplyImpulseAtPoint(impulse, lever, Quaternion::Identity());
 }
 
 void PhysicsBody::SetShapeInertiaSphere(float radius)
 {
-    if (radius <= 0.0f) { return; }
-    SetAngularInertia(0.4f * mass * radius * radius);
+    if (radius <= 0.0f) return;
+    inertiaPerMass = Vector3(0.4f * radius * radius);
+    RebuildInertia();
 }
 
 void PhysicsBody::SetShapeInertiaBox(const Vector3& size)
 {
-    // 等方近似：各軸の慣性モーメントの平均
-    const float sum = size.x * size.x + size.y * size.y + size.z * size.z;
-    SetAngularInertia(mass * sum / 18.0f);
+    // size は辺の全長。直方体の重心周りの主慣性モーメント。
+    inertiaPerMass = Vector3(
+        (size.y * size.y + size.z * size.z) / 12.0f,
+        (size.x * size.x + size.z * size.z) / 12.0f,
+        (size.x * size.x + size.y * size.y) / 12.0f);
+    RebuildInertia();
 }
 
 void PhysicsBody::SetShapeInertiaCapsule(float radius, float segmentLength)
 {
-    // 円柱と球の複合形状の簡易近似
-    const float length = segmentLength > 0.0f ? segmentLength : 0.0f;
-    SetAngularInertia(mass * (0.4f * radius * radius + length * length / 12.0f));
+    // 円柱＋両端半球の質量比を使う。カプセル長軸はローカルY軸。
+    if (radius <= 0.0f) return;
+    const float h = segmentLength > 0.0f ? segmentLength : 0.0f;
+    const float cylinderVolume = 3.14159265358979323846f * radius * radius * h;
+    const float sphereVolume = (4.0f / 3.0f) * 3.14159265358979323846f * radius * radius * radius;
+    const float cylinderRatio = cylinderVolume / (cylinderVolume + sphereVolume);
+    const float sphereRatio = 1.0f - cylinderRatio;
+    const float axial = cylinderRatio * 0.5f * radius * radius + sphereRatio * 0.4f * radius * radius;
+    const float transverse = cylinderRatio * (3.0f * radius * radius + h * h) / 12.0f
+        + sphereRatio * (0.4f * radius * radius + 0.25f * h * h);
+    inertiaPerMass = Vector3(transverse, axial, transverse);
+    RebuildInertia();
 }
 
 #pragma endregion

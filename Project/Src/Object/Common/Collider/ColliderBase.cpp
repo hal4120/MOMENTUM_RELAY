@@ -24,7 +24,7 @@ ColliderBase::ColliderBase(COLLIDER_TAG type, const Vector3& pos, const Quaterni
 	shape(COLLIDER_SHAPE::None),
 
 	OnCollision(nullptr),
-	OnGrounded(nullptr)
+	OnPushed(nullptr)
 {
 }
 
@@ -40,9 +40,9 @@ void ColliderBase::SetOnCollisionFunc(std::function<void(COLLIDER_TAG, const Col
 }
 
 
-void ColliderBase::SetOnGroundedFunc(std::function<void(COLLIDER_TAG, const ColliderBase&, const Vector3&)> OnGroundedFunc)
+void ColliderBase::SetOnPushedFunc(std::function<void(COLLIDER_TAG, const ColliderBase&, const Vector3&)> OnPushedFunc)
 {
-	OnGrounded = std::move(OnGroundedFunc);
+	OnPushed = std::move(OnPushedFunc);
 }
 
 
@@ -135,11 +135,11 @@ void ColliderBase::CallOnCollision(COLLIDER_TAG ownTag, const ColliderBase& othe
 }
 
 
-void ColliderBase::CallOnGrounded(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)
+void ColliderBase::CallOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)
 {
-	if (!OnGrounded) { return; }
+	if (!OnPushed) { return; }
 
-	OnGrounded(ownTag, other, pushVec);
+	OnPushed(ownTag, other, pushVec);
 }
 
 

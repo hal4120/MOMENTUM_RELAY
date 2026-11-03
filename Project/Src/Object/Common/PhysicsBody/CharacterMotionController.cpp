@@ -59,6 +59,14 @@ void CharacterMotionController::ApplyInput(
         {
             horizontal += input * accel;
         }
+        else if (grounded && momentumReleaseDeceleration > 0.0f)
+        {
+            // 勢いはすぐに消さず、接地中だけ一定量ずつ減速する。
+            // 空中では従来どおり慣性を保持する。
+            const float deceleration = momentumReleaseDeceleration * timeScale;
+            const float remaining = speed - deceleration;
+            horizontal *= remaining > 0.0f ? remaining / speed : 0.0f;
+        }
     }
     // 通常移動中の場合
     else

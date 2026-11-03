@@ -61,7 +61,6 @@ void SceneBase::Load(void)
 	// シーンごとに独立したカメラを生成する
 	CreateCamera();
 
-
 	// スカイボックスを生成
 	if (UseSkyBox()) { skyBox = new SkyBox(); }
 
@@ -215,6 +214,7 @@ void SceneBase::Draw(void)
 	SubUiDraw();
 
 	if (camera != nullptr) { camera->DrawDebug(); }
+	if (collision != nullptr) { collision->DrawCheckLog(); }
 
 #pragma endregion
 }

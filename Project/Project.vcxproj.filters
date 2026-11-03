@@ -80,6 +80,7 @@
     <ClCompile Include="Src\Object\Common\PhysicsBody\CharacterMotionController.cpp" />
     <ClCompile Include="Src\Object\Common\PhysicsBody\PhysicsBody.cpp" />
     <ClCompile Include="Src\Object\TestBoxObject.cpp" />
+    <ClCompile Include="Src\Manager\Collision\ContactSolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Src\Object\Common\PhysicsBody\PhysicsBody.h" />
     <ClInclude Include="Src\Object\Common\PhysicsBody\CharacterMotionController.h" />
     <ClInclude Include="Src\Object\TestBoxObject.h" />
+    <ClInclude Include="Src\Manager\Collision\ContactSolver.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />

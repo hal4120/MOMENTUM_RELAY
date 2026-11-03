@@ -49,23 +49,30 @@ void GameScene::SubPostLoad(void)
 	Snd::GetIns().ChangeScene("Game");
 
 	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false, false));
-	AddActor(new IceBoxDebugObject(Vector3(1000, 100, 1000), Vector3::XZonly(-1500.0f, 1500.0f), false));
-	//AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 100), Vector3::YZonly(5000.0f, 5000.0f), false));
-	//AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 100), Vector3::YZonly(5000.0f, -5000.0f), false));
-	//AddActor(new IceBoxDebugObject(Vector3(100, 10000, 10000), Vector3::XYonly(5000.0f, 5000.0f), false));
-	//AddActor(new IceBoxDebugObject(Vector3(100, 10000, 10000), Vector3::XYonly(-5000.0f, 5000.0f), false));
+	AddActor(new IceBoxDebugObject(Vector3(1000, 100, 1000), Vector3::XZonly(-1500.0f, 1500.0f), false, false));
+	AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 10), Vector3::YZonly(5000.0f, 5000.0f), false, false));
+	AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 100), Vector3::YZonly(5000.0f, -5000.0f), false, false));
+	AddActor(new IceBoxDebugObject(Vector3(100, 10000, 10000), Vector3::XYonly(5000.0f, 5000.0f), false, false));
+	AddActor(new IceBoxDebugObject(Vector3(100, 10000, 10000), Vector3::XYonly(-5000.0f, 5000.0f), false, false));
 
-	//AddActor(new CapsuleDebugObject(Vector3(50, 0, 0), Vector3(-50, 0, 0), 50.0f, Vector3(), true, true, true, 50, true));
+	//AddActor(new CapsuleDebugObject(Vector3(50, 0, 0), Vector3(-50, 0, 0), 50.0f, Vector3(), true, true, true, true));
 	//AddActor(new TestStage);
-	AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Xonly(50.0f)));
+	for (int i = 0; i < 100; i++) {
+		AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Xonly(50.0f)));
+		AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Zonly(50.0f)));
+	}
 	AddActor(new TestObject(Vector3(-400, 300, -400), Vector3::Zonly(50.0f)));
 	AddActor(new TestObject(Vector3(-600, 300, -600), Vector3::XZonly(25.0f, 25.0f)));
 
-	new TestBoxObject(
-		Vector3(100),
-		Vector3(0.0f, 300.0f, 0.0f),
-		TestBoxObject::TestMode::FreeFall
-	);
+	for (int i = 0; i < 10; i++) {
+		AddActor(
+			new TestBoxObject(
+				Vector3(100),
+				Vector3(0.0f, 300.0f, 0.0f),
+				TestBoxObject::TestMode::FreeFall
+			)
+		);
+	}
 
 	AddActor(new Player);
 	//AddActor(new Water);

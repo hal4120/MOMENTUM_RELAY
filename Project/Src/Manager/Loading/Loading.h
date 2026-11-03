@@ -44,7 +44,7 @@ private:
 	static Loading* ins;
 
 	// 最低でもロード画面を表示する時間
-	static constexpr int MIN_LOAD_TIME = 0;	// 60fps(1秒) * x
+	static constexpr int MIN_LOAD_TIME = 60;	// 60fps(1秒) * x
 
 	// 画像ハンドル
 

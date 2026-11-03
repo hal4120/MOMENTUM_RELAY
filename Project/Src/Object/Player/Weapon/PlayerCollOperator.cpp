@@ -23,13 +23,13 @@ void PlayerCollOperator::Load(void)
 #pragma region オブジェクト設定
 
 	// 動的オブジェクトとしての処理を有効にする
-	SetDynamicFlg(true);
+	SetColliderMobility(COLLIDER_MOBILITY::Movable);
 
 	// 重力を無効にする
 	SetGravityFlg(false);
 
 	// 当たり判定による押し出しを無効にする
-	SetPushFlg(false);
+	SetContactResponseEnabled(false);
 
 #pragma endregion
 

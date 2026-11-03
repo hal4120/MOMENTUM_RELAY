@@ -117,10 +117,8 @@ void Application::Run(void)
 		// シーン管理描画
 		SceneManager::GetIns().Draw();
 
-#ifdef _DEBUG
 		// フレームレートデバッグ描画
-		fps->DrawFrameRate();
-#endif // DEBUG
+		if (IsDrawDebug()) { fps->DrawFrameRate(); }
 
 		// 描画が完了した背面画面を表に持ってくる
 		ScreenFlip();
