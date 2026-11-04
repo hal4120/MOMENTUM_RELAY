@@ -64,8 +64,6 @@ void TestObject::Load(void)
 
 void TestObject::SubUpdate(void)
 {
-	return;
-
 	if (!(GetColliderMobility() == COLLIDER_MOBILITY::Movable)) { return; }
 
 	if ((GetPhysicsBody() != nullptr && GetPhysicsBody()->GetVelocity() > 0.0f) || !isGround) { return; }

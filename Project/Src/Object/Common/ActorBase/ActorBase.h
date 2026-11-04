@@ -278,13 +278,8 @@ protected:
 	// 派生先追加解放
 	virtual void SubRelease(void) {}
 
-	// 派生先追加接地判定（デフォルトはY軸加速度の打ち消し）
-	virtual void SubOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) {
-		// 速度の補正はCollisionManagerがPhysicsBodyに通知する
-	}
-
-	// 反射挙動（個別の特殊な反射演出用）
-	static void ReflexiveBehavior(Vector3& velocity, const Vector3& pushVec);
+	// 派生先追加接地判定
+	virtual void SubOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) {}
 
 private:
 
