@@ -245,17 +245,17 @@ void ActorBase::DrawColliderDebug(void) const
 Vector3 ActorBase::VelSteal(void)
 {
     if (physicsBody == nullptr) { return Vector3(0.0f); }
+
     const Vector3 taken = physicsBody->StealVelocity();
-    // Collider区分は維持
     
     return taken;
 }
 
 void ActorBase::VelGive(const Vector3& vel)
 {
-	if (physicsBody == nullptr) { return;/*CreatePhysicsBody();*/ }
+	if (physicsBody == nullptr) { return; }
+
     physicsBody->GiveVelocity(vel);
-    // PhysicsBodyが再開
 }
 
 void ActorBase::OnTargeted()
@@ -429,26 +429,6 @@ void ActorBase::MoveAccel(const Vector3& vec)
 			0.25f * TimeScale::Get()
 		)
 	);
-}
-
-void ActorBase::ReflexiveBehavior(Vector3& velocity, const Vector3& pushVec)
-{
-	if (pushVec.Length() <= 0.0001f) { return; }
-
-	// 押し出し方向
-	Vector3 normal = pushVec.Normalized();
-
-	// 押し出し方向に対する速度成分
-	float dot = velocity.Dot(normal);
-
-	// すでに離れる方向へ移動しているなら反射しない
-	if (dot >= 0.0f) { return; }
-
-	// 反発係数
-	constexpr float restitution = 0.75f;
-
-	// 衝突面に向かう速度成分だけを反射
-	velocity -= normal * ((1.0f + restitution) * dot);
 }
 
 // 位置拘束の角度補正。角速度には加算しない。

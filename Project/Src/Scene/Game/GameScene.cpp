@@ -57,12 +57,10 @@ void GameScene::SubPostLoad(void)
 
 	//AddActor(new CapsuleDebugObject(Vector3(50, 0, 0), Vector3(-50, 0, 0), 50.0f, Vector3(), true, true, true, true));
 	//AddActor(new TestStage);
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 20; i++) {
 		AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Xonly(50.0f)));
 		AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Zonly(50.0f)));
 	}
-	AddActor(new TestObject(Vector3(-400, 300, -400), Vector3::Zonly(50.0f)));
-	AddActor(new TestObject(Vector3(-600, 300, -600), Vector3::XZonly(25.0f, 25.0f)));
 
 	for (int i = 0; i < 10; i++) {
 		AddActor(
@@ -76,11 +74,6 @@ void GameScene::SubPostLoad(void)
 
 	AddActor(new Player);
 	//AddActor(new Water);
-
-	//for (int i = 0; i < 50; i++) {
-	//	AddActor(new SphereDebugObject(50.0f, Vector3::Xonly(10.0f * 25 - (10.0f * i))));
-	//	AddActor(new SphereDebugObject(50.0f, Vector3::Zonly(10.0f * 25 - (10.0f * i))));
-	//}
 }
 
 void GameScene::SubPostInit(void)
