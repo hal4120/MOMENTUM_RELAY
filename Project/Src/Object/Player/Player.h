@@ -158,6 +158,8 @@ private:
 		DECEL_RATE = 3.0f;
 
 		ACCEL_MAX = 40.0f;
+
+		trans.pos = Vector3(0, 1000, -500);
 	}
 
 	void SubUpdate(void)override;
