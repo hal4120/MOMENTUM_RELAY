@@ -57,7 +57,7 @@ public:
 	void SetPos(const Vector3& pos) { trans.pos = pos; }
 
 	// 当たり判定の通知
-	virtual void OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result) {}
+	virtual void OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result);
 
 	// 接地判定の通知
 	virtual void OnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec) {
@@ -191,6 +191,9 @@ protected:
 	void ResetShader();
 	// シェーダーのデフォルト設定
 	virtual void DefaultCreateShader(void) {}
+
+	// デフォルト描画タイプ設定
+	virtual ACTOR_DRAW_TYPE DefaultDrawType(void)const { return ACTOR_DRAW_TYPE::Default; }
 
 #pragma endregion
 

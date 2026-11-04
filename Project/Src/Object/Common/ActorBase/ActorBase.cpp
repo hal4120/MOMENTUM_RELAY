@@ -101,6 +101,9 @@ void ActorBase::Update(void)
 	// CCDのため、物理演算の有無に関係なく前フレーム座標を記録
 	trans.prevPos = trans.pos;
 
+	// 描画タイプのデフォルト更新
+	SetDrawType(DefaultDrawType());
+
 	// 最終派生固有
 	SubUpdate();
 
@@ -220,6 +223,11 @@ void ActorBase::Release(void)
 
 	// モデル制御情報の解放
 	trans.Release();
+}
+
+void ActorBase::OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result)
+{
+	if (other.GetTag() == COLLIDER_TAG::CameraLine) { SetDrawType(ACTOR_DRAW_TYPE::Alpha); }
 }
 
 std::vector<ColliderBase*> ActorBase::GetColliders(void) const
