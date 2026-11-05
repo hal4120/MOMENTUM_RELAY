@@ -158,7 +158,7 @@
     <ClInclude Include="Src\Object\Common\Shader\DefaultShader.h" />
     <ClInclude Include="Src\Object\Common\Shader\RimLightShader.h" />
     <ClInclude Include="Src\Object\Common\Shader\WaterShader.h" />
-    <ClInclude Include="Src\Object\Water.h" />
+    <ClInclude Include="Src\Object\CommonBuilding\Water.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\PostEffectBase.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\GrayScalePostEffect\GrayScalePostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.h" />

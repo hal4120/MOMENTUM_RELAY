@@ -1,15 +1,27 @@
 #pragma once
 
-#include "Common/ActorBase/ActorBase.h"
+#include "../Common/ActorBase/ActorBase.h"
 
-#include "Common/Shader/WaterShader.h"
+#include "../Common/Shader/WaterShader.h"
 
-#include "Common/Collider/BoxCollider.h"
+#include "../Common/Collider/BoxCollider.h"
 
 class Water : public ActorBase
 {
 public:
-	Water() :ActorBase() {}
+
+	// 水のモデルサイズ
+	static const inline Vector3 MODEL_SIZE = Vector3(200);
+
+	Water(const Vector3& pos = Vector3(), const Vector3& size = Vector3(100)) :
+		ActorBase()
+	{
+		// 座標を設定
+		trans.pos = pos;
+
+		// モデルのサイズと指定サイズからスケールを計算して設定
+		trans.scale = size / MODEL_SIZE;
+	}
 	~Water()override = default;
 
 	void Load(void)override {
@@ -17,13 +29,9 @@ public:
 
 		SetContactResponseEnabled(false);
 
-		trans.LoadModel("Water/WaterWaveCube");
+		trans.LoadModel("Water/Water");
 
-		trans.pos = Vector3(500, 100, 500);
-
-		trans.scale = Vector3(5.0f, 1.5f, 5.0f);
-
-		AddCollider(new BoxCollider(COLLIDER_TAG::Water, Vector3(200, 200, 200) * trans.scale));
+		AddCollider(new BoxCollider(COLLIDER_TAG::Water, MODEL_SIZE * trans.scale));
 	}
 
 	// 当たり判定の通知
