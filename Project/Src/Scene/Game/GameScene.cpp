@@ -39,7 +39,7 @@
 
 #include "../../Object/Player/Player.h"
 
-#include "../../Object/Water.h"
+#include "../../Object/CommonBuilding/Water.h"
 
 GameScene::GameScene() : SceneBase()
 {
@@ -49,7 +49,7 @@ void GameScene::SubPostLoad(void)
 {
 	Snd::GetIns().ChangeScene("Game");
 
-	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false, false));
+	//AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false, false));
 
 	AddActor(new TutorialStage);
 
@@ -69,7 +69,8 @@ void GameScene::SubPostLoad(void)
 	//for (int i = 0; i < 10; i++) {
 	//	AddActor(
 	//		new TestBoxObject(
-	//			Vector3(100),
+	//			//Vector3(100),
+	//			Vector3(100, 200, 100),
 	//			Vector3(0.0f, 300.0f, 0.0f),
 	//			TestBoxObject::TestMode::FreeFall
 	//		)
@@ -79,6 +80,8 @@ void GameScene::SubPostLoad(void)
 #pragma endregion
 
 	AddActor(new Player);
+
+	AddActor(new Water(Vector3(), Vector3(50000, 100, 50000)));
 }
 
 void GameScene::SubPostInit(void)
@@ -119,11 +122,11 @@ void GameScene::SubPostUpdate(void)
 	}
 	}
 
-	//switch (ActorSerch<Water>(actors)->UnderWaterPostEffectSwitch()) {
-	//case -1: { break; }
-	//case 0: { RemovePostEffect<UnderWaterPostEffect>(); break; }
-	//case 1: { AddPostEffect(new UnderWaterPostEffect()); break; }
-	//}
+	switch (ActorSerch<Water>(actors)->UnderWaterPostEffectSwitch()) {
+	case -1: { break; }
+	case 0: { RemovePostEffect<UnderWaterPostEffect>(); break; }
+	case 1: { AddPostEffect(new UnderWaterPostEffect()); break; }
+	}
 }
 
 void GameScene::SubUiDraw(void)

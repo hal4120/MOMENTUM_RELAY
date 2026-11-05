@@ -47,9 +47,10 @@ void Player::Load(void)
 	// 動的オブジェクトとしての処理を有効にする
 	SetColliderMobility(COLLIDER_MOBILITY::Movable);
 
+	// 物理挙動の有効化
+	CreatePhysicsBody();
 	// 重力を有効にする
 	SetGravityFlg(true);
-	CreatePhysicsBody();
 	GetPhysicsBody()->SetMode(PhysicsBody::MotionMode::Character);
 	// 物理衝突時の押しやすさ。SetPushWeightとは独立。
 	GetPhysicsBody()->SetMass(1.0f);

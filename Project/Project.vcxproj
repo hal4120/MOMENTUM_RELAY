@@ -312,7 +312,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\TestBoxObject.h" />
     <ClInclude Include="Src\Object\TestObject.h" />
     <ClInclude Include="Src\Object\TutorialStage\TutorialStage.h" />
-    <ClInclude Include="Src\Object\Water.h" />
+    <ClInclude Include="Src\Object\CommonBuilding\Water.h" />
     <ClInclude Include="Src\pch.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\AimCrosshairPostEffect\AimCrosshairPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.h" />
