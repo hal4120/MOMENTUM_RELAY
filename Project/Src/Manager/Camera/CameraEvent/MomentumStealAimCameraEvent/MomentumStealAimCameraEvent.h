@@ -22,7 +22,7 @@ public:
 private:
     // FPS視点専用の感度倍率
     static constexpr float AIM_MOUSE_SENSI = 0.15f;
-    static constexpr float AIM_CONTROLLER_SENSI = 0.3f;
+    static constexpr float AIM_CONTROLLER_SENSI = 0.15f;
 
     const Vector3& playerPos;
     Quaternion& playerRot;

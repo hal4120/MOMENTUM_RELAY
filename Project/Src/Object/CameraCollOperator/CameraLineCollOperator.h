@@ -16,10 +16,11 @@ public:
 
 	void Load(void)override {};
 	void Init(void)override {
+
+		// 動的オブジェクトとして扱う
 		SetColliderMobility(COLLIDER_MOBILITY::Movable);
 
-		SetGravityFlg(false);
-
+		// 接触時の物理応答を行わない
 		SetContactResponseEnabled(false);
 	};
 	void Draw(void)override {};

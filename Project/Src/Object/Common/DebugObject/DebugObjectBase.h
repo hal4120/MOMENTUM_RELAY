@@ -23,8 +23,19 @@ public:
 		isOperator(isOperator)
 	{
 		trans.pos = pos;
+
 		SetColliderMobility(dynamicFlg ? COLLIDER_MOBILITY::Movable : COLLIDER_MOBILITY::Static);
-		SetGravityFlg(isGravity);
+
+		// 動的オブジェクトとして生成された場合
+		if (dynamicFlg) {
+			// 物理挙動を生成
+			EnablePhysics();
+
+			// 重力
+			GetPhysicsBody()->SetGravityEnabled(isGravity);
+		}
+
+		// 押し出し
 		SetContactResponseEnabled(pushFlg);
 	}
 	DebugObjectBase(
@@ -42,8 +53,19 @@ public:
 		isOperator(isOperator)
 	{
 		trans.pos = pos;
+
 		SetColliderMobility(dynamicFlg ? COLLIDER_MOBILITY::Movable : COLLIDER_MOBILITY::Static);
-		SetGravityFlg(isGravity);
+
+		// 動的オブジェクトとして生成された場合
+		if (dynamicFlg) {
+			// 物理挙動を生成
+			EnablePhysics();
+
+			// 重力
+			GetPhysicsBody()->SetGravityEnabled(isGravity);
+		}
+
+		// 押し出し
 		SetContactResponseEnabled(pushFlg);
 	}
 	~DebugObjectBase()override = default;

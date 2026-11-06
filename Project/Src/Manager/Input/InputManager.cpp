@@ -58,12 +58,13 @@ void InputManager::Init(void)
 
 	// ダッシュ
 	SET_KEYBOARD(KEY_TYPE::PlayerDash, KEY_INPUT_LSHIFT);
-	SET_C_BUTTON(KEY_TYPE::PlayerDash, XINPUT_BUTTON_A);
+	SET_C_BUTTON(KEY_TYPE::PlayerDash, XINPUT_BUTTON_X);
 
 
 	SET_KEYBOARD(KEY_TYPE::PlayerRolling, KEY_INPUT_LCONTROL);
 
 	SET_MOUSE_BUTTON(KEY_TYPE::PlayerMomentumSteal, MOUSE_INPUT_LEFT);
+	SET_C_OTHERS(KEY_TYPE::PlayerMomentumSteal, CONTROLLER_OTHERS::RightTrigger);
 
 #pragma endregion
 
@@ -72,22 +73,22 @@ void InputManager::Init(void)
 	// 移動（前）
 	SET_KEYBOARD(KEY_TYPE::CameraMoveFront, KEY_INPUT_W);
 	SET_C_BUTTON(KEY_TYPE::CameraMoveFront, XINPUT_BUTTON_DPAD_UP);
-	SET_C_OTHERS(KEY_TYPE::CameraMoveFront, CONTROLLER_OTHERS::LeftstickUp);
+	//SET_C_OTHERS(KEY_TYPE::CameraMoveFront, CONTROLLER_OTHERS::LeftstickUp);
 
 	// 移動（後）
 	SET_KEYBOARD(KEY_TYPE::CameraMoveBack, KEY_INPUT_S);
 	SET_C_BUTTON(KEY_TYPE::CameraMoveBack, XINPUT_BUTTON_DPAD_DOWN);
-	SET_C_OTHERS(KEY_TYPE::CameraMoveBack, CONTROLLER_OTHERS::LeftstickDown);
+	//SET_C_OTHERS(KEY_TYPE::CameraMoveBack, CONTROLLER_OTHERS::LeftstickDown);
 
 	// 移動（右）
 	SET_KEYBOARD(KEY_TYPE::CameraMoveRight, KEY_INPUT_D);
 	SET_C_BUTTON(KEY_TYPE::CameraMoveRight, XINPUT_BUTTON_DPAD_RIGHT);
-	SET_C_OTHERS(KEY_TYPE::CameraMoveRight, CONTROLLER_OTHERS::LeftstickRight);
+	//SET_C_OTHERS(KEY_TYPE::CameraMoveRight, CONTROLLER_OTHERS::LeftstickRight);
 
 	// 移動（左）
 	SET_KEYBOARD(KEY_TYPE::CameraMoveLeft, KEY_INPUT_A);
 	SET_C_BUTTON(KEY_TYPE::CameraMoveLeft, XINPUT_BUTTON_DPAD_LEFT);
-	SET_C_OTHERS(KEY_TYPE::CameraMoveLeft, CONTROLLER_OTHERS::LeftstickLeft);
+	//SET_C_OTHERS(KEY_TYPE::CameraMoveLeft, CONTROLLER_OTHERS::LeftstickLeft);
 
 	// 移動（上）
 	SET_KEYBOARD(KEY_TYPE::CameraMoveUp, KEY_INPUT_E);
@@ -99,21 +100,21 @@ void InputManager::Init(void)
 
 	// 回転（上）
 	SET_KEYBOARD(KEY_TYPE::CameraRotUp, KEY_INPUT_UP);
-	SET_C_OTHERS(KEY_TYPE::CameraRotUp, CONTROLLER_OTHERS::RightstickUp);
+	//SET_C_OTHERS(KEY_TYPE::CameraRotUp, CONTROLLER_OTHERS::RightstickUp);
 
 	// 回転（下）
 	SET_KEYBOARD(KEY_TYPE::CameraRotDown, KEY_INPUT_DOWN);
-	SET_C_OTHERS(KEY_TYPE::CameraRotDown, CONTROLLER_OTHERS::RightstickDown);
+	//SET_C_OTHERS(KEY_TYPE::CameraRotDown, CONTROLLER_OTHERS::RightstickDown);
 
 	// 回転（右）
 	SET_KEYBOARD(KEY_TYPE::CameraRotRight, KEY_INPUT_RIGHT);
 	SET_C_BUTTON(KEY_TYPE::CameraRotRight, XINPUT_BUTTON_RIGHT_SHOULDER);
-	SET_C_OTHERS(KEY_TYPE::CameraRotRight, CONTROLLER_OTHERS::RightstickRight);
+	//SET_C_OTHERS(KEY_TYPE::CameraRotRight, CONTROLLER_OTHERS::RightstickRight);
 
 	// 回転（左）
 	SET_KEYBOARD(KEY_TYPE::CameraRotLeft, KEY_INPUT_LEFT);
 	SET_C_BUTTON(KEY_TYPE::CameraRotLeft, XINPUT_BUTTON_LEFT_SHOULDER);
-	SET_C_OTHERS(KEY_TYPE::CameraRotLeft, CONTROLLER_OTHERS::RightstickLeft);
+	//SET_C_OTHERS(KEY_TYPE::CameraRotLeft, CONTROLLER_OTHERS::RightstickLeft);
 
 #pragma endregion
 

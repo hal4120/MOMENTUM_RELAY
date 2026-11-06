@@ -48,10 +48,12 @@ void Player::Load(void)
 	SetColliderMobility(COLLIDER_MOBILITY::Movable);
 
 	// 物理挙動の有効化
-	CreatePhysicsBody();
+	EnablePhysics();
+
 	// 重力を有効にする
-	SetGravityFlg(true);
+	GetPhysicsBody()->SetGravityEnabled(true);
 	GetPhysicsBody()->SetMode(PhysicsBody::MotionMode::Character);
+
 	// 物理衝突時の押しやすさ。SetPushWeightとは独立。
 	GetPhysicsBody()->SetMass(1.0f);
 
@@ -197,7 +199,7 @@ void Player::Load(void)
 		STATE::MomentumInput,
 		new PlayerMomentumInputState(
 			0.0f,
-			10.0f,
+			15.0f,
 			std::bind(&Player::IsSteal,this),
 			[&]() { ChangeState(STATE::MomentumQuick); },
 			[&]() { ChangeState(STATE::MomentumAim); }

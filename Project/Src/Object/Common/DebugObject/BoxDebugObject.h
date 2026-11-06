@@ -31,18 +31,26 @@ public:
 
 	void Load(void)override {
 
+		// 動的オブジェクトとして生成された場合
 		if ((GetColliderMobility() == COLLIDER_MOBILITY::Movable)) {
-			CreatePhysicsBody();
 
+			// 物理挙動生成
+			EnablePhysics();
+
+			// 取得
 			PhysicsBody* body = GetPhysicsBody();
 
+			// 質量
 			body->SetMass(10.0f);
+			// 接触時物理応答を有効にする
 			body->SetRotationEnabled(true);
 
 			// 箱の大きさから回転慣性を近似
 			body->SetShapeInertiaBox(size);
 
+			// 反発係数
 			body->SetRestitution(0.2f);
+
 			body->SetFriction(0.6f);
 			body->SetAngularDragPerFrame(0.01f);
 		}

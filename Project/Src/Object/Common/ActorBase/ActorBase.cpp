@@ -26,7 +26,6 @@ ActorBase::ActorBase() :
 	colliders(),
 
 	colliderMobility(COLLIDER_MOBILITY::Movable),
-	gravityFlg(false),
 
 	contactResponseEnabled(true),
 
@@ -50,7 +49,6 @@ ActorBase::ActorBase(const std::string& parameterPath) :
 	colliders(),
 
 	colliderMobility(COLLIDER_MOBILITY::Movable),
-	gravityFlg(false),
 
 	contactResponseEnabled(true),
 
@@ -280,10 +278,27 @@ void ActorBase::OnUntargeted()
 	DefaultCreateShader();
 }
 
+void ActorBase::EnablePhysics(void)
+{
+	// すでにPhysicsBodyが生成されている場合は何もしない
+    if (physicsBody != nullptr) { return; }
+
+	// PhysicsBodyを 生成/保持
+    physicsBody = new PhysicsBody();
+
+    // 従来のActorBaseと同様、明示的に有効化するまで重力は無効。
+    physicsBody->SetGravityEnabled(false);
+}
+
 void ActorBase::SetColliderMobility(COLLIDER_MOBILITY value)
 {
+	// メンバ変数
 	colliderMobility = value;
+
+	// モデル制御情報の動的フラグ
 	trans.dynamicFlg = (value == COLLIDER_MOBILITY::Movable);
+
+	// コライダーの動的フラグ
 	for (ColliderBase* collider : colliders) {
 		if (collider != nullptr) { collider->SetMobility(value); }
 	}
@@ -292,22 +307,8 @@ void ActorBase::SetColliderMobility(COLLIDER_MOBILITY value)
 	// 登録タイミングが不明なため、ここでは再構築を呼ばず、Manager側の明示更新に委ねる。
 }
 
-void ActorBase::SetGravityFlg(bool flg)
-{
-	gravityFlg = flg;
-	if (flg && physicsBody == nullptr) { CreatePhysicsBody(); }
-	if (physicsBody != nullptr) { physicsBody->SetGravityEnabled(flg); }
-}
-
-
-void ActorBase::CreatePhysicsBody(void)
-{
-	if (physicsBody != nullptr) { return; }
-	physicsBody = new PhysicsBody();
-	physicsBody->SetGravityEnabled(gravityFlg);
-	physicsBody->SetGravityPerFrame(GRAVITY);
-}
-
+// Actor側からPhysicsBodyを操作するための初期設定API。
+// すべて既存のPhysicsBody setterへ委譲し、物理計算は変更しない。
 void ActorBase::AddCollider(ColliderBase* newCollider)
 {
 	newCollider->SetActorPtr(this);
@@ -402,15 +403,26 @@ void ActorBase::SetJudgeFlg(bool flg)
 
 void ActorBase::MoveAccel(const Vector3& vec)
 {
+
 	if (vec == 0.0f) { return; }
-	if (physicsBody == nullptr) { CreatePhysicsBody(); }
+
+	if (physicsBody == nullptr) { EnablePhysics(); }
 
 	// 入力量に応じて加速
 	if (physicsBody != nullptr && !physicsBody->IsFrozen()) {
+
+
         const Vector3 v = physicsBody->GetVelocity();
+
+
         const float speedXZ = sqrtf(v.x * v.x + v.z * v.z);
+
+
         const float steer = speedXZ > ACCEL_MAX ? 0.2f : 1.0f;
+
+		
         physicsBody->AddVelocity((vec * ACCEL_RATE * steer) * TimeScale::Get());
+
         // 通常速度だけを制限。付与された高速の勢いは維持する
         if (speedXZ <= ACCEL_MAX) {
             Vector3 next = physicsBody->GetVelocity();

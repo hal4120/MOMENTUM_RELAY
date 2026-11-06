@@ -110,15 +110,8 @@ private:
 	// 動的オブジェクトかどうか（Static = 静的、Movable = 動的）
 	COLLIDER_MOBILITY colliderMobility = COLLIDER_MOBILITY::Movable;
 
-	// 重力を適用するかどうか（true = する、false = しない）
-	bool gravityFlg;
-
 	// 接触時の物理応答を行うかどうか（true = 応答する、false = 応答しない）
 	bool contactResponseEnabled;
-	// 重力加速度
-	static constexpr float GRAVITY = -0.9f;
-	// 重力の最大値
-	static constexpr float GRAVITY_MAX = -100.0f;
 
 	// 接地判定 管理用(派生先で変更不可で参照渡し)
 	bool isGroundMaster;
@@ -143,9 +136,6 @@ protected:
 	// モデル制御情報構造体
 	Transform trans;
 
-	// 移動量
-	// 移動速度はPhysicsBodyで一元管理する
-
 	// 横軸加速度の1フレームごとの加速量
 	float ACCEL_RATE = 1.0f;
 	// 横軸加速度の1フレームごとの減速量
@@ -158,23 +148,17 @@ protected:
 
 #pragma region 初期設定
 
-	// 物理挙動管理を生成
-	void CreatePhysicsBody(void);
+	// 物理挙動を有効化（PhysicsBodyがなければ生成する）
+	void EnablePhysics(void);
+
+	// 物理挙動の種類を設定（Character / Dynamic / Kinematic）
+	void SetColliderMobility(COLLIDER_MOBILITY value);
 
 	// コライダー追加
 	void AddCollider(ColliderBase* newCollider);
 
-	// 物理演算とは独立したチャンク区分を設定
-	void SetColliderMobility(COLLIDER_MOBILITY value);
-
 	/// <summary>
-	/// 重力を適用するかを切り替える
-	/// </summary>
-	/// <param name="flg">true = 「する」に切り替える、false = 「しない」に切り替える</param>
-	void SetGravityFlg(bool flg);
-
-	/// <summary>
-	/// 接触時の物理応答を行うかを設定する
+	/// 接触時の物理応答（押し出し）を行うかを設定する
 	/// </summary>
 	/// <param name="flg">true = 応答する、false = 応答しない</param>
 	void SetContactResponseEnabled(bool flg) { contactResponseEnabled = flg; }
@@ -255,9 +239,6 @@ protected:
 	bool GetJudgeFlg(void);
 	// 当たり判定の設定（true = 「判定する」、false = 「判定しない」）
 	void SetJudgeFlg(bool flg);
-
-	// 重力の設定の状態を取得
-	bool GetGravityFlg(void)const { return gravityFlg; }
 
 	// 描画判定の取得（true = 「描画する」、false = 「描画しない」）
 	bool GetIsDraw(void)const { return isDraw; }
