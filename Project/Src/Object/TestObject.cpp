@@ -27,7 +27,7 @@ void TestObject::Load(void)
 	// 動的オブジェクト
 	SetColliderMobility(COLLIDER_MOBILITY::Movable);
 
-	CreatePhysicsBody();
+	EnablePhysics();
 
 	PhysicsBody* body = GetPhysicsBody();
 
@@ -40,7 +40,7 @@ void TestObject::Load(void)
 	body->SetMaxFallSpeed(100.0f);
 
 	// 重力有効
-	SetGravityFlg(true);
+	body->SetGravityEnabled(true);
 
 	// 押し出し有効
 	SetContactResponseEnabled(true);

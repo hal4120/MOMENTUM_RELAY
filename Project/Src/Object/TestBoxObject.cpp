@@ -12,8 +12,15 @@ TestBoxObject::TestBoxObject(const Vector3& size, const Vector3& pos, TestMode m
 
     // 物理Bodyの有無と独立して、動くColliderとして登録する。
     SetColliderMobility(COLLIDER_MOBILITY::Movable);
+
+    // 物理挙動を生成
+    EnablePhysics();
+
+    // 重力
+    GetPhysicsBody()->SetGravityEnabled(true);
+
+    // 押し出し
     SetContactResponseEnabled(true);
-    SetGravityFlg(mode != TestMode::SpinInAir);
 }
 
 void TestBoxObject::Load(void)
@@ -28,7 +35,7 @@ void TestBoxObject::Load(void)
     AddCollider(new BoxCollider(COLLIDER_TAG::DebugObject, boxSize));
 
     // SpinInAirでも角速度検証にPhysicsBodyが必要。
-    CreatePhysicsBody();
+    EnablePhysics();
     PhysicsBody* body = GetPhysicsBody();
     if (body == nullptr) { return; }
 

@@ -6,15 +6,27 @@
 
 #include "../../CameraBase.h"
 
-MoveCameraEvent::MoveCameraEvent(const Vector3& endPos, const Vector3& endAngle, float endFov, float frame) :
-	CameraEventBase(),
+MoveCameraEvent::MoveCameraEvent(AngleTag, const Vector3& endPos, const Vector3& endAngle, float endFov, float frame) :
+    CameraEventBase(),
 
-	startPos(), startRotation(), startFov(0.0f),
+    startPos(), startRotation(), startFov(0.0f),
 
-	endPos(endPos), endRotation(Quaternion::FromEulerXZY(endAngle)), endFov(endFov),
+    endPos(endPos), endRotation(Quaternion::FromEulerXZY(endAngle)), endFov(endFov),
 
-	maxFrame((std::max)(frame, 1.0f)),
-	currentFrame(0)
+    maxFrame((std::max)(frame, 1.0f)),
+    currentFrame(0)
+{
+}
+
+MoveCameraEvent::MoveCameraEvent(LookAtTag, const Vector3& endPos, const Vector3& endLookAt, float endFov, float frame) :
+    CameraEventBase(),
+
+    startPos(), startRotation(), startFov(0.0f),
+
+    endPos(endPos), endRotation(CalcCameraRotation(endPos, endLookAt)), endFov(endFov),
+
+    maxFrame((std::max)(frame, 1.0f)),
+    currentFrame(0)
 {
 }
 

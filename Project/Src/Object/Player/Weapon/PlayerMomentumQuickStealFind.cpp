@@ -19,8 +19,6 @@ void PlayerMomentumQuickStealFind::Load(void)
 {
 	// 動的有効
 	SetColliderMobility(COLLIDER_MOBILITY::Movable);
-	// 重力無効
-	SetGravityFlg(false);
 	// 押し出し無効
 	SetContactResponseEnabled(false);
 
