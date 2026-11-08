@@ -25,19 +25,15 @@ TestBoxObject::TestBoxObject(const Vector3& size, const Vector3& pos, TestMode m
 
 void TestBoxObject::Load(void)
 {
-    if (modelHandleOriginal == -1) { modelHandleOriginal = MV1LoadModel("Data/Model/Blocks/Block_Crate.mv1"); }
-    //trans.LoadModel("Blocks/Block_Crate");
-    trans.model = modelHandleOriginal;
-
-    trans.scale = boxSize / Vector3(200);
-
-    // BoxColliderはActorBaseが管理・解放する。
-    AddCollider(new BoxCollider(COLLIDER_TAG::DebugObject, boxSize));
-
-    // SpinInAirでも角速度検証にPhysicsBodyが必要。
-    EnablePhysics();
+    // 物理演算管理取得
     PhysicsBody* body = GetPhysicsBody();
-    if (body == nullptr) { return; }
+
+    // 重力有効
+    body->SetGravityEnabled(true);
+    // 押し出し有効
+    SetContactResponseEnabled(true);
+    // 物理衝突時の重さを設定
+    body->SetMass(0.5f);
 
     body->SetMode(PhysicsBody::MotionMode::Dynamic);
     body->SetMass(0.2f);
@@ -48,6 +44,19 @@ void TestBoxObject::Load(void)
     body->SetAngularDragPerFrame(0.005f);
     body->SetHorizontalDragPerFrame(0.03f);
     body->SetGravityEnabled(testMode != TestMode::SpinInAir);
+
+
+    // 静的に定義したハンドル番号格納変数を使いまわす
+    if (modelHandleOriginal == -1) { modelHandleOriginal = MV1LoadModel("Data/Model/Blocks/Block_Crate.mv1"); }
+
+    // モデルのハンドルを設定
+    trans.model = modelHandleOriginal;
+
+	// モデルのスケールを設定
+    trans.scale = boxSize / Vector3(200);
+
+    // BoxColliderはActorBaseが管理・解放する。
+    AddCollider(new BoxCollider(COLLIDER_TAG::DebugObject, boxSize));
 
     if (testMode == TestMode::SpinInAir) {
         // 外部からの力なしで回転減衰を検証する。

@@ -186,7 +186,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Object\Common\Collider\ColliderBase.cpp" />
     <ClCompile Include="Src\Object\Common\Collider\MeshCollider.cpp" />
     <ClCompile Include="Src\Object\Common\DataLoad\ParameterLoad.cpp" />
-    <ClCompile Include="Src\Object\Common\PhysicsBody\CharacterMotionController.cpp" />
+    <ClCompile Include="Src\Object\Common\MotionController\GroundMotionController.cpp" />
     <ClCompile Include="Src\Object\Common\PhysicsBody\PhysicsBody.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\DefaultShader.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\ModelDamageFlashShader.cpp" />
@@ -286,7 +286,8 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\Common\Collider\XZCircleCollider.h" />
     <ClInclude Include="Src\Object\Common\DataLoad\ParameterLoad.h" />
     <ClInclude Include="Src\Object\Common\DebugObject\BoxDebugObject.h" />
-    <ClInclude Include="Src\Object\Common\PhysicsBody\CharacterMotionController.h" />
+    <ClInclude Include="Src\Object\Common\MotionController\GroundMotionController.h" />
+    <ClInclude Include="Src\Object\Common\MotionController\MotionControllerBase.h" />
     <ClInclude Include="Src\Object\Common\PhysicsBody\PhysicsBody.h" />
     <ClInclude Include="Src\Object\Common\Shader\DefaultShader.h" />
     <ClInclude Include="Src\Object\Common\Shader\ModelDamageFlashShader.h" />

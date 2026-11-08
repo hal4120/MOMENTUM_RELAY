@@ -1,5 +1,9 @@
 #pragma once
 
+#include "../PhysicsBody/PhysicsBody.h"
+#include "../../../Manager/TimeScale/TimeScale.h"
+#include <cmath>
+
 #include "../ActorBase/ActorBase.h"
 
 #include "../../../Manager/Input/InputManager.h"
@@ -75,16 +79,19 @@ public:
 	}
 
 private:
+	float debugAcceleration = 3.0f;
+	float debugMaxSpeed = 15.0f;
+
 	// ‘€ì‰Â”\‚©‚Ç‚¤‚©
 	bool isOperator;
 
 	void SubInit(void)override {
 		// ˆÚ“®‰Á‘¬—Í
-		ACCEL_RATE = 3.0f;
+		debugAcceleration = 3.0f;
 		// ˆÚ“®Œ¸‘¬—Í
-		DECEL_RATE = 3.0f;
+		// Deceleration is handled by PhysicsBody.
 		// Å‘åˆÚ“®‘¬“x
-		ACCEL_MAX = 15.0f;
+		debugMaxSpeed = 15.0f;
 	}
 
 	void SubUpdate(void)override {
@@ -107,6 +114,27 @@ private:
 		vec.TransMatOwn(MGetRotY(CurrentCamera::Get().GetRotation().GetYaw()));
 
 		// ˆÚ“®
-		MoveAccel(vec);
+		if (vec != 0.0f) {
+			if (PhysicsBody* body = GetPhysicsBody()) {
+				if (!body->IsFrozen()) {
+					const Vector3 velocity = body->GetVelocity();
+					const float speedXZ = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
+					const float steering = speedXZ > debugMaxSpeed ? 0.2f : 1.0f;
+					body->AddVelocity(vec * (debugAcceleration * steering * TimeScale::Get()));
+					if (speedXZ <= debugMaxSpeed) {
+						Vector3 next = body->GetVelocity();
+						const float nextXZ = sqrtf(next.x * next.x + next.z * next.z);
+						if (nextXZ > debugMaxSpeed && nextXZ > 0.0f) {
+							const float ratio = debugMaxSpeed / nextXZ;
+							next.x *= ratio; next.z *= ratio;
+							body->SetVelocity(next);
+						}
+					}
+				}
+			}
+			const float angle = atan2f(vec.x, vec.z);
+			trans.SetRotation(Quaternion::Slerp(
+				trans.rotation, Quaternion::FromRotationY(angle), 0.25f * TimeScale::Get()));
+		}
 	}
 };

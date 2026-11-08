@@ -27,38 +27,52 @@ void TestObject::Load(void)
 	// 動的オブジェクト
 	SetColliderMobility(COLLIDER_MOBILITY::Movable);
 
+	// 物理演算有効化
 	EnablePhysics();
 
+	// 物理演算管理取得
 	PhysicsBody* body = GetPhysicsBody();
-
-	body->SetRotationEnabled(true);
-	body->SetStaticFriction(0.8f);
-	body->SetDynamicFriction(0.6f);
-	body->SetAngularDragPerFrame(0.005f);
-	body->SetHorizontalDragPerFrame(0.05f);
-	body->SetRollingResistance(0.001f);
-	body->SetMaxFallSpeed(100.0f);
 
 	// 重力有効
 	body->SetGravityEnabled(true);
-
 	// 押し出し有効
 	SetContactResponseEnabled(true);
+	// 物理衝突時の重さを設定
+	body->SetMass(0.5f);
 
-	// 押し出し重み設定
+	// 回転有効（回転を無効にすると、摩擦が効かなくなる）
+	body->SetRotationEnabled(true);
+	// 静止摩擦（0.8f程度が自然な挙動になる）
+	body->SetStaticFriction(0.8f);
+	// 動摩擦（0.6f程度が自然な挙動になる）
+	body->SetDynamicFriction(0.6f);
+	// 回転減衰（0.005f程度が自然な挙動になる）
+	body->SetAngularDragPerFrame(0.005f);
+	// 水平移動の減衰（0.05f程度が自然な挙動になる）
+	body->SetHorizontalDragPerFrame(0.05f);
+	// 転がり抵抗（0.001f程度が自然な挙動になる）
+	body->SetRollingResistance(0.001f);
+	// 落下速度制限（落下速度が速すぎると衝突判定が抜けることがあるため）
+	body->SetMaxFallSpeed(100.0f);
+
 #pragma endregion
 
+	// 静的に定義したハンドル番号格納変数を使いまわす
 	if (modelHandleOriginal == -1) { modelHandleOriginal = MV1LoadModel("Data/Model/Moon/Moon.mv1"); }
 
-	//trans.LoadModel("Moon/Moon");
+	// モデルのハンドルを設定
 	trans.model = modelHandleOriginal;
 
-
+	// モデルのスケールを設定（モデルの大きさが大きすぎるため）
 	trans.scale = 0.57282954884f;
 
-	// コライダーと慣性モーメントで同じ半径を使う
+	// 球体の半径を算出
 	const float radius = 174.572f * trans.scale.MaxElementF();
+
+	// コライダーを球体に設定（半径はモデルの大きさに合わせる）
 	AddCollider(new SphereCollider(COLLIDER_TAG::DebugObject, radius));
+
+	// 慣性モーメントを球体に設定（半径はコライダーと同じ）
 	body->SetShapeInertiaSphere(radius);
 }
 

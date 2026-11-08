@@ -1,16 +1,37 @@
-#include "CharacterMotionController.h"
+#include "GroundMotionController.h"
 
 #include <algorithm>
 #include <cmath>
+#include "../../../Manager/TimeScale/TimeScale.h"
 
 #pragma region 移動制御
 
-// 移動入力に応じて水平方向の速度を更新
-void CharacterMotionController::ApplyInput(
-    PhysicsBody& body,
-    const Vector3& inputDirection,
-    float timeScale)
+// 入力のないステートも含めて、毎フレーム水平速度を減衰させる。
+void GroundMotionController::Update(float timeScale)
 {
+    if (!physicsBody || physicsBody->IsFrozen() || timeScale <= 0.0f) return;
+    if (physicsBody->GetMode() != PhysicsBody::MotionMode::Character) return;
+
+    Vector3 velocity = physicsBody->GetVelocity();
+    const float speed = std::sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+    if (speed <= 0.0f) return;
+
+    // 接地情報は前回の衝突判定結果。Y方向の速度は変更しない。
+    const float drag = (IsGrounded() ? groundDrag : airDrag) * timeScale;
+    const float remaining = speed - drag;
+    const float ratio = remaining > 0.0f ? remaining / speed : 0.0f;
+
+    velocity.x *= ratio;
+    velocity.z *= ratio;
+    physicsBody->SetVelocity(velocity);
+}
+
+
+// 移動入力に応じて水平方向の速度を更新
+void GroundMotionController::ApplyInput(const Vector3& inputDirection, float timeScale)
+{
+    if (!physicsBody) return;
+    PhysicsBody& body = *physicsBody;
     // 物理停止中・時間停止中は処理しない
     if (body.IsFrozen() || timeScale <= 0.0f) return;
 
@@ -45,6 +66,8 @@ void CharacterMotionController::ApplyInput(
     // 高速移動中は方向修正倍率を適用
     const float steering =
         highSpeed ? momentumSteering : 1.0f;
+
+    const bool grounded = IsGrounded();
 
     // 接地状態に応じた加速度を計算
     const float accel =
@@ -90,6 +113,14 @@ void CharacterMotionController::ApplyInput(
         horizontal += delta;
     }
 
+    // 入力方向へキャラクターの向きを補間
+    if (transform && input.LengthSq() > 0.0001f) {
+        const float angle = atan2f(input.x, input.z);
+        transform->SetRotation(Quaternion::Slerp(
+            transform->rotation, Quaternion::FromRotationY(angle),
+            0.25f * timeScale));
+    }
+
     // 水平方向の速度を反映
     v.x = horizontal.x;
     v.z = horizontal.z;
@@ -98,11 +129,25 @@ void CharacterMotionController::ApplyInput(
     body.SetVelocity(v);
 }
 
-// 接地中ならジャンプ速度を設定
-bool CharacterMotionController::TryJump(PhysicsBody& body)
+// 回避時の瞬間的な加速（通常の移動入力とは独立）
+void GroundMotionController::ApplyRollingImpulse(const Vector3& impulse)
 {
+    if (!physicsBody || physicsBody->IsFrozen()) return;
+    const float timeScale = TimeScale::Get();
+    if (timeScale <= 0.0f) return;
+
+    // 接地中だけ上方向の速度も付与する。空中では水平成分のみ。
+    const float lift = IsGrounded() ? impulse.y : 0.0f;
+    physicsBody->AddVelocity(Vector3(impulse.x, lift, impulse.z) * timeScale);
+}
+
+// 接地中ならジャンプ速度を設定
+bool GroundMotionController::TryJump()
+{
+    if (!physicsBody) return false;
+    PhysicsBody& body = *physicsBody;
     // 非接地・物理停止中はジャンプしない
-    if (!grounded || body.IsFrozen()) return false;
+    if (!IsGrounded() || body.IsFrozen()) return false;
 
     // 現在速度を取得
     Vector3 v = body.GetVelocity();
@@ -112,9 +157,6 @@ bool CharacterMotionController::TryJump(PhysicsBody& body)
 
     // 更新した速度を設定
     body.SetVelocity(v);
-
-    // 接地状態を解除
-    grounded = false;
 
     // ジャンプ成功
     return true;

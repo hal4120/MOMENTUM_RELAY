@@ -94,59 +94,48 @@ void ActorBase::Init(void)
 	}
 }
 
+
 void ActorBase::Update(void)
 {
-	// CCDのため、物理演算の有無に関係なく前フレーム座標を記録
+	// 現在座標を前フレーム座標として保存する
 	trans.prevPos = trans.pos;
 
-	// 描画タイプのデフォルト更新
+	// 描画タイプを、このActorのデフォルト設定に戻す
 	SetDrawType(DefaultDrawType());
 
-	// 最終派生固有
+	// 最終派生クラス固有の更新処理を実行する
 	SubUpdate();
 
-	// 中間基底固有
+	// 中間基底クラス固有の更新処理を実行する
 	BaseUpdate();
 
-	// 物理挙動を持つActorのみ物理更新
+	// PhysicsBodyが登録されているActorのみ物理挙動を更新する。
 	if (physicsBody != nullptr) {
-        const float timeScale = TimeScale::Get();
 
-        // PlayerはCharacterMotionControllerを使用していないため、
-        // ActorBase側でCharacterの水平速度を継続的に減衰させる。
-        if (physicsBody->GetMode() == PhysicsBody::MotionMode::Character
-            && !physicsBody->IsFrozen() && timeScale > 0.0f) {
-            Vector3 velocity = physicsBody->GetVelocity();
-            const float speed = sqrtf(velocity.x * velocity.x + velocity.z * velocity.z);
-            if (speed > 0.0f) {
-                // 接地情報は前フレームの結果。空中は弱い減速にする。
-                const float drag = (isGroundMaster ? 0.65f : 0.08f) * timeScale;
-                const float remaining = speed - drag;
-                const float ratio = remaining > 0.0f ? remaining / speed : 0.0f;
-                velocity.x *= ratio;
-                velocity.z *= ratio;
-                physicsBody->SetVelocity(velocity);
-            }
-        }
-        trans.pos += physicsBody->Step(timeScale);
+		// 取得した移動量を現在座標に加算する
+		trans.pos += physicsBody->Step();
 
-        // 回転物理を有効化したActorだけ、角速度を回転へ反映
-        Vector3 rotationAxis(0.0f);
-        float rotationAngle = 0.0f;
-        if (physicsBody->StepRotation(timeScale, rotationAxis, rotationAngle)) {
-            // ワールド軸の回転を既存のQuaternionへ左から合成
-            trans.SetRotation(Quaternion::FromAxisAngle(rotationAxis, rotationAngle) * trans.rotation);
-        }
-    }
+		// 「回転軸」の計算結果を受け取るための変数
+		Vector3 rotationAxis(0.0f);
+		// 「回転角度（ラジアン）」の計算結果を受け取るための変数
+		float rotationAngle = 0.0f;
 
-	// 次の衝突判定で接地情報を再設定
-	isGroundMaster = false;
+		// PhysicsBodyの角速度から、このフレームの回転量を計算する
+		if (physicsBody->StepRotation(rotationAxis, rotationAngle)) {
 
-	// 子アクターの更新
+			// 物理演算によって発生した回転量を追加する
+			trans.SetRotation(Quaternion::FromAxisAngle(rotationAxis, rotationAngle) * trans.rotation);
+		}
+	}
+
+	// このActorが所有している子Actorを順番に更新する
 	for (ActorBase* child : childActors) { child->Update(); }
 
-	// シェーダーの更新
+	// シェーダーが登録されている場合、その更新処理を実行する
 	if (shader != nullptr) { shader->Update(); }
+
+	// 接地フラグをリセットする
+	isGroundMaster = false;
 }
 
 void ActorBase::Draw(void)
@@ -399,56 +388,6 @@ void ActorBase::SetJudgeFlg(bool flg)
 		if (!collider) { continue; }
 		collider->SetJudgeFlg(flg);
 	}
-}
-
-void ActorBase::MoveAccel(const Vector3& vec)
-{
-
-	if (vec == 0.0f) { return; }
-
-	if (physicsBody == nullptr) { EnablePhysics(); }
-
-	// 入力量に応じて加速
-	if (physicsBody != nullptr && !physicsBody->IsFrozen()) {
-
-
-        const Vector3 v = physicsBody->GetVelocity();
-
-
-        const float speedXZ = sqrtf(v.x * v.x + v.z * v.z);
-
-
-        const float steer = speedXZ > ACCEL_MAX ? 0.2f : 1.0f;
-
-		
-        physicsBody->AddVelocity((vec * ACCEL_RATE * steer) * TimeScale::Get());
-
-        // 通常速度だけを制限。付与された高速の勢いは維持する
-        if (speedXZ <= ACCEL_MAX) {
-            Vector3 next = physicsBody->GetVelocity();
-            const float nextXZ = sqrtf(next.x * next.x + next.z * next.z);
-            if (nextXZ > ACCEL_MAX && nextXZ > 0.0f) {
-                const float rate = ACCEL_MAX / nextXZ;
-                next.x *= rate; next.z *= rate;
-                physicsBody->SetVelocity(next);
-            }
-        }
-    }
-
-	// 移動方向から目標のY軸回転を取得
-	const float targetAngle = atan2f(vec.x, vec.z);
-
-	// 目標回転
-	const Quaternion targetRotation = Quaternion::FromRotationY(targetAngle);
-
-	// 現在の回転から目標回転へ補間
-	trans.SetRotation(
-		Quaternion::Slerp(
-			trans.rotation,
-			targetRotation,
-			0.25f * TimeScale::Get()
-		)
-	);
 }
 
 // 位置拘束の角度補正。角速度には加算しない。

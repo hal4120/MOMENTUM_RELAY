@@ -1,12 +1,17 @@
-#include "../Common/PhysicsBody/PhysicsBody.h"
 #include "Player.h"
 
 #include "../../Utility/Utility.h"
+#include "../../Manager/TimeScale/TimeScale.h"
+#include <cmath>
 
 #include "../../Scene/SceneManager.h"
 #include "../../Scene/SceneBase.h"
 
 #include "../Common/Collider/CapsuleCollider.h"
+
+#include "../Common/PhysicsBody/PhysicsBody.h"
+
+#include "../Common/MotionController/GroundMotionController.h"
 
 #include "../../Scene/Common/PostEffect/FocusLinesPostEffect/FocusLinesPostEffect.h"
 #include "../../Scene/Common/PostEffect/CRTPostEffect/CRTPostEffect.h"
@@ -52,15 +57,36 @@ void Player::Load(void)
 
 	// 重力を有効にする
 	GetPhysicsBody()->SetGravityEnabled(true);
-	GetPhysicsBody()->SetMode(PhysicsBody::MotionMode::Character);
 
-	// 物理衝突時の押しやすさ。SetPushWeightとは独立。
-	GetPhysicsBody()->SetMass(1.0f);
+	// キャラクター用の物理挙動に設定する
+	GetPhysicsBody()->SetMode(PhysicsBody::MotionMode::Character);
 
 	// 当たり判定による押し出しを有効にする
 	SetContactResponseEnabled(true);
+	// 物理衝突時の重さを設定
+	GetPhysicsBody()->SetMass(1.0f);
 
-	// 押し出しだしによる重みを設定
+	// 移動・ジャンプ・回避で共有するControllerを生成
+	GroundMotionController* groundMotionController = new GroundMotionController();
+
+	// アクターにMotionControllerを登録
+	AddMotionController(groundMotionController);
+
+	// モデル制御情報を設定
+	groundMotionController->SetTransform(&trans);
+	// 接地判定の参照先を設定
+	groundMotionController->SetGroundedSource(&isGround);
+	// 接地時の加速度を設定
+	groundMotionController->SetGroundAcceleration(3.0f);
+	// 空中時の加速度を設定
+	groundMotionController->SetAirAcceleration(3.0f);
+	// 慣性操作の強さを設定
+	groundMotionController->SetMomentumSteering(0.2f);
+	// 慣性操作が効く速度の閾値を設定
+	groundMotionController->SetMomentumThreshold(40.0f);
+	// ジャンプ力を設定
+	groundMotionController->SetJumpSpeed(20.0f);
+
 #pragma endregion
 
 #pragma region モデル設定
@@ -139,8 +165,7 @@ void Player::Load(void)
 		STATE::Move,
 		new PlayerMoveState(
 			10.0f, 1.5f, 300,
-			std::bind(&Player::MoveAccel, this, std::placeholders::_1),
-			ACCEL_MAX,
+			*groundMotionController,
 			[&]() { AnimePlay(ANIME_TYPE::Walk); },
 			[&]() { AnimePlay(ANIME_TYPE::Run); }
 		)
@@ -150,14 +175,8 @@ void Player::Load(void)
 	AddState(
 		STATE::Jump,
 		new PlayerJumpState(
-			20.0f, [this](float y) {
-				if (PhysicsBody* body = GetPhysicsBody()) {
-					Vector3 v = body->GetVelocity(); v.y = y; body->SetVelocity(v);
-				}
-			},
-			isGround,
-			std::bind(&Player::MoveAccel, this, std::placeholders::_1),
-			[&]() { AnimePlay(ANIME_TYPE::JumpStart); },
+			*groundMotionController,
+            [&]() { AnimePlay(ANIME_TYPE::JumpStart); },
 			[&]() { AnimePlay(ANIME_TYPE::JumpLoop); },
 			[&]() { AnimePlay(ANIME_TYPE::JumpEnd); },
 			std::bind(&Player::IsAnimeEnd, this),
@@ -181,12 +200,11 @@ void Player::Load(void)
 	AddState(
 		STATE::Rolling,
 		new PlayerRollingState(
-			10.0f,
+			30.0f, 8.0f, // 前方速度・接地中の浮き上がり速度
 			100,
 			0.25f, 0.55f,
 			trans.rotation,
-			std::bind(&Player::MoveAccel, this, std::placeholders::_1),
-			ACCEL_MAX,
+			*groundMotionController,
 			isInvincble,
 			[&]() { AnimePlay(ANIME_TYPE::Rolling); },
 			[&]() { return GetAnimeRatio(); },
@@ -267,6 +285,8 @@ void Player::Load(void)
 	RegisterStateTransition(STATE::Idle, STATE::Rolling);
 	// 「移動状態」->「回避状態」の自動遷移登録
 	RegisterStateTransition(STATE::Move, STATE::Rolling);
+	// 「ジャンプ状態」->「回避状態」の自動遷移登録
+	RegisterStateTransition(STATE::Jump, STATE::Rolling);
 
 	// 「待機状態」->「勢い操作入力状態」の自動遷移登録
 	RegisterStateTransition(STATE::Idle, STATE::MomentumInput);

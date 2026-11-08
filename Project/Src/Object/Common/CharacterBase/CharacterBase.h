@@ -6,6 +6,8 @@
 
 class CharacterStateBase;
 
+class MotionControllerBase;
+
 class AnimationController;
 
 class CharacterBase : public ActorBase
@@ -21,9 +23,6 @@ public:
 	int GetState(void)const { return state; }
 
 private:
-
-	// アニメーションコントローラーのインスタンス
-	AnimationController* anime;
 
 	// ステート管理用変数
 	int state;
@@ -42,6 +41,12 @@ private:
 
 	// 指定のステートインスタンスをゲットする関数
 	CharacterStateBase& GetStateIns(int state);
+
+	// モーションコントローラーのインスタンス
+	MotionControllerBase* motionController; // CharacterBaseが所有し、解放する
+
+	// アニメーションコントローラーのインスタンス
+	AnimationController* anime;
 
 	// キャラクターベース固有の更新処理
 	void BaseUpdate(void) override final;
@@ -71,6 +76,16 @@ protected:
 	// 指定のステートインスタンスをゲットする関数
 	template<typename StateEnum>
 	CharacterStateBase& GetStateIns(StateEnum state) { return GetStateIns(static_cast<int>(state)); }
+
+#pragma endregion
+
+#pragma region モーションコントローラー
+
+	// モーションコントローラーを生成
+	void AddMotionController(MotionControllerBase* controller);
+
+	// モーションコントローラー取得
+	MotionControllerBase* GetMotionController(void)const { return motionController; }
 
 #pragma endregion
 

@@ -16,8 +16,6 @@ public:
 
 	char OnIcePostEffectSwitch(void) {
 
-		if (nowIsOnIce) { DECEL_RATE = 0.05f; }
-		else { DECEL_RATE = 3.0f; }
 
 		if (prevIsOnIce == nowIsOnIce) { return -1; }
 
@@ -154,10 +152,6 @@ private:
 		// ë“ã@èÛë‘Ç…ëJà⁄
 		ChangeState(STATE::Idle);
 
-		ACCEL_RATE = 3.0f;
-		DECEL_RATE = 3.0f;
-
-		ACCEL_MAX = 40.0f;
 
 		trans.pos = Vector3(0, 1000, -500);
 	}

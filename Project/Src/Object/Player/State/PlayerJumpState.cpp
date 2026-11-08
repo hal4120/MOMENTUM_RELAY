@@ -5,28 +5,20 @@
 #include "../../../Manager/Input/InputManager.h"
 #include "../../../Manager/Camera/CurrentCamera.h"
 
+#include "../../Common/MotionController/GroundMotionController.h"
+
 PlayerJumpState::PlayerJumpState(
-	float JUMP_POWER,
+	GroundMotionController& motion,
 
-	std::function<void(float)> setJumpVelocity,
-	const bool& isGround,
+	const std::function<void(void)>& playAnimeJumpStart,
+	const std::function<void(void)>& playAnimeJumpLoop,
+	const std::function<void(void)>& playAnimeStamp,
 
-	std::function<void(const Vector3&)> moveAccel,
+	const std::function<bool(void)>& isAnimeEnd,
 
-	std::function<void(void)> playAnimeJumpStart,
-	std::function<void(void)> playAnimeJumpLoop,
-	std::function<void(void)> playAnimeStamp,
-
-	std::function<bool(void)> isAnimeEnd,
-
-	std::function<void(void)> changeStateIdle
+	const std::function<void(void)>& changeStateIdle
 ):
-	JUMP_POWER(JUMP_POWER),
-
-	setJumpVelocity(setJumpVelocity),
-	isGround(isGround),
-
-	moveAccel(moveAccel),
+	motion(motion),
 
 	playAnimeJumpStart(playAnimeJumpStart),
 	playAnimeJumpLoop(playAnimeJumpLoop),
@@ -65,8 +57,8 @@ void PlayerJumpState::Update(void)
 		// アニメーション終了
 		if (isAnimeEnd()) {
 
-			// 加速度加算
-			setJumpVelocity(JUMP_POWER);
+			// ジャンプ開始
+			motion.TryJump();
 
 			// 滞空アニメーションを再生
 			playAnimeJumpLoop();
@@ -100,11 +92,11 @@ void PlayerJumpState::Update(void)
 			vec.TransMatOwn(MGetRotY(CurrentCamera::Get().GetRotation().GetYaw()));
 
 			// 移動
-			moveAccel(vec);
+			motion.ApplyInput(vec);
 		}
 
 		// 着地
-		if (isGround) {
+		if (motion.IsGrounded()) {
 
 			// 着地のアニメーションを再生
 			playAnimeStamp();

@@ -136,14 +136,7 @@ protected:
 	// モデル制御情報構造体
 	Transform trans;
 
-	// 横軸加速度の1フレームごとの加速量
-	float ACCEL_RATE = 1.0f;
-	// 横軸加速度の1フレームごとの減速量
-	float DECEL_RATE = 1.0f;
-	// 横軸加速度の最大値
-	float ACCEL_MAX = 100.0f;
-
-	// 接地判定(派生先で参照用)
+// 接地判定(派生先で参照用)
 	const bool& isGround = isGroundMaster;
 
 #pragma region 初期設定
@@ -166,7 +159,7 @@ protected:
 	// 子クラスを追加する
 	void AddChildActor(ActorBase* child) {
 		child->Load();
-		childActors.push_back(child); 
+		childActors.push_back(child);
 	}
 
 	// シェーダーを設定
@@ -250,10 +243,7 @@ protected:
 	// 描画タイプの設定
 	void SetDrawType(const ACTOR_DRAW_TYPE& type) { drawType = type; }
 
-	// 指定の方向に向かって加速度を用いて移動する
-	void MoveAccel(const Vector3& vec);
-
-	// 派生先追加初期化
+// 派生先追加初期化
 	virtual void SubInit(void) {}
 	// 派生先追加更新
 	virtual void SubUpdate(void) {}

@@ -6,6 +6,9 @@
 
 #include "CharacterStateBase.h"
 
+#include "../MotionController/MotionControllerBase.h"
+#include "../../../Manager/TimeScale/TimeScale.h"
+
 #include "../AnimationController/AnimationController.h"
 
 CharacterBase::CharacterBase() :
@@ -13,6 +16,8 @@ CharacterBase::CharacterBase() :
 
 	state(-1),
 	stateMap(),
+
+	motionController(nullptr),
 
 	anime(nullptr)
 {
@@ -23,6 +28,8 @@ CharacterBase::CharacterBase(const std::string& parameterPath):
 
 	state(0),
 	stateMap(),
+
+	motionController(nullptr),
 
 	anime(nullptr)
 {
@@ -37,6 +44,11 @@ void CharacterBase::BaseUpdate(void)
 		for (std::pair<const int, CharacterStateBase*>& s : stateMap) { s.second->AlwaysUpdate(); }
 	}
 
+	// ステートによる入力反映後、PhysicsBody::Stepの前に共通減速を適用する。
+	if (motionController != nullptr) {
+		motionController->Update(TimeScale::Get());
+	}
+
 	// アニメーション更新
 	if (anime) {
 		anime->Update();
@@ -46,6 +58,10 @@ void CharacterBase::BaseUpdate(void)
 
 void CharacterBase::BaseRelease(void)
 {
+	// ActorBaseがPhysicsBodyを解放する前にControllerを破棄する。
+	delete motionController;
+	motionController = nullptr;
+
 	// ステート管理用マップの解放
 	for (auto& s : stateMap) {
 		if (s.second) { delete s.second; s.second = nullptr; }
@@ -100,6 +116,16 @@ CharacterStateBase& CharacterBase::GetStateIns(int state)
 
 #pragma endregion
 
+void CharacterBase::AddMotionController(MotionControllerBase* controller)
+{
+	// 同一ポインタの再登録では何もしない。
+	if (controller == motionController) return;
+
+	// Controllerの所有権をCharacterBaseに移す。
+	delete motionController;
+	motionController = controller;
+	if (motionController) motionController->Init(GetPhysicsBody());
+}
 
 #pragma region アニメーションコントローラー
 

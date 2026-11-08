@@ -256,7 +256,7 @@ void PhysicsBody::StabilizeBoxGroundContact(const Vector3& groundNormal)
     }
 }
 
-bool PhysicsBody::StepRotation(float timeScale, Vector3& axis, float& angle)
+bool PhysicsBody::StepRotation(Vector3& axis, float& angle, float timeScale)
 {
     axis = Vector3(0.0f);
     angle = 0.0f;

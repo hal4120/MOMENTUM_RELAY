@@ -3,15 +3,15 @@
 #include "../../Common/CharacterBase/CharacterStateBase.h"
 
 struct Vector3;
+class GroundMotionController;
 
 class PlayerMoveState : public CharacterStateBase
 {
 public:
 
 	PlayerMoveState(
-		float ACCEL_MAX, float DASH_SPEED_RATE, short DASH_STAMINA_MAX,
-		std::function<void(const Vector3&)> moveAccel,
-		float& accelMax,
+		float MOVE_SPEED, float DASH_SPEED_RATE, float DASH_STAMINA_MAX,
+		GroundMotionController& motion,
 		std::function<void(void)> playAnimeWalk,
 		std::function<void(void)> playAnimeRun
 	);
@@ -32,7 +32,7 @@ public:
 	void AlwaysUpdate(void)override;
 
 	// スタミナを返す関数
-	const short& GetDashStamina(void)const { return dashStamina; }
+	const float& GetDashStamina(void)const { return dashStamina; }
 	// 息切れかどうかを返す関数
 	bool IsTired(void)const { return isTired; }
 
@@ -41,23 +41,20 @@ private:
 #pragma region 定数
 
 	// 非ダッシュ時の最大移動速度
-	const float ACCEL_MAX;
+	const float MOVE_SPEED;
 
 	// ダッシュの移動量倍率
 	const float DASH_SPEED_RATE;
 
 	// ダッシュのスタミナの最大量（1フレームずつデクリメント）
-	const short DASH_STAMINA_MAX;
+	const float DASH_STAMINA_MAX;
 
 #pragma endregion
 
 #pragma region 受け取る参照変数・関数
 
 	// 移動関数のポインタ
-	const std::function<void(const Vector3&)> moveAccel;
-
-	// 横軸加速度の最大値の参照
-	float& accelMax;
+	GroundMotionController& motion;
 
 	// 歩きアニメーションの再生関数のポインタ
 	const std::function<void(void)> playAnimeWalk;
@@ -70,7 +67,7 @@ private:
 	bool isDash;
 
 	// ダッシュスタミナ
-	short dashStamina;
+	float dashStamina;
 
 	// 息切れ(1度スタミナが0になったかどうか)
 	bool isTired;

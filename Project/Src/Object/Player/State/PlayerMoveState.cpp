@@ -2,24 +2,24 @@
 
 #include "../../../Common/Vector3.h"
 
+#include "../../../Manager/TimeScale/TimeScale.h"
+
 #include "../../../Manager/Input/InputManager.h"
 #include "../../../Manager/Camera/CurrentCamera.h"
 
+#include "../../Common/MotionController/GroundMotionController.h"
+
 PlayerMoveState::PlayerMoveState(
-	float ACCEL_MAX, float DASH_SPEED_RATE, short DASH_STAMINA_MAX,
+	float MOVE_SPEED, float DASH_SPEED_RATE, float DASH_STAMINA_MAX,
 
-	std::function<void(const Vector3&)> moveAccel,
-
-	float& accelMax,
+	GroundMotionController& motion,
 
 	std::function<void(void)> playAnimeWalk,
 	std::function<void(void)> playAnimeRun
 ) :
-	ACCEL_MAX(ACCEL_MAX), DASH_SPEED_RATE(DASH_SPEED_RATE), DASH_STAMINA_MAX(DASH_STAMINA_MAX),
+	MOVE_SPEED(MOVE_SPEED), DASH_SPEED_RATE(DASH_SPEED_RATE), DASH_STAMINA_MAX(DASH_STAMINA_MAX),
 
-	moveAccel(moveAccel),
-
-	accelMax(accelMax),
+	motion(motion),
 
 	playAnimeWalk(playAnimeWalk),
 	playAnimeRun(playAnimeRun),
@@ -28,6 +28,7 @@ PlayerMoveState::PlayerMoveState(
 	dashStamina(DASH_STAMINA_MAX),
 	isTired(false)
 {
+	motion.SetMoveSpeed(MOVE_SPEED);
 }
 
 void PlayerMoveState::OwnStateConditionUpdate(void)
@@ -38,9 +39,9 @@ void PlayerMoveState::OwnStateConditionUpdate(void)
 
 void PlayerMoveState::Enter(void)
 {
-	// 非ダッシュ
-	if (Input::GetIns().GetInfo(KEY_TYPE::PlayerDash).now) { playAnimeRun(); }
 	// ダッシュ
+	if (Input::GetIns().GetInfo(KEY_TYPE::PlayerDash).now) { playAnimeRun(); }
+	// 非ダッシュ
 	else { playAnimeWalk(); }
 }
 
@@ -53,7 +54,7 @@ void PlayerMoveState::Update(void)
 	isDash = (isTired) ? false : Input::GetIns().GetInfo(KEY_TYPE::PlayerDash).now && inputVec != 0.0f;
 
 	// 移動量の最大値を更新する
-	accelMax = (isDash) ? ACCEL_MAX * DASH_SPEED_RATE : ACCEL_MAX * inputVec.Length();
+	motion.SetMoveSpeed((isDash) ? MOVE_SPEED * DASH_SPEED_RATE : MOVE_SPEED * inputVec.Length());
 
 	// 最終的に入力があれば加速度に加算する
 	if (inputVec != 0.0f) {
@@ -62,14 +63,15 @@ void PlayerMoveState::Update(void)
 		inputVec.TransMatOwn(MGetRotY(CurrentCamera::Get().GetRotation().GetYaw()));
 
 		// 移動
-		moveAccel(inputVec);
+		motion.ApplyInput(inputVec);
 
 		// ダッシュスタミナを更新 / アニメーションを更新
 		if (isDash) {
 
 			// ダッシュしているときはスタミナを減らす
-			if (--dashStamina < 0) {
-				dashStamina = 0;
+			dashStamina -= TimeScale::Get();
+			if (dashStamina <= 0.0f) {
+				dashStamina = 0.0f;
 
 				// 息切れ
 				isTired = true;
@@ -87,14 +89,16 @@ void PlayerMoveState::Update(void)
 
 void PlayerMoveState::Exit(void)
 {
-	accelMax = ACCEL_MAX;
+	isDash = false;
+	motion.SetMoveSpeed(MOVE_SPEED);
 }
 
 void PlayerMoveState::AlwaysUpdate(void)
 {
 	// ダッシュしていないときはスタミナを回復させる
 	if (!isDash) {
-		if (++dashStamina > DASH_STAMINA_MAX) {
+		dashStamina += TimeScale::Get();
+		if (dashStamina >= DASH_STAMINA_MAX) {
 			dashStamina = DASH_STAMINA_MAX;
 
 			// 息切れ回復
