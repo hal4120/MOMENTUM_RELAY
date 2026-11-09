@@ -24,6 +24,8 @@
 
 #include "../Common/PostEffect/UnderWaterPostEffect/UnderWaterPostEffect.h"
 
+#include "../../Object/Maps/CityMap.h"
+
 #include "../../Object/Common/DebugObject/BoxDebugObject.h"
 #include "../../Object/Common/DebugObject/IceBoxDebugObject.h"
 #include "../../Object/Common/DebugObject/SphereDebugObject.h"
@@ -42,7 +44,10 @@
 
 #include "../../Object/CommonBuilding/Water.h"
 
-GameScene::GameScene() : SceneBase()
+GameScene::GameScene() :
+	SceneBase(),
+
+	map(nullptr)
 {
 }
 
@@ -57,6 +62,9 @@ void GameScene::SubPostLoad(void)
 
 	ShaderResourceManager::GetIns().CreateVertexShader(VERTEX_SHADER_TYPE::Default1Frame);
 	ShaderResourceManager::GetIns().CreateVertexShader(VERTEX_SHADER_TYPE::RimLight1Frame);
+
+	map = new CityMap();
+	map->Load("Data/Maps/City/CityMap.json", "Data/Maps/City");
 
 	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false, false));
 
@@ -138,9 +146,23 @@ void GameScene::SubPostUpdate(void)
 	//}
 }
 
+void GameScene::SubPreDraw(void)
+{
+	map->Draw();
+}
+
 void GameScene::SubUiDraw(void)
 {
 	//DrawStringToHandle(0, 0, "ƒQ[ƒ€", 0xffffff, Font::GetIns().GetFont(FontKinds::Marumiya40));
+}
+
+void GameScene::SubPreRelease(void)
+{
+	if (map != nullptr) {
+		map->Release();
+		delete map;
+		map = nullptr;
+	}
 }
 
 void GameScene::CreateCamera(void)

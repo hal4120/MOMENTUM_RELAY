@@ -2,6 +2,8 @@
 
 #include"../SceneBase.h"
 
+class CityMap;
+
 class GameScene : public SceneBase
 {
 public:
@@ -24,10 +26,18 @@ private:
 	// XV
 	void SubPostUpdate(void)override;
 
+	// •`‰æ
+	void SubPreDraw(void) override;
+
 	// UI•`‰æ
 	void SubUiDraw(void)override;
+
+	// ‰ğ•ú
+	void SubPreRelease(void) override;
 
 #pragma endregion
 
 	void CreateCamera(void)override;
+
+	CityMap* map;
 };

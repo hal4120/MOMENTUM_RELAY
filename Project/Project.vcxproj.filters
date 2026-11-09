@@ -77,11 +77,12 @@
     <ClCompile Include="Src\Object\Player\State\PlayerMomentumQuickState.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerMomentumState.cpp" />
-    <ClCompile Include="Src\Object\Common\PhysicsBody\CharacterMotionController.cpp" />
     <ClCompile Include="Src\Object\Common\PhysicsBody\PhysicsBody.cpp" />
     <ClCompile Include="Src\Object\TestBoxObject.cpp" />
     <ClCompile Include="Src\Manager\Collision\ContactSolver.cpp" />
     <ClCompile Include="Src\Object\TutorialStage\TutorialStage.cpp" />
+    <ClCompile Include="Src\Object\Common\MotionController\GroundMotionController.cpp" />
+    <ClCompile Include="Src\Object\Maps\CityMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -186,10 +187,12 @@
     <ClInclude Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerMomentumState.h" />
     <ClInclude Include="Src\Object\Common\PhysicsBody\PhysicsBody.h" />
-    <ClInclude Include="Src\Object\Common\PhysicsBody\CharacterMotionController.h" />
     <ClInclude Include="Src\Object\TestBoxObject.h" />
     <ClInclude Include="Src\Manager\Collision\ContactSolver.h" />
     <ClInclude Include="Src\Object\TutorialStage\TutorialStage.h" />
+    <ClInclude Include="Src\Object\Common\MotionController\GroundMotionController.h" />
+    <ClInclude Include="Src\Object\Common\MotionController\MotionControllerBase.h" />
+    <ClInclude Include="Src\Object\Maps\CityMap.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />
