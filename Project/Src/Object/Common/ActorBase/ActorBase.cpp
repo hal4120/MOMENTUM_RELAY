@@ -16,6 +16,7 @@
 #include "../Collider/ColliderBase.h"
 
 #include "../Shader/ShaderBase.h"
+#include "../Shader/DefaultShader.h"
 #include "../Shader/RimLightShader.h"
 
 #include "../DataLoad/ParameterLoad.h"
@@ -325,6 +326,12 @@ void ActorBase::ResetShader()
 		delete shader;
 		shader = nullptr;
 	}
+}
+
+void ActorBase::DefaultCreateShader(void)
+{
+	// デフォルトシェーダーを生成
+	CreateShader(new DefaultShader(SHADER_VERTEX_TYPE::Frame1));
 }
 
 #pragma region パラメーター外部ファイル管理に関する関数

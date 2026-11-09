@@ -8,6 +8,7 @@
 #include "../../Manager/Input/InputManager.h"
 #include "../../Manager/Sound/SoundManager.h"
 #include "../../Manager/Font/FontManager.h"
+#include "../../Manager/Shader/ShaderResourceManager.h"
 
 #include "../../Manager/Camera/FollowRemote/FollowRemoteCamera.h"
 
@@ -49,6 +50,14 @@ void GameScene::SubPostLoad(void)
 {
 	Snd::GetIns().ChangeScene("Game");
 
+	ShaderResourceManager::GetIns().CreatePixelShader(PIXEL_SHADER_TYPE::Default);
+	ShaderResourceManager::GetIns().CreatePixelShader(PIXEL_SHADER_TYPE::Water);
+	ShaderResourceManager::GetIns().CreatePixelShader(PIXEL_SHADER_TYPE::UnderWater);
+	ShaderResourceManager::GetIns().CreatePixelShader(PIXEL_SHADER_TYPE::SkyBox);
+
+	ShaderResourceManager::GetIns().CreateVertexShader(VERTEX_SHADER_TYPE::Default1Frame);
+	ShaderResourceManager::GetIns().CreateVertexShader(VERTEX_SHADER_TYPE::RimLight1Frame);
+
 	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false, false));
 
 	//AddActor(new TutorialStage);
@@ -61,7 +70,7 @@ void GameScene::SubPostLoad(void)
 
 #pragma region テストオブジェクト
 
-	for (int i = 0; i < 100; i++) {
+	for (int i = 0; i < 10; i++) {
 		AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Xonly(50.0f)));
 		AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Zonly(50.0f)));
 	}
@@ -131,7 +140,7 @@ void GameScene::SubPostUpdate(void)
 
 void GameScene::SubUiDraw(void)
 {
-	DrawStringToHandle(0, 0, "ゲーム", 0xffffff, Font::GetIns().GetFont(FontKinds::Marumiya40));
+	//DrawStringToHandle(0, 0, "ゲーム", 0xffffff, Font::GetIns().GetFont(FontKinds::Marumiya40));
 }
 
 void GameScene::CreateCamera(void)

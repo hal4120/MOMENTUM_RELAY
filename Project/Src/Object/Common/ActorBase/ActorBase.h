@@ -167,7 +167,7 @@ protected:
 	// シェーダーを消去
 	void ResetShader();
 	// シェーダーのデフォルト設定
-	virtual void DefaultCreateShader(void) {}
+	virtual void DefaultCreateShader(void);
 
 	// デフォルト描画タイプ設定
 	virtual ACTOR_DRAW_TYPE DefaultDrawType(void)const { return ACTOR_DRAW_TYPE::Default; }
