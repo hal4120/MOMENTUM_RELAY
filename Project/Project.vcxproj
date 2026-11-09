@@ -103,7 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Lib\DxLib;$(ProjectDir)Lib\Enet</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Lib\DxLib</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -111,8 +111,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)Lib\DxLib;
-$(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)Lib\DxLib</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -129,7 +128,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Lib\DxLib;$(ProjectDir)Lib\Enet</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Lib\DxLib</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -137,8 +136,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)Lib\DxLib;
-$(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)Lib\DxLib</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -196,6 +194,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Object\Common\Shader\WaterShader.cpp" />
     <ClCompile Include="Src\Object\Common\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Src\Object\Common\Transform\Transform.cpp" />
+    <ClCompile Include="Src\Object\Maps\CityCollisionActor.cpp" />
     <ClCompile Include="Src\Object\Maps\CityMap.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerIdleState.cpp" />
@@ -299,6 +298,7 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\Common\SkyBox\SkyBox.h" />
     <ClInclude Include="Src\Object\Common\Transform\Transform.h" />
     <ClInclude Include="Src\Object\Common\DebugObject\MeshDebugObject.h" />
+    <ClInclude Include="Src\Object\Maps\CityCollisionActor.h" />
     <ClInclude Include="Src\Object\Maps\CityMap.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerIdleState.h" />
@@ -332,8 +332,8 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Scene\Common\Fade\FadeDefine.h" />
     <ClInclude Include="Src\Scene\Common\Fade\FadeSceneBase.h" />
     <ClInclude Include="Src\Scene\GameOver\GameOverScene.h" />
-    <ClInclude Include="Src\Scene\Game\GameScene.h" />
     <ClInclude Include="Src\Scene\Common\GameDebugScene.h" />
+    <ClInclude Include="Src\Scene\Game\GameScene.h" />
     <ClInclude Include="Src\Scene\Game\Pause\GamePauseh.h" />
     <ClInclude Include="Src\Scene\ActorUseDefine.h" />
     <ClInclude Include="Src\Scene\SceneBase.h" />

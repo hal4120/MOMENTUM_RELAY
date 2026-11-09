@@ -25,8 +25,9 @@
 #include "../Common/PostEffect/UnderWaterPostEffect/UnderWaterPostEffect.h"
 
 #include "../../Object/Maps/CityMap.h"
+#include "../../Object/Maps/CityCollisionActor.h"
 
-#include "../../Object/Common/DebugObject/BoxDebugObject.h"
+#include	"../../Object/Common/DebugObject/BoxDebugObject.h"
 #include "../../Object/Common/DebugObject/IceBoxDebugObject.h"
 #include "../../Object/Common/DebugObject/SphereDebugObject.h"
 #include "../../Object/Common/DebugObject/CapsuleDebugObject.h"
@@ -65,8 +66,9 @@ void GameScene::SubPostLoad(void)
 
 	map = new CityMap();
 	map->Load("Data/Maps/City/CityMap.json", "Data/Maps/City");
+	AddActor(new CityCollisionActor(*map));
 
-	AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false, false));
+	//AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false, false));
 
 	//AddActor(new TutorialStage);
 
@@ -122,12 +124,12 @@ void GameScene::SubPostUpdate(void)
 
 	switch (ActorSerch<Player>(actors)->OnIcePostEffectSwitch()) {
 	case -1: { break; }
-	case 0: { 
+	case 0: {
 		RemovePostEffect<FocusLinesPostEffect>();
 		RemovePostEffect<CRTPostEffect>();
 		RemovePostEffect<MenacingPostEffect>();
 		//RemovePostEffect<PurpleFlamePostEffect>();
-		break; 
+		break;
 	}
 	case 1: {
 		AddPostEffect(new FocusLinesPostEffect(1.5f, 18.0f, 100.0f));
@@ -135,7 +137,7 @@ void GameScene::SubPostUpdate(void)
 		AddPostEffect(new MenacingPostEffect(2.0f, 0.5f, 1.0f));
 		//AddPostEffect(new PurpleFlamePostEffect(10.0f, 0.4f, 1.75f));
 		//AddPostEffect(new DamageFlashPostEffect(10.0f, 10.0f));
-		break; 
+		break;
 	}
 	}
 

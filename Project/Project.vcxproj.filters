@@ -17,7 +17,6 @@
     <ClCompile Include="Src\Object\Common\DataLoad\ParameterLoad.cpp" />
     <ClCompile Include="Src\Scene\GameClear\GameClearScene.cpp" />
     <ClCompile Include="Src\Scene\GameOver\GameOverScene.cpp" />
-    <ClCompile Include="Src\Scene\Game\GameScene.cpp" />
     <ClCompile Include="Src\Scene\SceneManager.cpp" />
     <ClCompile Include="Src\Scene\Title\TitleScene.cpp" />
     <ClCompile Include="Src\Manager\Camera\CurrentCamera.cpp" />
@@ -83,6 +82,8 @@
     <ClCompile Include="Src\Object\TutorialStage\TutorialStage.cpp" />
     <ClCompile Include="Src\Object\Common\MotionController\GroundMotionController.cpp" />
     <ClCompile Include="Src\Object\Maps\CityMap.cpp" />
+    <ClCompile Include="Src\Scene\Game\GameScene.cpp" />
+    <ClCompile Include="Src\Object\Maps\CityCollisionActor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -116,7 +117,6 @@
     <ClInclude Include="Src\pch.h" />
     <ClInclude Include="Src\Scene\GameClear\GameClearScene.h" />
     <ClInclude Include="Src\Scene\GameOver\GameOverScene.h" />
-    <ClInclude Include="Src\Scene\Game\GameScene.h" />
     <ClInclude Include="Src\Scene\Common\GameDebugScene.h" />
     <ClInclude Include="Src\Scene\Game\Pause\GamePauseh.h" />
     <ClInclude Include="Src\Scene\SceneBase.h" />
@@ -193,6 +193,8 @@
     <ClInclude Include="Src\Object\Common\MotionController\GroundMotionController.h" />
     <ClInclude Include="Src\Object\Common\MotionController\MotionControllerBase.h" />
     <ClInclude Include="Src\Object\Maps\CityMap.h" />
+    <ClInclude Include="Src\Scene\Game\GameScene.h" />
+    <ClInclude Include="Src\Object\Maps\CityCollisionActor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />
