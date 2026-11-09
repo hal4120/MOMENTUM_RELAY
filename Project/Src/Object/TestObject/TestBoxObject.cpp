@@ -1,7 +1,7 @@
 #include "TestBoxObject.h"
 
-#include "Common/Collider/BoxCollider.h"
-#include "Common/PhysicsBody/PhysicsBody.h"
+#include "../Common/Collider/BoxCollider.h"
+#include "../Common/PhysicsBody/PhysicsBody.h"
 
 int TestBoxObject::modelHandleOriginal = -1;
 

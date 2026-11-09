@@ -1,9 +1,10 @@
-#include "Common/PhysicsBody/PhysicsBody.h"
 #include "TestObject.h"
 
-#include "../Utility/Utility.h"
+#include "../Common/PhysicsBody/PhysicsBody.h"
 
-#include "Common/Collider/SphereCollider.h"
+#include "../../Utility/Utility.h"
+
+#include "../Common/Collider/SphereCollider.h"
 
 int TestObject::modelHandleOriginal = -1;
 
@@ -54,6 +55,8 @@ void TestObject::Load(void)
 	body->SetRollingResistance(0.001f);
 	// 落下速度制限（落下速度が速すぎると衝突判定が抜けることがあるため）
 	body->SetMaxFallSpeed(100.0f);
+
+	body->SetRestitution(0.5f);
 
 #pragma endregion
 

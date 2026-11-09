@@ -75,6 +75,7 @@ namespace {
         Vector3 offsetA = Vector3(0.0f);
         Vector3 offsetB = Vector3(0.0f);
         Impulses impulses;
+        float bounceTarget = 0.0f; // このフレームの反発目標速度
     };
     struct CachedPair {
         Vector3 normal = Vector3(0.0f);
@@ -439,6 +440,21 @@ void SolveOne(const ContactManifold& contact, bool warmStart, bool applyRolling)
     const int count = (std::min)(contact.count, 4);
     const PairKey key{ contact.a, contact.b };
     CachedPair& cache = contactCache[key];
+    // 反発は新しい衝突でのみ発生させる。
+    // 継続接触中に位置補正・重力で生じた微小な侵入速度を
+    // 新しい衝突として扱うと、不自然な再反発が起こる。
+    if (warmStart) {
+        const bool continuingContact =
+            cache.frame + 1 == currentFrame && cache.normal.Dot(n) > 0.95f;
+        for (int i = 0; i < count; ++i) {
+            const Vector3 ra = contact.points[i] - a.center;
+            const Vector3 rb = contact.points[i] - b.center;
+            const float incoming = (a.VelocityAt(ra) - b.VelocityAt(rb)).Dot(n);
+            cache.points[i].bounceTarget =
+                !continuingContact && incoming < -1.0f
+                ? -restitution * incoming : 0.0f;
+        }
+    }
     // 同じ向きの接触のみ再利用。回転や移動で接触位置が変わった点は捨てる。
     if (warmStart && cache.frame + 1 == currentFrame && cache.normal.Dot(n) > 0.95f) {
         std::array<bool, 4> matched{};
@@ -488,7 +504,8 @@ void SolveOne(const ContactManifold& contact, bool warmStart, bool applyRolling)
             const float denominator = a.invMass + b.invMass +
                 rnA.Dot(a.InverseInertia(rnA)) + rnB.Dot(b.InverseInertia(rnB));
             if (denominator <= 1.0e-8f) continue;
-            const float bounce = warmStart && iteration == 0 && vn < -1.0f ? -restitution * vn : 0.0f;
+            // 後続反復でも反発目標を維持し、跳ね返りを打ち消さない。
+            const float bounce = cache.points[i].bounceTarget;
             const float previous = accumulated[i].normal;
             accumulated[i].normal = (std::max)(0.0f, previous + (-vn + bounce) / denominator);
             const float j = accumulated[i].normal - previous;

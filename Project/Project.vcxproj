@@ -208,8 +208,9 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClCompile Include="Src\Object\Player\State\PlayerRollingState.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\PlayerCollOperator.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.cpp" />
-    <ClCompile Include="Src\Object\TestBoxObject.cpp" />
-    <ClCompile Include="Src\Object\TestObject.cpp" />
+    <ClCompile Include="Src\Object\TestObject\TestBoxObject.cpp" />
+    <ClCompile Include="Src\Object\TestObject\TestGoal.cpp" />
+    <ClCompile Include="Src\Object\TestObject\TestObject.cpp" />
     <ClCompile Include="Src\Object\TutorialStage\TutorialStage.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\AimCrosshairPostEffect\AimCrosshairPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.cpp" />
@@ -310,8 +311,9 @@ $(ProjectDir)Lib\Enet;</AdditionalLibraryDirectories>
     <ClInclude Include="Src\Object\Player\State\PlayerRollingState.h" />
     <ClInclude Include="Src\Object\Player\Weapon\PlayerCollOperator.h" />
     <ClInclude Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.h" />
-    <ClInclude Include="Src\Object\TestBoxObject.h" />
-    <ClInclude Include="Src\Object\TestObject.h" />
+    <ClInclude Include="Src\Object\TestObject\TestBoxObject.h" />
+    <ClInclude Include="Src\Object\TestObject\TestGoal.h" />
+    <ClInclude Include="Src\Object\TestObject\TestObject.h" />
     <ClInclude Include="Src\Object\TutorialStage\TutorialStage.h" />
     <ClInclude Include="Src\Object\CommonBuilding\Water.h" />
     <ClInclude Include="Src\pch.h" />

@@ -33,8 +33,9 @@
 #include "../../Object/CameraCollOperator/CameraPointCollOperator.h"
 #include "../../Object/CameraCollOperator/CameraLineCollOperator.h"
 
-#include "../../Object/TestObject.h"
-#include "../../Object/TestBoxObject.h"
+#include "../../Object/TestObject/TestObject.h"
+#include "../../Object/TestObject/TestBoxObject.h"
+#include "../../Object/TestObject/TestGoal.h"
 
 #include "../../Object/TutorialStage/TutorialStage.h"
 
@@ -62,7 +63,7 @@ void GameScene::SubPostLoad(void)
 
 	//AddActor(new TutorialStage);
 
-	AddActor(new IceBoxDebugObject(Vector3(1000, 100, 1000), Vector3::XZonly(-1500.0f, 1500.0f), false, false));
+	AddActor(new TestGoal(Vector3(1000, 2000, 1000), Vector3(-1500.0f, 1000.0f, 1500.0f)));
 	//AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 10), Vector3::YZonly(5000.0f, 5000.0f), false, false));
 	//AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 100), Vector3::YZonly(5000.0f, -5000.0f), false, false));
 	//AddActor(new IceBoxDebugObject(Vector3(100, 10000, 10000), Vector3::XYonly(5000.0f, 5000.0f), false, false));
@@ -70,9 +71,10 @@ void GameScene::SubPostLoad(void)
 
 #pragma region テストオブジェクト
 
-	for (int i = 0; i < 10; i++) {
-		AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Xonly(50.0f)));
+	for (int i = 0; i < 100; i++) {
+		//AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Xonly(50.0f)));
 		AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Zonly(50.0f)));
+		AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Yonly(50.0f)));
 	}
 
 	for (int i = 0; i < 10; i++) {
