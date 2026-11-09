@@ -187,6 +187,7 @@
     <ClCompile Include="Src\Object\Common\MotionController\GroundMotionController.cpp" />
     <ClCompile Include="Src\Object\Common\PhysicsBody\PhysicsBody.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\DefaultShader.cpp" />
+    <ClCompile Include="Src\Object\Common\Shader\GoalFieldShader.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\ModelDamageFlashShader.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\RimLightShader.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\ShaderBase.cpp" />
@@ -206,12 +207,12 @@
     <ClCompile Include="Src\Object\Player\State\PlayerMomentumState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerMoveState.cpp" />
     <ClCompile Include="Src\Object\Player\State\PlayerRollingState.cpp" />
+    <ClCompile Include="Src\Object\Player\UI\MomentumIndicator.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\PlayerCollOperator.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.cpp" />
     <ClCompile Include="Src\Object\TestObject\TestBoxObject.cpp" />
     <ClCompile Include="Src\Object\TestObject\TestGoal.cpp" />
     <ClCompile Include="Src\Object\TestObject\TestObject.cpp" />
-    <ClCompile Include="Src\Object\TutorialStage\TutorialStage.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\AimCrosshairPostEffect\AimCrosshairPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\DamageFlashPostEffect\DamageFlashPostEffect.cpp" />
@@ -291,6 +292,7 @@
     <ClInclude Include="Src\Object\Common\MotionController\MotionControllerBase.h" />
     <ClInclude Include="Src\Object\Common\PhysicsBody\PhysicsBody.h" />
     <ClInclude Include="Src\Object\Common\Shader\DefaultShader.h" />
+    <ClInclude Include="Src\Object\Common\Shader\GoalFieldShader.h" />
     <ClInclude Include="Src\Object\Common\Shader\ModelDamageFlashShader.h" />
     <ClInclude Include="Src\Object\Common\Shader\RimLightShader.h" />
     <ClInclude Include="Src\Object\Common\Shader\ShaderBase.h" />
@@ -311,13 +313,12 @@
     <ClInclude Include="Src\Object\Player\State\PlayerMomentumState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerMoveState.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerRollingState.h" />
+    <ClInclude Include="Src\Object\Player\UI\MomentumIndicator.h" />
     <ClInclude Include="Src\Object\Player\Weapon\PlayerCollOperator.h" />
     <ClInclude Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.h" />
     <ClInclude Include="Src\Object\TestObject\TestBoxObject.h" />
     <ClInclude Include="Src\Object\TestObject\TestGoal.h" />
     <ClInclude Include="Src\Object\TestObject\TestObject.h" />
-    <ClInclude Include="Src\Object\TutorialStage\TutorialStage.h" />
-    <ClInclude Include="Src\Object\CommonBuilding\Water.h" />
     <ClInclude Include="Src\pch.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\AimCrosshairPostEffect\AimCrosshairPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.h" />
@@ -417,6 +418,10 @@
     <FxCompile Include="Src\Shader\Default\DefaultVS_NMap8Frame.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Src\Shader\ModelDamageFlash\ModelDamageFlashPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>

@@ -158,8 +158,8 @@ bool CityMap::Load(const std::string& jsonPath, const std::string& assetRoot) {
         instance.transform.scale = Vector3(scale[0], scale[1], scale[2]);
         objects.push_back(std::move(instance));
     }
-    printfDx("CityMap: %d instances, %d models, %d skipped\n",
-        static_cast<int>(objects.size()), static_cast<int>(models.size()), static_cast<int>(errors));
+    //printfDx("CityMap: %d instances, %d models, %d skipped\n",
+    //    static_cast<int>(objects.size()), static_cast<int>(models.size()), static_cast<int>(errors));
     // Optional collision array (older exports without it remain valid).
     size_t collisionArray;
     if (FindValue(json, "colliders", collisionArray) && json[collisionArray] == '[') {
@@ -244,7 +244,7 @@ bool CityMap::Load(const std::string& jsonPath, const std::string& assetRoot) {
             boxCollisions.push_back(box);
         }
     }
-    printfDx("CityMap: %d box colliders, %d mesh colliders\n", static_cast<int>(boxCollisions.size()), static_cast<int>(meshCollisions.size()));
+    //printfDx("CityMap: %d box colliders, %d mesh colliders\n", static_cast<int>(boxCollisions.size()), static_cast<int>(meshCollisions.size()));
     return !objects.empty() && errors == 0;
 }
 

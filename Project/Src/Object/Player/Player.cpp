@@ -21,6 +21,8 @@
 #include "../Common/Shader/WaterShader.h"
 #include "../Common/Shader/ModelDamageFlashShader.h"
 
+#include "UI/MomentumIndicator.h"
+
 #include "Weapon/PlayerCollOperator.h"
 #include "Weapon/PlayerMomentumQuickStealFind.h"
 
@@ -149,6 +151,8 @@ void Player::Load(void)
 
 	PlayerMomentumQuickStealFind* momentumQuickStealFind = new PlayerMomentumQuickStealFind(trans);
 	AddChildActor(momentumQuickStealFind);
+
+	AddChildActor(new MomentumIndicator(stealVelocity));
 
 #pragma endregion
 

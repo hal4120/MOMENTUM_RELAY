@@ -1,4 +1,4 @@
-ï»¿#pragma once
+#pragma once
 
 #include <map>
 #include <string>
@@ -31,46 +31,46 @@ public:
 	}
 
 
-	// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ç”Ÿæˆ
+	// ’¸“_ƒVƒF[ƒ_[‚Ì¶¬
 	void CreateVertexShader(VERTEX_SHADER_TYPE type);
 
-	// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®å–å¾—
+	// ’¸“_ƒVƒF[ƒ_[‚Ìæ“¾
 	int GetVertexShader(VERTEX_SHADER_TYPE type);
 
-	// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®è§£æ”¾
+	// ’¸“_ƒVƒF[ƒ_[‚Ì‰ğ•ú
 	void ReleaseVertexShader(VERTEX_SHADER_TYPE type);
 
-	// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’å…¨ã¦è§£æ”¾ã™ã‚‹
+	// ’¸“_ƒVƒF[ƒ_[‚ğ‘S‚Ä‰ğ•ú‚·‚é
 	void ReleaseAllVertexShader(void);
 
 
-	// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ç”Ÿæˆ
+	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ì¶¬
 	void CreatePixelShader(PIXEL_SHADER_TYPE type);
 
-	// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®å–å¾—
+	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ìæ“¾
 	int GetPixelShader(PIXEL_SHADER_TYPE type);
 
-	// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®è§£æ”¾
+	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ì‰ğ•ú
 	void ReleasePixelShader(PIXEL_SHADER_TYPE type);
 
-	// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’å…¨ã¦è§£æ”¾ã™ã‚‹
+	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚ğ‘S‚Ä‰ğ•ú‚·‚é
 	void ReleaseAllPixelShader(void);
 
 
-	// å…¨ã¦ã®ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®è§£æ”¾
+	// ‘S‚Ä‚ÌƒVƒF[ƒ_[‚Ì‰ğ•ú
 	void ReleaseAllShader(void);
 
 private:
 
-	// ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®åå‰ã‚’ãƒ‘ã‚¹ã¸
+	// ƒVƒF[ƒ_[‚Ì–¼‘O‚ğƒpƒX‚Ö
 	std::string ShaderNameToPath(const std::string& shaderName) {
 		return "Data/Shader/" + shaderName + ".cso";
 	}
 
-	// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®åå‰ãƒ†ãƒ¼ãƒ–ãƒ«
+	// ’¸“_ƒVƒF[ƒ_[‚Ì–¼‘Oƒe[ƒuƒ‹
 	const std::map<VERTEX_SHADER_TYPE, std::string> VERTEX_SHADER_NAME_TABLE = {
 
-	#pragma region ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
+	#pragma region ƒfƒtƒHƒ‹ƒg
 		{
 			VERTEX_SHADER_TYPE::Default1Frame,
 			"DefaultVS_1Frame"
@@ -97,7 +97,7 @@ private:
 		},
 	#pragma endregion
 
-	#pragma region ãƒªãƒ ãƒ©ã‚¤ãƒˆ
+	#pragma region ƒŠƒ€ƒ‰ƒCƒg
 		{
 			VERTEX_SHADER_TYPE::ModelDamageFlash1Frame,
 			"ModelDamageFlashVS_1Frame"
@@ -124,7 +124,7 @@ private:
 		},
 	#pragma endregion
 
-	#pragma region ãƒ€ãƒ¡ãƒ¼ã‚¸ï¼ˆãƒ¢ãƒ‡ãƒ«ï¼‰
+	#pragma region ƒ_ƒ[ƒWiƒ‚ƒfƒ‹j
 		{
 			VERTEX_SHADER_TYPE::RimLight1Frame,
 			"RimLightVS_1Frame"
@@ -151,83 +151,89 @@ private:
 		},
 	#pragma endregion
 
-		// æ°´é¢
+		// …–Ê
 		{
 			VERTEX_SHADER_TYPE::Water,
 			"WaterVS"
 		},
 
-		// ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹
+		// ƒXƒJƒCƒ{ƒbƒNƒX
 		{
 			VERTEX_SHADER_TYPE::SkyBox,
 			"SkyBoxVS"
 		},
 	};
 
-	// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼
+	// ’¸“_ƒVƒF[ƒ_[
 	std::map<VERTEX_SHADER_TYPE, int> vertexShaderList;
 
 
-	// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®åå‰ãƒ†ãƒ¼ãƒ–ãƒ«
+	// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ì–¼‘Oƒe[ƒuƒ‹
 	const std::map<PIXEL_SHADER_TYPE, std::string> PIXEL_SHADER_NAME_TABLE = {
 
-		// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
+		// ƒfƒtƒHƒ‹ƒg
 		{
 			PIXEL_SHADER_TYPE::Default,
 			"DefaultPS"
 		},
 
-		// ãƒªãƒ ãƒ©ã‚¤ãƒˆ
+		// ƒŠƒ€ƒ‰ƒCƒg
 		{
 			PIXEL_SHADER_TYPE::RimLight,
 			"RimLightPS"
 		},
 
-		// ãƒ€ãƒ¡ãƒ¼ã‚¸ï¼ˆãƒ¢ãƒ‡ãƒ«ï¼‰
+		// ƒ_ƒ[ƒWiƒ‚ƒfƒ‹j
 		{
 			PIXEL_SHADER_TYPE::ModelDamageFlash,
 			"ModelDamageFlashPS"
 		},
 
-		// æ°´é¢
+		// ƒS[ƒ‹ƒtƒB[ƒ‹ƒh
+		{
+			PIXEL_SHADER_TYPE::GoalField,
+			"GoalFieldPS"
+		},
+
+		// …–Ê
 		{
 			PIXEL_SHADER_TYPE::Water,
 			"WaterPS"
 		},
 
-	#pragma region ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+	#pragma region ƒ|ƒXƒgƒGƒtƒFƒNƒg
 
-		// ãƒ–ãƒ©ã‚¦ãƒ³ç®¡
+		// ƒuƒ‰ƒEƒ“ŠÇ
 		{
 			PIXEL_SHADER_TYPE::CRT,
 			"CRT_PS"
 		},
 
-		// é›†ä¸­ç·š
+		// W’†ü
 		{
 			PIXEL_SHADER_TYPE::FocusLines,
 			"FocusLinesPS"
 		},
 
-		// é›†ä¸­ç·š
+		// W’†ü
 		{
 			PIXEL_SHADER_TYPE::UnderWater,
 			"UnderWaterPS"
 		},
 
-		// ã‚´ã‚´ã‚´ã‚´â€¦ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+		// ƒSƒSƒSƒScƒGƒtƒFƒNƒg
 		{
 			PIXEL_SHADER_TYPE::Menacing,
 			"MenacingPS"
 		},
 
-		// ç‚ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+		// ‰Šƒ|ƒXƒgƒGƒtƒFƒNƒg
 		{
 			PIXEL_SHADER_TYPE::PurpleFlame,
 			"PurpleFlamePS"
 		},
 
-		// ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+		// ƒ_ƒ[ƒWƒtƒ‰ƒbƒVƒ…ƒ|ƒXƒgƒGƒtƒFƒNƒg
 		{
 			PIXEL_SHADER_TYPE::DamageFlash,
 			"DamageFlashPS"
@@ -243,7 +249,7 @@ private:
 
 	#pragma endregion
 
-		// ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹
+		// ƒXƒJƒCƒ{ƒbƒNƒX
 		{
 			PIXEL_SHADER_TYPE::SkyBox,
 			"SkyBoxPS"

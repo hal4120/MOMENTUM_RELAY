@@ -40,11 +40,7 @@
 #include "../../Object/TestObject/TestBoxObject.h"
 #include "../../Object/TestObject/TestGoal.h"
 
-#include "../../Object/TutorialStage/TutorialStage.h"
-
 #include "../../Object/Player/Player.h"
-
-#include "../../Object/CommonBuilding/Water.h"
 
 GameScene::GameScene() :
 	SceneBase(),
@@ -69,16 +65,6 @@ void GameScene::SubPostLoad(void)
 	map->Load("Data/Maps/City/CityMap.json", "Data/Maps/City");
 	AddActor(new CityCollisionActor(*map));
 
-	//AddActor(new BoxDebugObject(Vector3(20000, 1000, 20000), Vector3::Yonly(-500), false, false));
-
-	//AddActor(new TutorialStage);
-
-	AddActor(new TestGoal(Vector3(1000, 2000, 1000), Vector3(-1500.0f, 1000.0f, 1500.0f)));
-	//AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 10), Vector3::YZonly(5000.0f, 5000.0f), false, false));
-	//AddActor(new IceBoxDebugObject(Vector3(10000, 10000, 100), Vector3::YZonly(5000.0f, -5000.0f), false, false));
-	//AddActor(new IceBoxDebugObject(Vector3(100, 10000, 10000), Vector3::XYonly(5000.0f, 5000.0f), false, false));
-	//AddActor(new IceBoxDebugObject(Vector3(100, 10000, 10000), Vector3::XYonly(-5000.0f, 5000.0f), false, false));
-
 #pragma region テストオブジェクト
 
 	for (int i = 0; i < 100; i++) {
@@ -101,8 +87,6 @@ void GameScene::SubPostLoad(void)
 #pragma endregion
 
 	AddActor(new Player);
-
-	//AddActor(new Water(Vector3(), Vector3(50000, 100, 50000)));
 }
 
 void GameScene::SubPostInit(void)
@@ -157,7 +141,6 @@ void GameScene::SubPreDraw(void)
 
 void GameScene::SubUiDraw(void)
 {
-	//DrawStringToHandle(0, 0, "ゲーム", 0xffffff, Font::GetIns().GetFont(FontKinds::Marumiya40));
 }
 
 void GameScene::SubPreRelease(void)

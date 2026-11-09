@@ -158,10 +158,6 @@ private:
 
 	void SubUpdate(void)override;
 
-	void SubDraw(void)override {
-		DrawFormatString(0, 100, 0xffffff, "PlayerPos: %f, %f, %f", trans.pos.x, trans.pos.y, trans.pos.z);
-	}
-
 	void SubOnPushed(COLLIDER_TAG ownTag, const ColliderBase& other, const Vector3& pushVec)override;
 
 	bool nowIsOnIce = false;

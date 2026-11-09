@@ -47,6 +47,9 @@ enum class PIXEL_SHADER_TYPE
     // ダメージ（モデル）
     ModelDamageFlash,
 
+	// ゴールフィールド
+    GoalField,
+
     // 水面
     Water,
 
