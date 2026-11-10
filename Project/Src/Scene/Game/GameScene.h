@@ -39,5 +39,9 @@ private:
 
 	void CreateCamera(void)override;
 
+	void DrawControlGuide(void);
+
+	void DrawMomentumGuide(void);
+
 	CityMap* map;
 };

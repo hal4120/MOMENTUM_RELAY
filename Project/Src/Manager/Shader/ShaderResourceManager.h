@@ -23,9 +23,9 @@ public:
 	static void CreateIns(void) { if (ins == nullptr)ins = new ShaderResourceManager(); }
 	static ShaderResourceManager& GetIns(void) { return *ins; }
 	static void DeleteIns(void) {
-		if (ins != nullptr) { 
+		if (ins != nullptr) {
 			ins->ReleaseAllShader();
-			delete ins; 
+			delete ins;
 			ins = nullptr;
 		}
 	}
@@ -151,6 +151,33 @@ private:
 		},
 	#pragma endregion
 
+	#pragma region ゴール
+		{
+			VERTEX_SHADER_TYPE::GoalField1Frame,
+			"GoalFieldVS_1Frame"
+		},
+		{
+			VERTEX_SHADER_TYPE::GoalField4Frame,
+			"GoalFieldVS_4Frame"
+		},
+		{
+			VERTEX_SHADER_TYPE::GoalField8Frame,
+			"GoalFieldVS_8Frame"
+		},
+		{
+			VERTEX_SHADER_TYPE::GoalFieldNMap1Frame,
+			"GoalFieldVS_NMap1Frame"
+		},
+		{
+			VERTEX_SHADER_TYPE::GoalFieldNMap4Frame,
+			"GoalFieldVS_NMap4Frame"
+		},
+		{
+			VERTEX_SHADER_TYPE::GoalFieldNMap8Frame,
+			"GoalFieldVS_NMap8Frame"
+		},
+	#pragma endregion
+
 		// 水面
 		{
 			VERTEX_SHADER_TYPE::Water,
@@ -189,7 +216,7 @@ private:
 			"ModelDamageFlashPS"
 		},
 
-		// ゴールフィールド
+		// ゴール
 		{
 			PIXEL_SHADER_TYPE::GoalField,
 			"GoalFieldPS"
@@ -238,14 +265,24 @@ private:
 			PIXEL_SHADER_TYPE::DamageFlash,
 			"DamageFlashPS"
 		},
-        {
-            PIXEL_SHADER_TYPE::TimeFreeze,
-            "TimeFreezePS"
-        },
-        {
-            PIXEL_SHADER_TYPE::AimCrosshair,
-            "AimCrosshairPS"
-        },
+
+		// 時間停止ポストエフェクト
+		{
+			PIXEL_SHADER_TYPE::TimeFreeze,
+			"TimeFreezePS"
+		},
+
+		// 照準ポストエフェクト
+		{
+			PIXEL_SHADER_TYPE::AimCrosshair,
+			"AimCrosshairPS"
+		},
+
+		// ゴール案内ポストエフェクト
+		{
+			PIXEL_SHADER_TYPE::GoalDirection,
+			"GoalDirectionPS"
+		},
 
 	#pragma endregion
 
@@ -257,6 +294,6 @@ private:
 
 	};
 
-	// 繝斐け繧ｻ繝ｫ繧ｷ繧ｧ繝ｼ繝繝ｼ
+	// ピクセルシェーダー
 	std::map<PIXEL_SHADER_TYPE, int> pixelShaderList;
 };

@@ -7,6 +7,8 @@
 
 #include "../../Common/MotionController/GroundMotionController.h"
 
+#include "../Player.h"
+
 PlayerJumpState::PlayerJumpState(
 	GroundMotionController& motion,
 
@@ -34,6 +36,9 @@ PlayerJumpState::PlayerJumpState(
 
 void PlayerJumpState::OwnStateConditionUpdate(void)
 {
+	// 最初のカメライベント中は状態遷移しない
+	if (Player::isFirstCameraEvent) { return; }
+
 	// ジャンプキーのダウントリガーで遷移
 	if (Input::GetIns().GetInfo(KEY_TYPE::PlayerJump).down) { OwnChangeState(); }
 }

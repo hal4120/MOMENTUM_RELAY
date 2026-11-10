@@ -9,6 +9,8 @@
 
 #include "../../Common/MotionController/GroundMotionController.h"
 
+#include "../Player.h"
+
 PlayerRollingState::PlayerRollingState(
 	float ROLL_SPEED,
 	float ROLL_LIFT_SPEED,
@@ -53,6 +55,9 @@ PlayerRollingState::PlayerRollingState(
 
 void PlayerRollingState::OwnStateConditionUpdate(void)
 {
+	// 最初のカメライベント中は状態遷移しない
+	if (Player::isFirstCameraEvent) { return; }
+
 	// クールタイム中は状態遷移しない
 	if (coolTimeCounter > 0.0f) { return; }
 

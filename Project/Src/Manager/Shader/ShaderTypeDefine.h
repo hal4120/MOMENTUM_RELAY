@@ -1,9 +1,9 @@
-ï»¿#pragma once
+#pragma once
 
-// é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ç¨®é¡
+// ’¸“_ƒVƒF[ƒ_[‚Ìí—Ş
 enum class VERTEX_SHADER_TYPE
 {
-    // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
+    // ƒfƒtƒHƒ‹ƒg
     Default1Frame,
     Default4Frame,
     Default8Frame,
@@ -11,7 +11,7 @@ enum class VERTEX_SHADER_TYPE
     DefaultNMap4Frame,
     DefaultNMap8Frame,
 
-    // ãƒªãƒ ãƒ©ã‚¤ãƒˆ
+    // ƒŠƒ€ƒ‰ƒCƒg
     RimLight1Frame,
     RimLight4Frame,
     RimLight8Frame,
@@ -19,7 +19,7 @@ enum class VERTEX_SHADER_TYPE
     RimLightNMap4Frame,
     RimLightNMap8Frame,
 
-    // ãƒ€ãƒ¡ãƒ¼ã‚¸ï¼ˆãƒ¢ãƒ‡ãƒ«ï¼‰
+    // ƒ_ƒ[ƒWiƒ‚ƒfƒ‹j
     ModelDamageFlash1Frame,
     ModelDamageFlash4Frame,
     ModelDamageFlash8Frame,
@@ -27,65 +27,79 @@ enum class VERTEX_SHADER_TYPE
     ModelDamageFlashNMap4Frame,
     ModelDamageFlashNMap8Frame,
 
-	// æ°´é¢
+    // ƒS[ƒ‹
+    GoalField1Frame,
+    GoalField4Frame,
+    GoalField8Frame,
+    GoalFieldNMap1Frame,
+    GoalFieldNMap4Frame,
+    GoalFieldNMap8Frame,
+
+    // …–Ê
     Water,
 
 
-    // ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹
+    // ƒXƒJƒCƒ{ƒbƒNƒX
     SkyBox,
 };
 
-// ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®ç¨®é¡
+// ƒsƒNƒZƒ‹ƒVƒF[ƒ_[‚Ìí—Ş
 enum class PIXEL_SHADER_TYPE
 {
-    // ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
+    // ƒfƒtƒHƒ‹ƒg
     Default,
 
-    // ãƒªãƒ ãƒ©ã‚¤ãƒˆ
+    // ƒŠƒ€ƒ‰ƒCƒg
     RimLight,
 
-    // ãƒ€ãƒ¡ãƒ¼ã‚¸ï¼ˆãƒ¢ãƒ‡ãƒ«ï¼‰
+    // ƒ_ƒ[ƒWiƒ‚ƒfƒ‹j
     ModelDamageFlash,
 
-	// ã‚´ãƒ¼ãƒ«ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰
+    // ƒS[ƒ‹
     GoalField,
 
-    // æ°´é¢
+    // …–Ê
     Water,
 
-#pragma region ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+#pragma region ƒ|ƒXƒgƒGƒtƒFƒNƒg
 
-	// ã‚°ãƒ¬ãƒ¼ã‚¹ã‚±ãƒ¼ãƒ«ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+    // ƒOƒŒ[ƒXƒP[ƒ‹ƒ|ƒXƒgƒGƒtƒFƒNƒg
     GrayScale,
 
-    // ãƒ–ãƒ©ã‚¦ãƒ³ç®¡ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+    // ƒuƒ‰ƒEƒ“ŠÇƒ|ƒXƒgƒGƒtƒFƒNƒg
     CRT,
 
-    // é›†ä¸­ç·šãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+    // W’†üƒ|ƒXƒgƒGƒtƒFƒNƒg
     FocusLines,
 
-	// æ°´ä¸­ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
-	UnderWater,
+    // …’†ƒ|ƒXƒgƒGƒtƒFƒNƒg
+    UnderWater,
 
-    // ã‚´ã‚´ã‚´ã‚´â€¦ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+    // ƒSƒSƒSƒScƒGƒtƒFƒNƒg
     Menacing,
 
-    // ç‚ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+    // ‰Šƒ|ƒXƒgƒGƒtƒFƒNƒg
     PurpleFlame,
 
-    // ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒ•ãƒ©ãƒƒã‚·ãƒ¥ãƒã‚¹ãƒˆã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+    // ƒ_ƒ[ƒWƒtƒ‰ƒbƒVƒ…ƒ|ƒXƒgƒGƒtƒFƒNƒg
     DamageFlash,
 
+	// ŠÔ’â~ƒ|ƒXƒgƒGƒtƒFƒNƒg
     TimeFreeze,
+
+	// Æ€ƒ|ƒXƒgƒGƒtƒFƒNƒg
     AimCrosshair,
+
+	// ƒS[ƒ‹ˆÄ“àƒ|ƒXƒgƒGƒtƒFƒNƒg
+    GoalDirection,
 
 #pragma endregion
 
-    // ã‚¹ã‚«ã‚¤ãƒœãƒƒã‚¯ã‚¹
+    // ƒXƒJƒCƒ{ƒbƒNƒX
     SkyBox,
 };
 
-// é ‚ç‚¹ã‚¿ã‚¤ãƒ—
+// ’¸“_ƒ^ƒCƒv
 enum SHADER_VERTEX_TYPE
 {
     Frame1,

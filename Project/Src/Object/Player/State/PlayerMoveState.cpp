@@ -9,6 +9,8 @@
 
 #include "../../Common/MotionController/GroundMotionController.h"
 
+#include "../Player.h"
+
 PlayerMoveState::PlayerMoveState(
 	float MOVE_SPEED, float DASH_SPEED_RATE, float DASH_STAMINA_MAX,
 
@@ -33,6 +35,9 @@ PlayerMoveState::PlayerMoveState(
 
 void PlayerMoveState::OwnStateConditionUpdate(void)
 {
+	// 最初のカメライベント中は状態遷移しない
+	if (Player::isFirstCameraEvent) { return; }
+
 	// 移動入力があれば、自分の状態に遷移
 	if (InputVec() != 0.0f) { OwnChangeState(); }
 }

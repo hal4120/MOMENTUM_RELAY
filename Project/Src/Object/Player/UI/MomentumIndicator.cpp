@@ -42,8 +42,6 @@ void MomentumIndicator::Load(void)
     arrowTrans.LoadModel("MomentumIndicatorArrow/MomentumIndicatorArrow");
     arrowTrans.pos = Vector3();
     arrowTrans.scale = Vector3(ARROW_SCALE);
-
-    SetDrawType(ACTOR_DRAW_TYPE::Ui);
 }
 
 void MomentumIndicator::Update(void)
@@ -82,7 +80,7 @@ void MomentumIndicator::Draw(void)
 
     // Composite the 200x200 UI in the same coordinates.
     DrawGraph(UI_X, UI_Y, frameHandle, TRUE);
-    DrawGraph(UI_X, UI_Y, tempScreenHandle, TRUE);
+    DrawGraph(UI_X, UI_Y + 15, tempScreenHandle, TRUE);
 }
 
 void MomentumIndicator::Release(void)

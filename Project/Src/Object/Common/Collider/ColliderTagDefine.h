@@ -30,6 +30,8 @@ enum class COLLIDER_TAG
 	IceStage,
 	Water,
 
+	Goal,
+
 	CameraPoint,
 	CameraLine,
 

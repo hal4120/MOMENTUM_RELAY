@@ -4,6 +4,8 @@
 
 #include "../../../Manager/Input/InputManager.h"
 
+#include "../Player.h"
+
 PlayerIdleState::PlayerIdleState(std::function<void(void)> playAnimeIdle):
 	playAnimeIdle(playAnimeIdle)
 {
@@ -11,6 +13,9 @@ PlayerIdleState::PlayerIdleState(std::function<void(void)> playAnimeIdle):
 
 void PlayerIdleState::OwnStateConditionUpdate(void)
 {
+	// 最初のカメライベント中は状態遷移しない
+	if (Player::isFirstCameraEvent) { return; }
+
 	Vector3 vec = Vector3();
 
 	// コントローラーの入力を取得

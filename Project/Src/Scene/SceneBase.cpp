@@ -147,6 +147,10 @@ void SceneBase::Draw(void)
 	ActorsDraw(actors, ACTOR_DRAW_TYPE::Default);
 	SubPostDraw();
 
+	// ‰ÁŽZ‡¬•`‰æ
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 255);
+	ActorsDraw(actors, ACTOR_DRAW_TYPE::Additive);
+
 	// ”¼“§–¾•`‰æ
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 150);
 	ActorsDraw(actors, ACTOR_DRAW_TYPE::Alpha);
@@ -155,7 +159,7 @@ void SceneBase::Draw(void)
 	ActorsColliderDebugDraw(actors);
 
 	// ƒfƒoƒbƒO—pƒ`ƒƒƒ“ƒN•`‰æ
-	if (collision != nullptr && camera != nullptr) { collision->DrawChunkGrid(camera->GetPos()); }
+	//if (collision != nullptr && camera != nullptr) { collision->DrawChunkGrid(camera->GetPos()); }
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 

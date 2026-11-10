@@ -5,6 +5,8 @@
 
 #include "../../../Common/Vector3.h"
 
+#include "../Player.h"
+
 PlayerMomentumInputState::PlayerMomentumInputState(
 	float STEAL_COOL_TIME,
 
@@ -31,6 +33,9 @@ PlayerMomentumInputState::PlayerMomentumInputState(
 
 void PlayerMomentumInputState::OwnStateConditionUpdate(void)
 {
+	// 最初のカメライベント中は状態遷移しない
+	if (Player::isFirstCameraEvent) { return; }
+
 	// 勢いを保持している -> 勢いを「与える」行動
 	if (isSteal()) {
 

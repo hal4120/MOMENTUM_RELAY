@@ -82,10 +82,12 @@
     <ClCompile Include="Src\Scene\Game\GameScene.cpp" />
     <ClCompile Include="Src\Object\Maps\CityCollisionActor.cpp" />
     <ClCompile Include="Src\Object\TestObject\TestBoxObject.cpp" />
-    <ClCompile Include="Src\Object\TestObject\TestGoal.cpp" />
     <ClCompile Include="Src\Object\TestObject\TestObject.cpp" />
     <ClCompile Include="Src\Object\Player\UI\MomentumIndicator.cpp" />
     <ClCompile Include="Src\Object\Common\Shader\GoalFieldShader.cpp" />
+    <ClCompile Include="Src\Object\GoalArea\GoalArea.cpp" />
+    <ClCompile Include="Src\Manager\Camera\CameraEvent\GameStartCameraEvent\GameStartCameraEvent.cpp" />
+    <ClCompile Include="Src\Scene\Common\PostEffect\GoalDirection\GoalDirectionPostEffect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Application\resource.h" />
@@ -149,8 +151,6 @@
     <ClInclude Include="Src\Object\Common\DebugObject\MeshDebugObject.h" />
     <ClInclude Include="Src\Manager\TimeScale\TimeScale.h" />
     <ClInclude Include="Src\Object\Common\ActorBase\ActorDrawTypeDefine.h" />
-    <ClInclude Include="Src\Manager\Shader\ShaderResourceManager.h" />
-    <ClInclude Include="Src\Manager\Shader\ShaderTypeDefine.h" />
     <ClInclude Include="Src\Object\Common\Shader\ShaderBase.h" />
     <ClInclude Include="Src\Object\Common\Shader\TestShader.h" />
     <ClInclude Include="Src\Object\Player\State\PlayerIdleState.h" />
@@ -194,10 +194,14 @@
     <ClInclude Include="Src\Scene\Game\GameScene.h" />
     <ClInclude Include="Src\Object\Maps\CityCollisionActor.h" />
     <ClInclude Include="Src\Object\TestObject\TestBoxObject.h" />
-    <ClInclude Include="Src\Object\TestObject\TestGoal.h" />
     <ClInclude Include="Src\Object\TestObject\TestObject.h" />
     <ClInclude Include="Src\Object\Player\UI\MomentumIndicator.h" />
     <ClInclude Include="Src\Object\Common\Shader\GoalFieldShader.h" />
+    <ClInclude Include="Src\Object\GoalArea\GoalArea.h" />
+    <ClInclude Include="Src\Manager\Shader\ShaderResourceManager.h" />
+    <ClInclude Include="Src\Manager\Shader\ShaderTypeDefine.h" />
+    <ClInclude Include="Src\Manager\Camera\CameraEvent\GameStartCameraEvent\GameStartCameraEvent.h" />
+    <ClInclude Include="Src\Scene\Common\PostEffect\GoalDirection\GoalDirectionPostEffect.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />
@@ -216,6 +220,8 @@
     <None Include="Src\Shader\Shadow\ShadowVSBody.hlsli" />
     <None Include="Src\Shader\Shadow\ShadowVSOutput.hlsli" />
     <None Include="Src\Shader\Default\DefaultVSBody.hlsli" />
+    <None Include="Src\Shader\GoalField\GoalFieldVSBody.hlsli" />
+    <None Include="Src\Shader\Common\GoalFieldVarying.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Src\Shader\Depth\DepthPS.hlsl" />
@@ -281,5 +287,12 @@
     <FxCompile Include="Src\Shader\PostEffect\AimCrosshairPS.hlsl" />
     <FxCompile Include="Src\Shader\PostEffect\TimeFreezePS.hlsl" />
     <FxCompile Include="Src\Shader\GoalField\GoalFieldPS.hlsl" />
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_1Frame.hlsl" />
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_4Frame.hlsl" />
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_8Frame.hlsl" />
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_NMap1Frame.hlsl" />
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_NMap4Frame.hlsl" />
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_NMap8Frame.hlsl" />
+    <FxCompile Include="Src\Shader\PostEffect\GoalDirectionPS.hlsl" />
   </ItemGroup>
 </Project>

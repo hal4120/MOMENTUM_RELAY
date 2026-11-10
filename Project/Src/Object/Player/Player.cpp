@@ -9,6 +9,8 @@
 
 #include "../Common/Collider/CapsuleCollider.h"
 
+#include "../../Manager/Camera/CurrentCamera.h"
+
 #include "../Common/PhysicsBody/PhysicsBody.h"
 
 #include "../Common/MotionController/GroundMotionController.h"
@@ -36,6 +38,8 @@
 #include "State/PlayerMomentumQuickState.h"
 #include "State/PlayerMomentumAimState.h"
 #include "State/PlayerMomentumState.h"
+
+bool Player::isFirstCameraEvent = true;
 
 Player::Player() :
 	CharacterBase(),
@@ -300,6 +304,8 @@ void Player::Load(void)
 	RegisterStateTransition(STATE::Jump, STATE::MomentumInput);
 
 #pragma endregion
+
+	trans.pos = Vector3(-100, 83, 680);
 }
 
 void Player::DefaultCreateShader(void)
@@ -310,7 +316,8 @@ void Player::DefaultCreateShader(void)
 
 void Player::OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result)
 {
-	if (other.GetTag() == COLLIDER_TAG::Stage) {
+	if (other.GetTag() == COLLIDER_TAG::Goal) {
+		SceneManager::GetIns().ChangeSceneFade(SCENE_ID::GameClear);
 	}
 }
 
@@ -325,4 +332,8 @@ void Player::SubUpdate(void)
 {
 	prevIsOnIce = nowIsOnIce;
 	nowIsOnIce = false;
+
+	if (isFirstCameraEvent) {
+		if (!CurrentCamera::Get().IsEvent()) { isFirstCameraEvent = false; }
+	}
 }

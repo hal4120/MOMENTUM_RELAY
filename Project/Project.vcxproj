@@ -153,6 +153,7 @@
     <ClCompile Include="Src\Common\Vector3.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Manager\Camera\CameraBase.cpp" />
+    <ClCompile Include="Src\Manager\Camera\CameraEvent\GameStartCameraEvent\GameStartCameraEvent.cpp" />
     <ClCompile Include="Src\Manager\Camera\CameraEvent\LookAtCameraEvent\LookAtCameraEvent.cpp" />
     <ClCompile Include="Src\Manager\Camera\CameraEvent\MomentumStealAimCameraEvent\MomentumStealAimCameraEvent.cpp" />
     <ClCompile Include="Src\Manager\Camera\CameraEvent\MoveCameraEvent\MoveCameraEvent.cpp" />
@@ -195,6 +196,7 @@
     <ClCompile Include="Src\Object\Common\Shader\WaterShader.cpp" />
     <ClCompile Include="Src\Object\Common\SkyBox\SkyBox.cpp" />
     <ClCompile Include="Src\Object\Common\Transform\Transform.cpp" />
+    <ClCompile Include="Src\Object\GoalArea\GoalArea.cpp" />
     <ClCompile Include="Src\Object\Maps\CityCollisionActor.cpp" />
     <ClCompile Include="Src\Object\Maps\CityMap.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
@@ -211,12 +213,12 @@
     <ClCompile Include="Src\Object\Player\Weapon\PlayerCollOperator.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.cpp" />
     <ClCompile Include="Src\Object\TestObject\TestBoxObject.cpp" />
-    <ClCompile Include="Src\Object\TestObject\TestGoal.cpp" />
     <ClCompile Include="Src\Object\TestObject\TestObject.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\AimCrosshairPostEffect\AimCrosshairPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\DamageFlashPostEffect\DamageFlashPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\FocusLinesPostEffect\FocusLinesPostEffect.cpp" />
+    <ClCompile Include="Src\Scene\Common\PostEffect\GoalDirection\GoalDirectionPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\GrayScalePostEffect\GrayScalePostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\MenacingPostEffect\MenacingPostEffect.cpp" />
     <ClCompile Include="Src\Scene\Common\PostEffect\PostEffectBase.cpp" />
@@ -240,6 +242,7 @@
     <ClInclude Include="Src\Common\Vector2I.h" />
     <ClInclude Include="Src\Common\Vector3.h" />
     <ClInclude Include="Src\Manager\Camera\CameraBase.h" />
+    <ClInclude Include="Src\Manager\Camera\CameraEvent\GameStartCameraEvent\GameStartCameraEvent.h" />
     <ClInclude Include="Src\Manager\Camera\CameraEvent\LookAtCameraEvent\LookAtCameraEvent.h" />
     <ClInclude Include="Src\Manager\Camera\CameraEvent\MomentumStealAimCameraEvent\MomentumStealAimCameraEvent.h" />
     <ClInclude Include="Src\Manager\Camera\CameraEvent\StartCameraEvent\StartCameraEvent.h" />
@@ -301,6 +304,7 @@
     <ClInclude Include="Src\Object\Common\SkyBox\SkyBox.h" />
     <ClInclude Include="Src\Object\Common\Transform\Transform.h" />
     <ClInclude Include="Src\Object\Common\DebugObject\MeshDebugObject.h" />
+    <ClInclude Include="Src\Object\GoalArea\GoalArea.h" />
     <ClInclude Include="Src\Object\Maps\CityCollisionActor.h" />
     <ClInclude Include="Src\Object\Maps\CityMap.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />
@@ -317,13 +321,13 @@
     <ClInclude Include="Src\Object\Player\Weapon\PlayerCollOperator.h" />
     <ClInclude Include="Src\Object\Player\Weapon\PlayerMomentumQuickStealFind.h" />
     <ClInclude Include="Src\Object\TestObject\TestBoxObject.h" />
-    <ClInclude Include="Src\Object\TestObject\TestGoal.h" />
     <ClInclude Include="Src\Object\TestObject\TestObject.h" />
     <ClInclude Include="Src\pch.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\AimCrosshairPostEffect\AimCrosshairPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\CRTPostEffect\CRTPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\DamageFlashPostEffect\DamageFlashPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\FocusLinesPostEffect\FocusLinesPostEffect.h" />
+    <ClInclude Include="Src\Scene\Common\PostEffect\GoalDirection\GoalDirectionPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\GrayScalePostEffect\GrayScalePostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\MenacingPostEffect\MenacingPostEffect.h" />
     <ClInclude Include="Src\Scene\Common\PostEffect\PostEffectBase.h" />
@@ -345,6 +349,7 @@
     <ClInclude Include="Src\Utility\Utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Src\Shader\Common\GoalFieldVarying.hlsli" />
     <None Include="Src\Shader\Common\Pixel\ModelFog.hlsli" />
     <None Include="Src\Shader\Common\Pixel\ModelLighting.hlsli" />
     <None Include="Src\Shader\Common\Pixel\ModelPixelCommon.hlsli" />
@@ -357,6 +362,7 @@
     <None Include="Src\Shader\Common\Vertex\VertexShader3DHeader.hlsli" />
     <None Include="Src\Shader\Depth\DepthVSBody.hlsli" />
     <None Include="Src\Shader\Default\DefaultVSBody.hlsli" />
+    <None Include="Src\Shader\GoalField\GoalFieldVSBody.hlsli" />
     <None Include="Src\Shader\PostEffect\PostEffectHeader.hlsli" />
     <None Include="Src\Shader\RimLight\RimLightVSBody.hlsli" />
     <None Include="Src\Shader\Shadow\ShadowVSBody.hlsli" />
@@ -423,6 +429,30 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_1Frame.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_4Frame.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_8Frame.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_NMap1Frame.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_NMap4Frame.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\GoalField\GoalFieldVS_NMap8Frame.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Src\Shader\ModelDamageFlash\ModelDamageFlashPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
@@ -488,6 +518,10 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Src\Shader\PostEffect\FocusLinesPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Src\Shader\PostEffect\GoalDirectionPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>

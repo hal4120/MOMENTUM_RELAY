@@ -136,7 +136,7 @@ protected:
 	// モデル制御情報構造体
 	Transform trans;
 
-// 接地判定(派生先で参照用)
+	// 接地判定(派生先で参照用)
 	const bool& isGround = isGroundMaster;
 
 #pragma region 初期設定
@@ -243,7 +243,7 @@ protected:
 	// 描画タイプの設定
 	void SetDrawType(const ACTOR_DRAW_TYPE& type) { drawType = type; }
 
-// 派生先追加初期化
+	// 派生先追加初期化
 	virtual void SubInit(void) {}
 	// 派生先追加更新
 	virtual void SubUpdate(void) {}

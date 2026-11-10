@@ -15,12 +15,13 @@ public:
 	void OnCollision(COLLIDER_TAG ownTag, const ColliderBase& other, const CollisionResult& result)override;
 
 	char OnIcePostEffectSwitch(void) {
-
-
 		if (prevIsOnIce == nowIsOnIce) { return -1; }
 
 		return (char)nowIsOnIce;
 	}
+
+	// 最初のカメライベントの最中は操作を受け付けないようにするフラグ
+	static bool isFirstCameraEvent;
 
 private:
 
@@ -152,8 +153,7 @@ private:
 		// 待機状態に遷移
 		ChangeState(STATE::Idle);
 
-
-		trans.pos = Vector3(0, 1000, -500);
+		isFirstCameraEvent = true;
 	}
 
 	void SubUpdate(void)override;

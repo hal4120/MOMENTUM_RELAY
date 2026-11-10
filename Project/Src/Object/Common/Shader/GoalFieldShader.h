@@ -14,12 +14,20 @@ public:
     void SetSpeed(float value) { speed = value; }
     void SetBrightness(float value) { brightness = value; }
     void SetOpacity(float value) { opacity = value; }
+    void SetWaveHeight(float value) { waveHeight = value; }
+    void SetWaveFrequency(float value) { waveFrequency = value; }
+    void SetFieldSize(float radiusValue, float heightValue) { radius = radiusValue; height = heightValue; }
 private:
+
     SHADER_VERTEX_TYPE vertexType;
     int constantBufferHandle;
     float elapsed;
     float speed;
     float brightness;
     float opacity;
+    float waveHeight;
+    float waveFrequency;
+    float radius;
+    float height;
     static constexpr int BUFFER_REGISTER = 4;
 };

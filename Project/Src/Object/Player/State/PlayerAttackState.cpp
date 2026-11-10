@@ -6,6 +6,8 @@
 
 #include "../Weapon/PlayerCollOperator.h"
 
+#include "../Player.h"
+
 PlayerAttackState::PlayerAttackState(
 	float COLL_START_TIME,
 	float COLL_END_TIME,
@@ -33,6 +35,9 @@ PlayerAttackState::PlayerAttackState(
 
 void PlayerAttackState::OwnStateConditionUpdate(void)
 {
+	// 最初のカメライベント中は状態遷移しない
+	if (Player::isFirstCameraEvent) { return; }
+
 	if (Input::GetIns().GetInfo(KEY_TYPE::PlayerKickDownAttack).down) {
 		OwnChangeState();
 	}

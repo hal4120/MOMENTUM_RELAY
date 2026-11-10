@@ -16,10 +16,14 @@ public:
     void Release(void) override;
 
 private:
+
+    // デフォルト描画タイプ設定
+    ACTOR_DRAW_TYPE DefaultDrawType(void)const override { return ACTOR_DRAW_TYPE::Ui; }
+
     const Vector2I TEMP_SCREEN_SIZE = Vector2I(200, 200);
     static constexpr int UI_X = 10;
     static constexpr int UI_Y = 600;
-    static constexpr float ARROW_SCALE = 0.75f; // Adjust for the actual model size
+    static constexpr float ARROW_SCALE = 0.65f; // Adjust for the actual model size
     static constexpr float UI_CAMERA_DISTANCE = 200.0f;
 
     int tempScreenHandle;
