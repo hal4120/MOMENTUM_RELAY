@@ -51,10 +51,6 @@ void Application::Init(void)
 	SetUseDirect3DVersion(DX_DIRECT3D_11);
 	if (DxLib_Init() == -1) { isInitFail = true; return; }
 
-	if (Effekseer_Init(EFFECT_MAX_NUM) == -1) { isInitFail = true; return; }
-	SetChangeScreenModeGraphicsSystemResetFlag(false);
-	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
-
 	// 描画先画面を裏にする
 	SetDrawScreen(DX_SCREEN_BACK);
 
@@ -149,8 +145,6 @@ void Application::Release(void)
 	// フレームレート解放
 	delete fps;
 
-	// エフェクト終了
-	Effkseer_End();
 	// DxLib終了
 	if (DxLib_End() == -1) { isReleaseFail = true; }
 }

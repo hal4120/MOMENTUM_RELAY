@@ -133,7 +133,6 @@ void SceneBase::Draw(void)
 
 	// ƒJƒƒ‰î•ñ‚ðDxLib‚Ö”½‰f
 	if (camera != nullptr) { camera->Apply(); }
-	Effekseer_Sync3DSetting();
 
 #pragma endregion
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 #include "../../../Common/Vector3.h"
 #include "../../../Common/Quaternion.h"
 

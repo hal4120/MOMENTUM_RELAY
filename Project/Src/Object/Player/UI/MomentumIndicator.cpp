@@ -29,10 +29,10 @@ MomentumIndicator::MomentumIndicator(const Vector3& stealVelocity) :
     tempScreenHandle(-1),
     frameHandle(-1),
     arrowTrans(),
-    uiCamera(FixedPointCamera::LookAt,
-        Vector3(0.0f, 0.0f, -UI_CAMERA_DISTANCE), Vector3()),
+    uiCamera(FixedPointCamera::LookAt, Vector3(0.0f, 0.0f, -UI_CAMERA_DISTANCE), Vector3()),
     stealVelocity(stealVelocity)
 {
+    SetDrawType(DefaultDrawType());
 }
 
 void MomentumIndicator::Load(void)
