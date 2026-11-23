@@ -1,5 +1,7 @@
 #include "GameScene.h"
 
+#include <stdexcept>
+
 #include "../../Utility/Utility.h"
 
 #include "../../Application/Application.h"
@@ -39,6 +41,7 @@
 #include "../../Object/CameraCollOperator/CameraLineCollOperator.h"
 
 #include "../../Object/TestObject/TestObject.h"
+#include "../../Object/Pendulum/Pendulum.h"
 #include "../../Object/TestObject/TestBoxObject.h"
 
 #include "../../Object/GoalArea/GoalArea.h"
@@ -65,15 +68,19 @@ void GameScene::SubPostLoad(void)
 	ShaderResourceManager::GetIns().CreateVertexShader(VERTEX_SHADER_TYPE::RimLight1Frame);
 
 	map = new CityMap();
-	map->Load("Data/Maps/City/CityMap.json", "Data/Maps/City");
+	if (!map->Load("Data/Maps/TutorialStage01/CityMap.json", "Data/Maps/TutorialStage01")) {
+		throw std::runtime_error("Failed to load TutorialStage01 map. Export it from Unity first.");
+	}
 	AddActor(new CityCollisionActor(*map));
 
-	AddActor(new GoalArea);
+	GoalArea* goal = new GoalArea();
+	AddActor(goal);
+	goal->SetPos(Vector3(-864.0f, 817.5f, 12112.0f));
 
 #pragma region テストオブジェクト
 
-	for (int i = 0; i < 100; i++) {
-		AddActor(new TestObject(Vector3(-500, 300, -500), Vector3::Yonly(50.0f)));
+	for (const PendulumDefinition& definition : map->GetPendulums()) {
+		AddActor(new Pendulum(definition));
 	}
 
 #pragma endregion
@@ -101,6 +108,11 @@ void GameScene::SubPostInit(void)
 
 void GameScene::SubPostUpdate(void)
 {
+    Player* player = ActorSerch<Player>(actors);
+    if (player != nullptr && player->GetTrans().pos.y < -1000.0f) {
+        player->SetPos(Vector3(-100.0f, 83.0f, 680.0f));
+        player->GetPhysicsBody()->SetVelocity(Vector3(0.0f));
+    }
 	// ゲーム終了処理
 	if (Input::GetIns().GetInfo(KEY_TYPE::End).down) {
 		SceneManager::GetIns().ChangeSceneFade(SCENE_ID::Title);

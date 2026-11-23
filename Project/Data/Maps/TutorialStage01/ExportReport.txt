@@ -1,0 +1,12 @@
+DxLib X export
+Scene: TutorialStage01
+Instances: 51
+Mesh colliders: 50
+Unique X models: 12
+Skipped: 0
+Pendulums: 1
+
+Supported: MeshFilter/MeshRenderer, triangles, UV0, normals, material base color and main texture.
+Not supported: Unity shaders, metallic/roughness, normal maps, transparency, skinned meshes, terrain, complex material graphs.
+Textures are converted to PNG beside each X file. Check output in DxLib Model Viewer before importing all.
+Warnings:

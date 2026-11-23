@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <cstdint>
 #include <vector>
+#include <iterator>
 #include <chrono>
 #include "../../Object/Common/Collider/ColliderBase.h"
 #include "../../Object/Common/ActorBase/ActorBase.h"
@@ -83,7 +84,7 @@ namespace {
         int count = 0;
         unsigned long long frame = 0;
     };
-    std::unordered_map<PairKey, CachedPair, PairHash> contactCache;
+    std::unordered_map<PairKey, std::vector<CachedPair>, PairHash> contactCache;
     unsigned long long currentFrame = 0;
     std::vector<ContactManifold> pendingContacts;
     ContactSolver::FrameStats lastFrameStats;
@@ -270,7 +271,10 @@ void ContactSolver::EndFrame()
 {
     // 接触しなくなった組は直ちに破棄。解放済みColliderのアドレス再利用も防ぐ。
     for (auto it = contactCache.begin(); it != contactCache.end();) {
-        if (it->second.frame != currentFrame) it = contactCache.erase(it);
+        auto& surfaces = it->second;
+        surfaces.erase(std::remove_if(surfaces.begin(), surfaces.end(),
+            [](const CachedPair& surface) { return surface.frame != currentFrame; }), surfaces.end());
+        if (surfaces.empty()) it = contactCache.erase(it);
         else ++it;
     }
 }
@@ -431,15 +435,30 @@ void SolveOne(const ContactManifold& contact, bool warmStart, bool applyRolling)
     const float staticB = b.body ? b.body->GetStaticFriction() : 0.65f;
     const float dynamicA = a.body ? a.body->GetDynamicFriction() : 0.5f;
     const float dynamicB = b.body ? b.body->GetDynamicFriction() : 0.5f;
-    const float staticFriction = std::sqrt((std::max)(0.0f, staticA * staticB));
-    const float dynamicFriction = std::sqrt((std::max)(0.0f, dynamicA * dynamicB));
+    // Character movement must not turn pressure against a wall into vertical support.
+    // Floor-facing contacts keep their material friction, including walkable slopes.
+    const bool characterWallContact = (a.character && n.y <= 0.7f) ||
+        (b.character && -n.y <= 0.7f);
+    const float staticFriction = characterWallContact ? 0.0f :
+        std::sqrt((std::max)(0.0f, staticA * staticB));
+    const float dynamicFriction = characterWallContact ? 0.0f :
+        std::sqrt((std::max)(0.0f, dynamicA * dynamicB));
     const float restA = a.invMass > 0.0f ? a.body->GetRestitution() : 0.0f;
     const float restB = b.invMass > 0.0f ? b.body->GetRestitution() : 0.0f;
     const float restitution = (std::max)(restA, restB);
     std::array<Impulses, 4> accumulated{};
     const int count = (std::min)(contact.count, 4);
     const PairKey key{ contact.a, contact.b };
-    CachedPair& cache = contactCache[key];
+    // A floor and a wall of the same mesh need independent accumulated impulses.
+    auto& surfaces = contactCache[key];
+    auto surface = std::find_if(surfaces.begin(), surfaces.end(),
+        [&](const CachedPair& candidate) { return candidate.normal.Dot(n) >= 0.98f; });
+    if (surface == surfaces.end()) {
+        surfaces.emplace_back();
+        surface = std::prev(surfaces.end());
+        surface->normal = n;
+    }
+    CachedPair& cache = *surface;
     // 反発は新しい衝突でのみ発生させる。
     // 継続接触中に位置補正・重力で生じた微小な侵入速度を
     // 新しい衝突として扱うと、不自然な再反発が起こる。
@@ -475,6 +494,7 @@ void SolveOne(const ContactManifold& contact, bool warmStart, bool applyRolling)
             if (best >= 0) {
                 matched[best] = true;
                 accumulated[i] = cache.points[best].impulses;
+                if (characterWallContact) { accumulated[i].tangentImpulse = Vector3(0.0f); }
                 // 古い接触インパルスを適用し、次の反復で差分のみを求める。
                 a.Apply(n * accumulated[i].normal + accumulated[i].tangentImpulse, ra);
                 b.Apply(-n * accumulated[i].normal - accumulated[i].tangentImpulse, rb);

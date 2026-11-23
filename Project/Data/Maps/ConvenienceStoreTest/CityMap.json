@@ -1,0 +1,212 @@
+{
+    "version": 1,
+    "scene": "ConvenienceStoreTest",
+    "coordinateSystem": "Unity world; left-handed; Y up; meters",
+    "objects": [
+        {
+            "name": "Visual",
+            "hierarchyPath": "ConvenienceStore_01/Visual",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "geometry_0",
+            "position": [
+                109.00328826904297,
+                4.76837158203125e-7,
+                83.97698974609375
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                800.0,
+                799.9998779296875,
+                799.9998779296875
+            ]
+        },
+        {
+            "name": "Visual",
+            "hierarchyPath": "ConvenienceStore_02/Visual",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "geometry_0",
+            "position": [
+                140.9967041015625,
+                4.76837158203125e-7,
+                84.02301025390625
+            ],
+            "rotation": [
+                3.0908619663705397e-8,
+                0.7071067094802856,
+                0.7071068286895752,
+                -3.0908616110991718e-8
+            ],
+            "scale": [
+                800.0,
+                799.9998779296875,
+                799.9998779296875
+            ]
+        },
+        {
+            "name": "Visual",
+            "hierarchyPath": "ConvenienceStore_03/Visual",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "geometry_0",
+            "position": [
+                108.97698974609375,
+                4.76837158203125e-7,
+                103.99671173095703
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                800.0001220703125,
+                800.0000610351563,
+                799.9999389648438
+            ]
+        },
+        {
+            "name": "Visual",
+            "hierarchyPath": "ConvenienceStore_04/Visual",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "geometry_0",
+            "position": [
+                141.02301025390626,
+                4.76837158203125e-7,
+                104.00328826904297
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                -0.4999999701976776,
+                -0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                800.0001220703125,
+                800.0000610351563,
+                799.9999389648438
+            ]
+        },
+        {
+            "name": "Visual",
+            "hierarchyPath": "ConvenienceStore_05/Visual",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "geometry_0",
+            "position": [
+                108.99671173095703,
+                4.76837158203125e-7,
+                124.02301025390625
+            ],
+            "rotation": [
+                3.0908619663705397e-8,
+                0.7071067094802856,
+                0.7071068286895752,
+                -3.0908616110991718e-8
+            ],
+            "scale": [
+                800.0,
+                799.9998779296875,
+                799.9998779296875
+            ]
+        },
+        {
+            "name": "Visual",
+            "hierarchyPath": "ConvenienceStore_06/Visual",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "geometry_0",
+            "position": [
+                141.0032958984375,
+                4.76837158203125e-7,
+                123.97698974609375
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                800.0,
+                799.9998779296875,
+                799.9998779296875
+            ]
+        },
+        {
+            "name": "Ground",
+            "hierarchyPath": "Ground",
+            "modelId": "mesh_0001.x",
+            "modelFile": "Models/mesh_0001.x",
+            "meshName": "TestGround",
+            "position": [
+                125.0,
+                -0.25,
+                100.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                100.0,
+                0.5,
+                100.0
+            ]
+        }
+    ],
+    "colliders": [
+        {
+            "name": "Collision",
+            "hierarchyPath": "ConvenienceStore_01/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0000.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "ConvenienceStore_02/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0001.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "ConvenienceStore_03/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0002.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "ConvenienceStore_04/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0003.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "ConvenienceStore_05/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0004.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "ConvenienceStore_06/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0005.txt"
+        },
+        {
+            "name": "Ground",
+            "hierarchyPath": "Ground",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0006.txt"
+        }
+    ]
+}

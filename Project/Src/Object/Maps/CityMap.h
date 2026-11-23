@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <vector>
 #include "../../Object/Common/Transform/Transform.h"
+#include "../Pendulum/PendulumDefinition.h"
 
 // Static map renderer. Model handles are shared and owned by this class.
 class CityMap {
@@ -14,6 +15,8 @@ public:
     void Release();
     size_t GetObjectCount() const { return objects.size(); }
     size_t GetModelCount() const { return models.size(); }
+
+    const std::vector<PendulumDefinition>& GetPendulums() const { return pendulums; }
 
     struct BoxCollision {
         Vector3 center;
@@ -37,4 +40,5 @@ private:
     std::vector<Instance> objects;
     std::vector<BoxCollision> boxCollisions;
     std::vector<MeshCollision> meshCollisions;
+    std::vector<PendulumDefinition> pendulums;
 };

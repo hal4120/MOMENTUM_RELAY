@@ -36,4 +36,5 @@ enum class COLLIDER_TAG
 	CameraLine,
 
 	DebugObject,
+	Pendulum,
 };

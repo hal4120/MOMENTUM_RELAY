@@ -87,6 +87,8 @@ namespace
 bool UsesSingleContactManifold(COLLIDER_SHAPE a, COLLIDER_SHAPE b)
 {
     if (a == COLLIDER_SHAPE::Box && b == COLLIDER_SHAPE::Box) { return false; }
+    if ((a == COLLIDER_SHAPE::Capsule && b == COLLIDER_SHAPE::Mesh) ||
+        (b == COLLIDER_SHAPE::Capsule && a == COLLIDER_SHAPE::Mesh)) { return false; }
     if (a == COLLIDER_SHAPE::Line || b == COLLIDER_SHAPE::Line) { return false; }
     if (a == COLLIDER_SHAPE::XzCircle || b == COLLIDER_SHAPE::XzCircle) { return false; }
     return true;
@@ -2815,52 +2817,73 @@ bool CollisionManager::CapsuleToBox(CapsuleCollider* capsule, BoxCollider* box, 
 // カプセル×メッシュ
 bool CollisionManager::CapsuleToMesh(CapsuleCollider* capsule, MeshCollider* mesh, CollisionResult& result)
 {
-	mesh->QueryTriangles(capsule->GetAABB(), meshQueryBufferA);
+    mesh->QueryTriangles(capsule->GetAABB(), meshQueryBufferA);
+    const Vector3 capsuleStart = capsule->GetStartPos();
+    const Vector3 capsuleEnd = capsule->GetEndPos();
+    const float radius = capsule->GetRadius();
+    const float radiusSq = radius * radius;
 
-	const Vector3 capsuleStart = capsule->GetStartPos();
+    struct MeshContact {
+        CollisionResult result;
+        Vector3 faceNormal;
+        bool onFace;
+    };
+    std::vector<MeshContact> contacts;
+    for (unsigned int triangleIndex : meshQueryBufferA) {
+        Vector3 p0, p1, p2, triangleNormal;
+        mesh->GetWorldTriangle(triangleIndex, p0, p1, p2, triangleNormal);
+        if (triangleNormal.LengthSq() <= COLLISION_EPSILON) { continue; }
 
-	const Vector3 capsuleEnd = capsule->GetEndPos();
+        Vector3 capsulePoint, trianglePoint;
+        const float distanceSq = SegmentToTriangleDistanceSq(
+            capsuleStart, capsuleEnd, p0, p1, p2, capsulePoint, trianglePoint);
+        if (distanceSq > radiusSq) { continue; }
 
-	const float radius = capsule->GetRadius();
+        const Vector3 faceNormal = triangleNormal.Normalized();
+        const Vector3 separation = capsulePoint - trianglePoint;
+        // Mesh surfaces are one-sided, including contacts near an edge.
+        if (separation.Dot(faceNormal) < -COLLISION_EPSILON) { continue; }
 
-	const float radiusSq = radius * radius;
+        const float distance = std::sqrt((std::max)(distanceSq, 0.0f));
+        const Vector3 closestNormal = distance > COLLISION_EPSILON ? separation / distance : faceNormal;
+        const bool onFace = closestNormal.Dot(faceNormal) > 0.9999f;
+        // Use the exact plane normal on face interiors to avoid numerical lift along walls.
+        const Vector3 normal = onFace ? faceNormal : closestNormal;
+        CollisionResult contact;
+        contact.point = trianglePoint;
+        SetContactNormalAndDepth(contact, normal, radius - distance);
+        contacts.push_back({ contact, faceNormal, onFace });
+    }
 
-	bool isHit = false;
-	float maximumPenetration = -FLT_MAX;
-
-	for (unsigned int triangleIndex : meshQueryBufferA) {
-		Vector3 p0, p1, p2, triangleNormal;
-
-		mesh->GetWorldTriangle(triangleIndex, p0, p1, p2, triangleNormal);
-
-		Vector3 capsulePoint;
-		Vector3 trianglePoint;
-
-		const float distanceSq = SegmentToTriangleDistanceSq(capsuleStart, capsuleEnd, p0, p1, p2, capsulePoint, trianglePoint);
-
-		if (distanceSq > radiusSq) { continue; }
-
-		const float distance = std::sqrt((std::max)(distanceSq, 0.0f));
-
-		// ポリゴン法線方向のめり込み量を求める（面の表側を衝突可能側とする）
-		if (triangleNormal.LengthSq() <= COLLISION_EPSILON) { continue; }
-		const Vector3 normal = triangleNormal.Normalized();
-		const float signedDistance = (capsulePoint - p0).Dot(normal);
-		const float penetration = radius - signedDistance;
-		if (penetration <= 0.0f) { continue; }
-
-		if (penetration <= maximumPenetration) { continue; }
-
-		maximumPenetration = penetration;
-		result.point = trianglePoint;
-		SetContactNormalAndDepth(result, normal, penetration);
-		isHit = true;
-	}
-
-
-	return isHit;
+    bool isHit = false;
+    const bool respond = NeedContactResponse(capsule, mesh);
+    for (const MeshContact& contact : contacts) {
+        if (!contact.onFace) {
+            // A triangle's internal edge must not add a sideways constraint
+            // when its coplanar neighbour already supplies the surface contact.
+            const bool coveredByFace = std::any_of(contacts.begin(), contacts.end(),
+                [&](const MeshContact& other) {
+                    return other.onFace && other.faceNormal.Dot(contact.faceNormal) > 0.9999f &&
+                        std::abs((other.result.point - contact.result.point).Dot(contact.faceNormal)) < 0.01f;
+                });
+            if (coveredByFace) { continue; }
+        }
+        if (!isHit || contact.result.penetration > result.penetration) {
+            result = contact.result;
+        }
+        isHit = true;
+        if (respond) {
+            ContactManifold manifold;
+            manifold.a = capsule;
+            manifold.b = mesh;
+            manifold.normal = contact.result.normal;
+            manifold.penetration = contact.result.penetration;
+            manifold.AddPoint(contact.result.point);
+            ContactSolver::AddContact(manifold);
+        }
+    }
+    return isHit;
 }
-
 // カプセル×XZ平面上の円形
 bool CollisionManager::CapsuleToXZCircle(CapsuleCollider* capsule, XZCircleCollider* xzcircle, CollisionResult& result)
 {

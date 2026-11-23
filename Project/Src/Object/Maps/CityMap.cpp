@@ -4,6 +4,8 @@
 
 #include <array>
 #include <cctype>
+#include <cmath>
+#include <algorithm>
 #include <cstdlib>
 #include <fstream>
 #include <iterator>
@@ -66,6 +68,44 @@ namespace {
         return p < s.size() && s[p] == ']';
     }
 
+    bool ReadNumber(const std::string& source, const std::string& key, float& value) {
+        size_t position;
+        if (!FindValue(source, key, position)) return false;
+        const char* begin = source.c_str() + position;
+        char* end = nullptr;
+        value = std::strtof(begin, &end);
+        return end != begin && std::isfinite(value);
+    }
+
+    bool ReadObjectArray(const std::string& source, const std::string& key,
+        std::vector<std::string>& entries) {
+        size_t position;
+        if (!FindValue(source, key, position)) return true;
+        if (source[position++] != '[') return false;
+        while (position < source.size()) {
+            position = SkipWs(source, position);
+            if (position >= source.size()) return false;
+            if (source[position] == ']') return true;
+            if (source[position] == ',') { ++position; continue; }
+            if (source[position] != '{') return false;
+            const size_t start = position;
+            bool quoted = false, escaped = false;
+            int depth = 0;
+            do {
+                const char c = source[position++];
+                if (quoted) {
+                    if (escaped) escaped = false;
+                    else if (c == '\\') escaped = true;
+                    else if (c == '"') quoted = false;
+                } else if (c == '"') quoted = true;
+                else if (c == '{') ++depth;
+                else if (c == '}') --depth;
+            } while (position < source.size() && depth > 0);
+            if (depth != 0) return false;
+            entries.push_back(source.substr(start, position - start));
+        }
+        return false;
+    }
     std::string Directory(const std::string& path) {
         const auto pos = path.find_last_of("/\\");
         return pos == std::string::npos ? std::string() : path.substr(0, pos + 1);
@@ -245,6 +285,41 @@ bool CityMap::Load(const std::string& jsonPath, const std::string& assetRoot) {
         }
     }
     //printfDx("CityMap: %d box colliders, %d mesh colliders\n", static_cast<int>(boxCollisions.size()), static_cast<int>(meshCollisions.size()));
+    std::vector<std::string> pendulumEntries;
+    if (!ReadObjectArray(json, "pendulums", pendulumEntries)) { Release(); return false; }
+    for (const std::string& entry : pendulumEntries) {
+        PendulumDefinition definition;
+        std::string path;
+        std::array<float, 3> pivot{}, scale{};
+        std::array<float, 4> rotation{};
+        if (!ReadString(entry, "modelFile", path) || path.empty() ||
+            path.find("..") != std::string::npos || path.find(':') != std::string::npos ||
+            path.front() == '/' || path.front() == '\\' ||
+            !ReadNumbers(entry, "pivot", pivot) || !ReadNumbers(entry, "rotation", rotation) ||
+            !ReadNumbers(entry, "scale", scale) || !ReadNumber(entry, "length", definition.length) ||
+            !ReadNumber(entry, "ballRadius", definition.ballRadius) ||
+            !ReadNumber(entry, "initialAngle", definition.initialAngle) ||
+            definition.length <= definition.ballRadius || definition.ballRadius <= 0.0f ||
+            std::abs(definition.initialAngle) > 60.0f ||
+            !std::all_of(pivot.begin(), pivot.end(), [](float v) { return std::isfinite(v); }) ||
+            !std::all_of(rotation.begin(), rotation.end(), [](float v) { return std::isfinite(v); }) ||
+            !std::all_of(scale.begin(), scale.end(), [](float v) { return std::isfinite(v) && v > 0; })) {
+            ++errors; continue;
+        }
+        definition.modelPath = root;
+        if (!definition.modelPath.empty() && definition.modelPath.back() != '/' &&
+            definition.modelPath.back() != '\\') definition.modelPath += '/';
+        definition.modelPath += path;
+        std::ifstream modelFile(definition.modelPath, std::ios::binary);
+        if (!modelFile) { ++errors; continue; }
+        definition.pivot = Vector3((pivot[0] - 125.0f) * 150.0f - 264.0f,
+            pivot[1] * 150.0f, (pivot[2] - 100.0f) * 150.0f + 712.0f);
+        definition.rotation = Quaternion(rotation[0], rotation[1], rotation[2], rotation[3]).Normalized();
+        definition.scale = Vector3(scale[0], scale[1], scale[2]) * 150.0f;
+        definition.length *= 150.0f;
+        definition.ballRadius *= 150.0f;
+        pendulums.push_back(std::move(definition));
+    }
     return !objects.empty() && errors == 0;
 }
 
@@ -289,6 +364,7 @@ void CityMap::Draw() const
 }
 
 void CityMap::Release() {
+    pendulums.clear();
     boxCollisions.clear();
     meshCollisions.clear();
     objects.clear();

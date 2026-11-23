@@ -1,0 +1,1507 @@
+{
+    "version": 1,
+    "scene": "TutorialStage01",
+    "coordinateSystem": "Unity world; left-handed; Y up; meters",
+    "objects": [
+        {
+            "name": "Floor",
+            "hierarchyPath": "01_StartPlaza/Floor/Visual/Floor",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "Floor",
+            "position": [
+                117.0,
+                -0.5999995470046997,
+                92.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99983215332031,
+                100.0
+            ]
+        },
+        {
+            "name": "Floor",
+            "hierarchyPath": "01_StartPlaza/Floor/Visual/Floor",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "Floor",
+            "position": [
+                117.0,
+                -0.5999995470046997,
+                100.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99983215332031,
+                100.0
+            ]
+        },
+        {
+            "name": "Floor",
+            "hierarchyPath": "01_StartPlaza/Floor/Visual/Floor",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "Floor",
+            "position": [
+                117.0,
+                -0.5999995470046997,
+                108.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99983215332031,
+                100.0
+            ]
+        },
+        {
+            "name": "Floor",
+            "hierarchyPath": "01_StartPlaza/Floor/Visual/Floor",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "Floor",
+            "position": [
+                125.0,
+                -0.5999995470046997,
+                92.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99983215332031,
+                100.0
+            ]
+        },
+        {
+            "name": "Mosaic",
+            "hierarchyPath": "01_StartPlaza/Mosaic/Visual/Mosaic",
+            "modelId": "mesh_0001.x",
+            "modelFile": "Models/mesh_0001.x",
+            "meshName": "Mosaic",
+            "position": [
+                125.0,
+                -0.5999995470046997,
+                100.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.00001525878906,
+                99.99983215332031,
+                100.0
+            ]
+        },
+        {
+            "name": "Floor",
+            "hierarchyPath": "01_StartPlaza/Floor/Visual/Floor",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "Floor",
+            "position": [
+                125.0,
+                -0.5999995470046997,
+                108.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99983215332031,
+                100.0
+            ]
+        },
+        {
+            "name": "Floor",
+            "hierarchyPath": "01_StartPlaza/Floor/Visual/Floor",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "Floor",
+            "position": [
+                133.0,
+                -0.5999995470046997,
+                92.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99983215332031,
+                100.0
+            ]
+        },
+        {
+            "name": "Floor",
+            "hierarchyPath": "01_StartPlaza/Floor/Visual/Floor",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "Floor",
+            "position": [
+                133.0,
+                -0.5999995470046997,
+                100.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99983215332031,
+                100.0
+            ]
+        },
+        {
+            "name": "Floor",
+            "hierarchyPath": "01_StartPlaza/Floor/Visual/Floor",
+            "modelId": "mesh_0000.x",
+            "modelFile": "Models/mesh_0000.x",
+            "meshName": "Floor",
+            "position": [
+                133.0,
+                -0.5999995470046997,
+                108.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99983215332031,
+                100.0
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "01_StartPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                113.0,
+                2.9802322387695315e-8,
+                92.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "01_StartPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                137.0,
+                2.9802322387695315e-8,
+                92.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "01_StartPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                113.0,
+                2.9802322387695315e-8,
+                100.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "01_StartPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                137.0,
+                2.9802322387695315e-8,
+                100.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "01_StartPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                113.0,
+                2.9802322387695315e-8,
+                108.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "01_StartPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                137.0,
+                2.9802322387695315e-8,
+                108.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "01_StartPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                125.0,
+                2.9802322387695315e-8,
+                88.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99998474121094,
+                49.99998474121094
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "01_StartPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                117.0,
+                2.9802322387695315e-8,
+                112.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99998474121094,
+                49.99998474121094
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "01_StartPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                133.0,
+                2.9802322387695315e-8,
+                112.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99998474121094,
+                49.99998474121094
+            ]
+        },
+        {
+            "name": "CornerWall",
+            "hierarchyPath": "01_StartPlaza/CornerWall/Visual/CornerWall",
+            "modelId": "mesh_0003.x",
+            "modelFile": "Models/mesh_0003.x",
+            "meshName": "CornerWall",
+            "position": [
+                115.0,
+                1.1920926823449918e-7,
+                90.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99996948242188,
+                50.0
+            ]
+        },
+        {
+            "name": "CornerWall",
+            "hierarchyPath": "01_StartPlaza/CornerWall/Visual/CornerWall",
+            "modelId": "mesh_0003.x",
+            "modelFile": "Models/mesh_0003.x",
+            "meshName": "CornerWall",
+            "position": [
+                135.0,
+                1.1920926823449918e-7,
+                90.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                99.99999237060547,
+                50.000003814697269
+            ]
+        },
+        {
+            "name": "Pillar",
+            "hierarchyPath": "01_StartPlaza/Pillar/Visual/Pillar",
+            "modelId": "mesh_0004.x",
+            "modelFile": "Models/mesh_0004.x",
+            "meshName": "Pillar",
+            "position": [
+                113.0,
+                4.172325418494438e-8,
+                112.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                100.0,
+                69.9999771118164
+            ]
+        },
+        {
+            "name": "Pillar",
+            "hierarchyPath": "01_StartPlaza/Pillar/Visual/Pillar",
+            "modelId": "mesh_0004.x",
+            "modelFile": "Models/mesh_0004.x",
+            "meshName": "Pillar",
+            "position": [
+                137.0,
+                4.172325418494438e-8,
+                112.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                100.0,
+                69.9999771118164
+            ]
+        },
+        {
+            "name": "Stairs",
+            "hierarchyPath": "02_MomentumCourtyard/Stairs/Visual/Stairs",
+            "modelId": "mesh_0005.x",
+            "modelFile": "Models/mesh_0005.x",
+            "meshName": "Stairs",
+            "position": [
+                125.0,
+                4.768368739860307e-7,
+                116.0
+            ],
+            "rotation": [
+                3.0908619663705397e-8,
+                0.7071067094802856,
+                0.7071068286895752,
+                -3.0908616110991718e-8
+            ],
+            "scale": [
+                100.0,
+                99.99992370605469,
+                100.0
+            ]
+        },
+        {
+            "name": "Landing",
+            "hierarchyPath": "02_MomentumCourtyard/Landing/Visual/Landing",
+            "modelId": "mesh_0006.x",
+            "modelFile": "Models/mesh_0006.x",
+            "meshName": "Landing",
+            "position": [
+                125.0,
+                4.768368739860307e-7,
+                124.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99992370605469,
+                100.0
+            ]
+        },
+        {
+            "name": "LongPlatform",
+            "hierarchyPath": "02_MomentumCourtyard/LongPlatform/Visual/LongPlatform",
+            "modelId": "mesh_0007.x",
+            "modelFile": "Models/mesh_0007.x",
+            "meshName": "LongPlatform",
+            "position": [
+                125.0,
+                -2.3999996185302736,
+                132.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99996185302735,
+                100.0
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "02_MomentumCourtyard/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                117.0,
+                1.2000000476837159,
+                132.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "02_MomentumCourtyard/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                133.0,
+                1.2000000476837159,
+                132.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Pillar",
+            "hierarchyPath": "02_MomentumCourtyard/Pillar/Visual/Pillar",
+            "modelId": "mesh_0004.x",
+            "modelFile": "Models/mesh_0004.x",
+            "meshName": "Pillar",
+            "position": [
+                117.0,
+                1.2000000476837159,
+                136.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                100.0,
+                69.9999771118164
+            ]
+        },
+        {
+            "name": "Pillar",
+            "hierarchyPath": "02_MomentumCourtyard/Pillar/Visual/Pillar",
+            "modelId": "mesh_0004.x",
+            "modelFile": "Models/mesh_0004.x",
+            "meshName": "Pillar",
+            "position": [
+                133.0,
+                1.2000000476837159,
+                136.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                100.0,
+                69.9999771118164
+            ]
+        },
+        {
+            "name": "ArchBridge",
+            "hierarchyPath": "02_MomentumCourtyard/ArchBridge/Visual/ArchBridge",
+            "modelId": "mesh_0008.x",
+            "modelFile": "Models/mesh_0008.x",
+            "meshName": "ArchBridge",
+            "position": [
+                125.0,
+                -1.189880132675171,
+                140.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                100.00000762939453
+            ]
+        },
+        {
+            "name": "Gateway",
+            "hierarchyPath": "02_MomentumCourtyard/Pendulum/Gateway",
+            "modelId": "mesh_0009.x",
+            "modelFile": "Models/mesh_0009.x",
+            "meshName": "Gateway",
+            "position": [
+                125.0,
+                1.2000000476837159,
+                132.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99998474121094,
+                99.99998474121094
+            ]
+        },
+        {
+            "name": "AxlePin",
+            "hierarchyPath": "02_MomentumCourtyard/Pendulum/AxlePin",
+            "modelId": "mesh_0010.x",
+            "modelFile": "Models/mesh_0010.x",
+            "meshName": "AxlePin",
+            "position": [
+                125.0,
+                6.949999809265137,
+                132.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.0,
+                100.0,
+                100.0
+            ]
+        },
+        {
+            "name": "TallPlatform",
+            "hierarchyPath": "03_IntermediatePlatforms/TallPlatform/Visual/TallPlatform",
+            "modelId": "mesh_0011.x",
+            "modelFile": "Models/mesh_0011.x",
+            "meshName": "TallPlatform",
+            "position": [
+                125.0,
+                3.1789141985427707e-7,
+                149.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.9999771118164,
+                66.66666412353516
+            ]
+        },
+        {
+            "name": "TallPlatform",
+            "hierarchyPath": "03_IntermediatePlatforms/TallPlatform/Visual/TallPlatform",
+            "modelId": "mesh_0011.x",
+            "modelFile": "Models/mesh_0011.x",
+            "meshName": "TallPlatform",
+            "position": [
+                125.0,
+                4.7683712978141559e-7,
+                158.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.9999771118164,
+                100.0
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "03_IntermediatePlatforms/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                121.0,
+                2.4000000953674318,
+                149.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "03_IntermediatePlatforms/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                129.0,
+                2.4000000953674318,
+                149.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "03_IntermediatePlatforms/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                121.0,
+                3.5999999046325685,
+                158.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "03_IntermediatePlatforms/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                129.0,
+                3.5999999046325685,
+                158.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "TallPlatform",
+            "hierarchyPath": "04_GoalPlaza/TallPlatform/Visual/TallPlatform",
+            "modelId": "mesh_0011.x",
+            "modelFile": "Models/mesh_0011.x",
+            "meshName": "TallPlatform",
+            "position": [
+                121.0,
+                6.357828397085541e-7,
+                168.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.9999771118164,
+                133.3333282470703
+            ]
+        },
+        {
+            "name": "TallPlatform",
+            "hierarchyPath": "04_GoalPlaza/TallPlatform/Visual/TallPlatform",
+            "modelId": "mesh_0011.x",
+            "modelFile": "Models/mesh_0011.x",
+            "meshName": "TallPlatform",
+            "position": [
+                121.0,
+                5.563099421124207e-7,
+                176.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.9999771118164,
+                116.66666412353516
+            ]
+        },
+        {
+            "name": "Mosaic",
+            "hierarchyPath": "04_GoalPlaza/Mosaic/Visual/Mosaic",
+            "modelId": "mesh_0001.x",
+            "modelFile": "Models/mesh_0001.x",
+            "meshName": "Mosaic",
+            "position": [
+                121.0,
+                4.200000286102295,
+                176.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.00001525878906,
+                99.99983215332031,
+                100.0
+            ]
+        },
+        {
+            "name": "TallPlatform",
+            "hierarchyPath": "04_GoalPlaza/TallPlatform/Visual/TallPlatform",
+            "modelId": "mesh_0011.x",
+            "modelFile": "Models/mesh_0011.x",
+            "meshName": "TallPlatform",
+            "position": [
+                129.0,
+                6.357828397085541e-7,
+                168.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.9999771118164,
+                133.3333282470703
+            ]
+        },
+        {
+            "name": "TallPlatform",
+            "hierarchyPath": "04_GoalPlaza/TallPlatform/Visual/TallPlatform",
+            "modelId": "mesh_0011.x",
+            "modelFile": "Models/mesh_0011.x",
+            "meshName": "TallPlatform",
+            "position": [
+                129.0,
+                6.357828397085541e-7,
+                176.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.9999771118164,
+                133.3333282470703
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "04_GoalPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                117.0,
+                4.800000190734863,
+                168.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "04_GoalPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                133.0,
+                4.800000190734863,
+                168.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "04_GoalPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                117.0,
+                4.800000190734863,
+                176.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "04_GoalPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                133.0,
+                4.800000190734863,
+                176.0
+            ],
+            "rotation": [
+                -0.5000000596046448,
+                0.4999999701976776,
+                0.5000000596046448,
+                0.4999999701976776
+            ],
+            "scale": [
+                100.00001525878906,
+                100.00000762939453,
+                49.9999885559082
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "04_GoalPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                121.0,
+                4.800000190734863,
+                180.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99998474121094,
+                49.99998474121094
+            ]
+        },
+        {
+            "name": "Wall",
+            "hierarchyPath": "04_GoalPlaza/Wall/Visual/Wall",
+            "modelId": "mesh_0002.x",
+            "modelFile": "Models/mesh_0002.x",
+            "meshName": "Wall",
+            "position": [
+                129.0,
+                4.800000190734863,
+                180.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                99.99998474121094,
+                49.99998474121094
+            ]
+        },
+        {
+            "name": "Pillar",
+            "hierarchyPath": "04_GoalPlaza/Pillar/Visual/Pillar",
+            "modelId": "mesh_0004.x",
+            "modelFile": "Models/mesh_0004.x",
+            "meshName": "Pillar",
+            "position": [
+                117.0,
+                4.800000190734863,
+                180.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                100.0,
+                69.9999771118164
+            ]
+        },
+        {
+            "name": "Pillar",
+            "hierarchyPath": "04_GoalPlaza/Pillar/Visual/Pillar",
+            "modelId": "mesh_0004.x",
+            "modelFile": "Models/mesh_0004.x",
+            "meshName": "Pillar",
+            "position": [
+                133.0,
+                4.800000190734863,
+                180.0
+            ],
+            "rotation": [
+                -0.7071068286895752,
+                0.0,
+                0.0,
+                0.7071067094802856
+            ],
+            "scale": [
+                100.0,
+                100.0,
+                69.9999771118164
+            ]
+        }
+    ],
+    "colliders": [
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Floor/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0000.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Floor/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0001.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Floor/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0002.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Floor/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0003.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Mosaic/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0004.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Floor/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0005.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Floor/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0006.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Floor/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0007.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Floor/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0008.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0009.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0010.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0011.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0012.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0013.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0014.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0015.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0016.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0017.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/CornerWall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0018.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/CornerWall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0019.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Pillar/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0020.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "01_StartPlaza/Pillar/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0021.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "02_MomentumCourtyard/Stairs/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0022.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "02_MomentumCourtyard/Landing/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0023.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "02_MomentumCourtyard/LongPlatform/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0024.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "02_MomentumCourtyard/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0025.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "02_MomentumCourtyard/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0026.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "02_MomentumCourtyard/Pillar/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0027.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "02_MomentumCourtyard/Pillar/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0028.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "02_MomentumCourtyard/ArchBridge/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0029.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "02_MomentumCourtyard/Pendulum/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0030.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "03_IntermediatePlatforms/TallPlatform/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0031.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "03_IntermediatePlatforms/TallPlatform/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0032.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "03_IntermediatePlatforms/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0033.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "03_IntermediatePlatforms/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0034.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "03_IntermediatePlatforms/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0035.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "03_IntermediatePlatforms/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0036.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/TallPlatform/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0037.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/TallPlatform/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0038.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/Mosaic/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0039.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/TallPlatform/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0040.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/TallPlatform/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0041.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0042.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0043.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0044.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0045.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0046.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/Wall/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0047.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/Pillar/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0048.txt"
+        },
+        {
+            "name": "Collision",
+            "hierarchyPath": "04_GoalPlaza/Pillar/Collision",
+            "type": "Mesh",
+            "meshFile": "CollisionMeshes/collision_0049.txt"
+        }
+    ],
+    "pendulums": [
+        {
+            "name": "Pendulum",
+            "modelFile": "Pendulums/pendulum_0000.x",
+            "pivot": [
+                125.0,
+                6.949999809265137,
+                132.0
+            ],
+            "rotation": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "length": 3.680000066757202,
+            "ballRadius": 0.8999999761581421,
+            "initialAngle": 30.0
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+DxLib X export
+Scene: ConvenienceStoreTest
+Instances: 7
+Mesh colliders: 7
+Unique X models: 2
+Skipped: 0
+
+Supported: MeshFilter/MeshRenderer, triangles, UV0, normals, material base color and main texture.
+Not supported: Unity shaders, metallic/roughness, normal maps, transparency, skinned meshes, terrain, complex material graphs.
+Textures are converted to PNG beside each X file. Check output in DxLib Model Viewer before importing all.
+Warnings:
